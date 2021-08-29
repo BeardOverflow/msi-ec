@@ -1,5 +1,23 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+/*
+ * msi-ec.c - MSI Embedded Controller for laptops support.
+ *
+ * This driver exports a few files in /sys/devices/platform/msi-laptop:
+ *   webcam   Whether or not we activate the webcam (rw)
+ *
+ * In addition to these platform device attributes the driver
+ * registers itself in the Linux power_supply subsystem and is
+ * available to userspace under /sys/class/power_supply/<power_supply>:
+ *
+ *   charge_control_start_threshold
+ *   charge_control_end_threshold
+ *
+ * This driver might not work on other laptops produced by MSI. Also, and until
+ * future enhancements, no DMI data are used to identify your compatibility
+ *
+ */
+
 #include <acpi/battery.h>
 #include <linux/acpi.h>
 #include <linux/init.h>
@@ -20,6 +38,10 @@
 #define MSI_EC_CHARGE_CONTROL_RANGE_MAX 0xe4
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
+
+// ============================================================ //
+// Sysfs power_supply subsystem
+// ============================================================ //
 
 static ssize_t charge_control_threshold_show(u8 offset,
 				struct device *device,
@@ -91,26 +113,36 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
 static DEVICE_ATTR_RW(charge_control_start_threshold);
 static DEVICE_ATTR_RW(charge_control_end_threshold);
 
-static struct attribute *msi_ec_battery_attrs[] = {
+static struct attribute *msi_battery_attrs[] = {
 	&dev_attr_charge_control_start_threshold.attr,
 	&dev_attr_charge_control_end_threshold.attr,
 	NULL,
 };
 
-ATTRIBUTE_GROUPS(msi_ec_battery);
+ATTRIBUTE_GROUPS(msi_battery);
 
-static int msi_ec_battery_add(struct power_supply *battery)
+static int msi_battery_add(struct power_supply *battery)
 {
-	if (device_add_groups(&battery->dev, msi_ec_battery_groups))
+	if (device_add_groups(&battery->dev, msi_battery_groups))
 		return -ENODEV;
 	return 0;
 }
 
-static int msi_ec_battery_remove(struct power_supply *battery)
+static int msi_battery_remove(struct power_supply *battery)
 {
-	device_remove_groups(&battery->dev, msi_ec_battery_groups);
+	device_remove_groups(&battery->dev, msi_battery_groups);
 	return 0;
 }
+
+static struct acpi_battery_hook battery_hook = {
+        .add_battery = msi_battery_add,
+        .remove_battery = msi_battery_remove,
+        .name = MSI_DRIVER_NAME,
+};
+
+// ============================================================ //
+// Sysfs platform device attributes
+// ============================================================ //
 
 static ssize_t webcam_show(struct device *device,
 				struct device_attribute *attr,
@@ -186,18 +218,16 @@ static struct platform_driver msi_platform_driver = {
 	.remove	= msi_platform_remove,
 };
 
-static struct acpi_battery_hook battery_hook = {
-	.add_battery = msi_ec_battery_add,
-	.remove_battery = msi_ec_battery_remove,
-	.name = "msi-ec: battery extension",
-};
+// ============================================================ //
+// Module load/unload
+// ============================================================ //
 
-static int __init msi_ec_module_init(void)
+static int __init msi_ec_init(void)
 {
 	int result;
 
 	if (acpi_disabled) {
-		pr_err("ACPI needs to be enabled for this driver to work!\n");
+		pr_err("Unable to init because ACPI needs to be enabled first!\n");
 		return -ENODEV;
 	}
 
@@ -219,25 +249,25 @@ static int __init msi_ec_module_init(void)
 		return result;
 	}
 
-	pr_info("msi-ec: module_init\n");
 	battery_hook_register(&battery_hook);
 
+	pr_info("msi-ec: module_init\n");
 	return 0;
 }
 
-static void __exit msi_ec_module_exit(void)
+static void __exit msi_ec_exit(void)
 {
-	pr_info("msi-ec: module_exit\n");
-
 	platform_driver_unregister(&msi_platform_driver);
 	platform_device_del(msi_platform_device);
 	battery_hook_unregister(&battery_hook);
+
+	pr_info("msi-ec: module_exit\n");
 }
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.04");
+MODULE_VERSION("0.05");
 
-module_init(msi_ec_module_init);
-module_exit(msi_ec_module_exit);
+module_init(msi_ec_init);
+module_exit(msi_ec_exit);
