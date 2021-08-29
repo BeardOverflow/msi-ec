@@ -4,9 +4,10 @@
  * msi-ec.c - MSI Embedded Controller for laptops support.
  *
  * This driver exports a few files in /sys/devices/platform/msi-laptop:
- *   webcam   Whether or not we activate the integrated webcam (rw)
- *   fn_key   Position for the function key
- *   win_key  Position for the windows key
+ *   webcam         Integrated webcam activation
+ *   fn_key         Function key location
+ *   win_key        Windows key location
+ *   battery_mode   Battery health options
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -38,6 +39,10 @@
 #define MSI_EC_FN_KEY_RIGHT 0x50
 #define MSI_EC_WIN_KEY_LEFT 0x50
 #define MSI_EC_WIN_KEY_RIGHT 0x40
+#define MSI_EC_BATTERY_MODE_ADDRESS 0xef
+#define MSI_EC_BATTERY_MODE_HIGH_CAPACITY 0xe4
+#define MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY 0xd0
+#define MSI_EC_BATTERY_MODE_LOW_CAPACITY 0xbc
 #define MSI_EC_CHARGE_CONTROL_ADDRESS 0xef
 #define MSI_EC_CHARGE_CONTROL_OFFSET_START 0x8a
 #define MSI_EC_CHARGE_CONTROL_OFFSET_END 0x80
@@ -271,14 +276,61 @@ static ssize_t win_key_store(struct device *dev,
 	return count;
 }
 
+static ssize_t battery_mode_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_BATTERY_MODE_ADDRESS, &rdata);
+	if (result < 0)
+		return result;
+
+	switch (rdata) {
+		case MSI_EC_BATTERY_MODE_HIGH_CAPACITY:
+			return sprintf(buf, "%s\n", "high");
+		case MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY:
+			return sprintf(buf, "%s\n", "medium");
+		case MSI_EC_BATTERY_MODE_LOW_CAPACITY:
+			return sprintf(buf, "%s\n", "low");
+		default:
+			return sprintf(buf, "%s\n", "unknown");
+	}
+}
+
+
+static ssize_t battery_mode_store(struct device *dev,
+			struct device_attribute *attr,
+			const char *buf, size_t count)
+{
+	int result = -EINVAL;
+
+	if (streq(buf, "high"))
+		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_HIGH_CAPACITY);
+
+	if (streq(buf, "medium"))
+		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY);
+
+	if (streq(buf, "low"))
+		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_LOW_CAPACITY);
+
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
 static DEVICE_ATTR_RW(webcam);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
+static DEVICE_ATTR_RW(battery_mode);
 
 static struct attribute *msi_platform_attrs[] = {
 	&dev_attr_webcam.attr,
 	&dev_attr_fn_key.attr,
 	&dev_attr_win_key.attr,
+	&dev_attr_battery_mode.attr,
 	NULL,
 };
 
