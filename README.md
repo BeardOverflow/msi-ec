@@ -1,4 +1,4 @@
-# MSI Embedded Controller for laptops
+# Embedded Controller for MSI laptops
 
 This driver exports a few files in its own platform device, msi-ec, and is available to userspace under:
 
@@ -30,6 +30,13 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - high: best for mobility. Charge the battery to 100% all the time
     - medium: balanced. Charge the battery when under 70%, stop at 80%
     - low: best for battery. Charge the battery when under 50%, stop at 60%
+
+- `/sys/devices/platform/msi-ec/cooler_boost`
+  - Description: This entry allows enabling the cooler boost function. It provides powerful cooling capability by boosting the airflow.
+  - Access: Read, Write
+  - Valid values:
+    - on: cooler boost function is enabled
+    - off: cooler boost function is disabled
 
 In addition to these platform device attributes the driver registers itself in the Linux power_supply subsystem (Documentation/ABI/testing/sysfs-class-power) and is available to userspace under:
 

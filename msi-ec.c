@@ -8,6 +8,7 @@
  *   fn_key         Function key location
  *   win_key        Windows key location
  *   battery_mode   Battery health options
+ *   cooler_boost   Cooler boost function
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -43,6 +44,9 @@
 #define MSI_EC_BATTERY_MODE_HIGH_CAPACITY 0xe4
 #define MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY 0xd0
 #define MSI_EC_BATTERY_MODE_LOW_CAPACITY 0xbc
+#define MSI_EC_COOLER_BOOST_ADDRESS 0x98
+#define MSI_EC_COOLER_BOOST_ON 0x82
+#define MSI_EC_COOLER_BOOST_OFF 0x02
 #define MSI_EC_CHARGE_CONTROL_ADDRESS 0xef
 #define MSI_EC_CHARGE_CONTROL_OFFSET_START 0x8a
 #define MSI_EC_CHARGE_CONTROL_OFFSET_END 0x80
@@ -321,16 +325,57 @@ static ssize_t battery_mode_store(struct device *dev,
 	return count;
 }
 
+static ssize_t cooler_boost_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_COOLER_BOOST_ADDRESS, &rdata);
+	if (result < 0)
+		return result;
+
+	switch (rdata) {
+		case MSI_EC_COOLER_BOOST_ON:
+			return sprintf(buf, "%s\n", "on");
+		case MSI_EC_COOLER_BOOST_OFF:
+			return sprintf(buf, "%s\n", "off");
+		default:
+			return sprintf(buf, "%s\n", "unknown");
+	}
+}
+
+static ssize_t cooler_boost_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	int result = -EINVAL;
+
+	if (streq(buf, "on"))
+		result = ec_write(MSI_EC_COOLER_BOOST_ADDRESS, MSI_EC_COOLER_BOOST_ON);
+
+	if (streq(buf, "off"))
+		result = ec_write(MSI_EC_COOLER_BOOST_ADDRESS, MSI_EC_COOLER_BOOST_OFF);
+
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
 static DEVICE_ATTR_RW(webcam);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(battery_mode);
+static DEVICE_ATTR_RW(cooler_boost);
 
 static struct attribute *msi_platform_attrs[] = {
 	&dev_attr_webcam.attr,
 	&dev_attr_fn_key.attr,
 	&dev_attr_win_key.attr,
 	&dev_attr_battery_mode.attr,
+	&dev_attr_cooler_boost.attr,
 	NULL,
 };
 
