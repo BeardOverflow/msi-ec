@@ -5,11 +5,13 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 
-#define MSI_PROC_DIR "msi-ec"
+#define MSI_PROC_DIR KBUILD_MODNAME
 #define MSI_PROC_VERSION 1
+#define MSI_DRIVER_NAME "msi-ec"
 #define MSI_EC_SWITCH_WEBCAM 0x2e
 #define MSI_EC_SWITCH_WEBCAM_ON 0x4a
 #define MSI_EC_SWITCH_WEBCAM_OFF 0x48
@@ -210,6 +212,80 @@ static int msi_ec_battery_remove(struct power_supply *battery)
 	return 0;
 }
 
+static ssize_t webcam_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_SWITCH_WEBCAM, &rdata);
+	if (result < 0)
+		return result;
+
+	switch (rdata) {
+		case MSI_EC_SWITCH_WEBCAM_ON:
+			return sprintf(buf, "%s\n", "on");
+		case MSI_EC_SWITCH_WEBCAM_OFF:
+			return sprintf(buf, "%s\n", "off");
+		default:
+			return sprintf(buf, "%s\n", "unknown");
+	}
+}
+
+
+static ssize_t webcam_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	int result = -EINVAL;
+
+	if (compare_strings(buf, "on"))
+		result = ec_write(MSI_EC_SWITCH_WEBCAM, MSI_EC_SWITCH_WEBCAM_ON);
+
+	if (compare_strings(buf, "off"))
+		result = ec_write(MSI_EC_SWITCH_WEBCAM, MSI_EC_SWITCH_WEBCAM_OFF);
+
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
+static DEVICE_ATTR_RW(webcam);
+
+static struct attribute *msi_platform_attrs[] = {
+	&dev_attr_webcam.attr,
+	NULL,
+};
+
+ATTRIBUTE_GROUPS(msi_platform);
+
+static int msi_platform_probe(struct platform_device *pdev)
+{
+	int result;
+	result = sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
+	if (result < 0)
+		return result;
+	return 0;
+}
+
+static int msi_platform_remove(struct platform_device *pdev)
+{
+	sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
+	return 0;
+}
+
+static struct platform_device *msi_platform_device;
+
+static struct platform_driver msi_platform_driver = {
+	.driver = {
+		.name = MSI_DRIVER_NAME,
+	},
+	.probe	= msi_platform_probe,
+	.remove	= msi_platform_remove,
+};
+
 static struct acpi_battery_hook battery_hook = {
 	.add_battery = msi_ec_battery_add,
 	.remove_battery = msi_ec_battery_remove,
@@ -218,9 +294,29 @@ static struct acpi_battery_hook battery_hook = {
 
 static int __init msi_ec_module_init(void)
 {
+	int result;
+
 	if (acpi_disabled) {
 		pr_err("ACPI needs to be enabled for this driver to work!\n");
 		return -ENODEV;
+	}
+
+	result = platform_driver_register(&msi_platform_driver);
+	if (result < 0) {
+		return result;
+	}
+
+	msi_platform_device = platform_device_alloc(MSI_DRIVER_NAME, -1);
+	if (msi_platform_device == NULL) {
+		platform_driver_unregister(&msi_platform_driver);
+		return -ENOMEM;
+	}
+
+	result = platform_device_add(msi_platform_device);
+	if (result < 0) {
+		platform_device_del(msi_platform_device);
+		platform_driver_unregister(&msi_platform_driver);
+		return result;
 	}
 
 	msi_proc_dir = proc_mkdir(MSI_PROC_DIR, acpi_root_dir);
@@ -240,6 +336,8 @@ static void __exit msi_ec_module_exit(void)
 {
 	pr_info("msi-ec: module_exit\n");
 
+	platform_driver_unregister(&msi_platform_driver);
+	platform_device_del(msi_platform_device);
 	battery_hook_unregister(&battery_hook);
 
 	remove_msi_proc_entries();
@@ -250,7 +348,7 @@ static void __exit msi_ec_module_exit(void)
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.01");
+MODULE_VERSION("0.03");
 
 module_init(msi_ec_module_init);
 module_exit(msi_ec_module_exit);
