@@ -38,6 +38,16 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - on: cooler boost function is enabled
     - off: cooler boost function is disabled
 
+- `/sys/devices/platform/msi-ec/shift_mode`
+  - Description: This entry allows switching the shift mode. It provides a set of profiles for gaining CPU & GPU overclock/underclock.
+  - Access: Read, Write
+  - Valid values:
+    - turbo: over-voltage and over-clock for the CPU & GPU, aka overcloking mode
+    - sport: full clock frequency for the CPU & GPU, aka default desktop mode
+    - comfort: dynamic clock frequency for the CPU & GPU, aka power balanced mode
+    - eco: low clock frequency for the CPU & GPU, aka power saving mode
+    - off: operating system decides
+
 In addition to these platform device attributes the driver registers itself in the Linux power_supply subsystem (Documentation/ABI/testing/sysfs-class-power) and is available to userspace under:
 
 - `/sys/class/power_supply/<supply_name>/charge_control_start_threshold`

@@ -9,6 +9,7 @@
  *   win_key        Windows key location
  *   battery_mode   Battery health options
  *   cooler_boost   Cooler boost function
+ *   shift_mode     CPU & GPU performance modes
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -47,6 +48,12 @@
 #define MSI_EC_COOLER_BOOST_ADDRESS 0x98
 #define MSI_EC_COOLER_BOOST_ON 0x82
 #define MSI_EC_COOLER_BOOST_OFF 0x02
+#define MSI_EC_SHIFT_MODE_ADDRESS 0xf2
+#define MSI_EC_SHIFT_MODE_TURBO 0xc4
+#define MSI_EC_SHIFT_MODE_SPORT 0xc0
+#define MSI_EC_SHIFT_MODE_COMFORT 0xc1
+#define MSI_EC_SHIFT_MODE_ECO 0xc2
+#define MSI_EC_SHIFT_MODE_OFF 0x80
 #define MSI_EC_CHARGE_CONTROL_ADDRESS 0xef
 #define MSI_EC_CHARGE_CONTROL_OFFSET_START 0x8a
 #define MSI_EC_CHARGE_CONTROL_OFFSET_END 0x80
@@ -177,7 +184,7 @@ static ssize_t webcam_show(struct device *device,
 		case MSI_EC_WEBCAM_OFF:
 			return sprintf(buf, "%s\n", "off");
 		default:
-			return sprintf(buf, "%s\n", "unknown");
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
@@ -217,7 +224,7 @@ static ssize_t fn_key_show(struct device *device,
 		case MSI_EC_FN_KEY_RIGHT:
 			return sprintf(buf, "%s\n", "right");
 		default:
-			return sprintf(buf, "%s\n", "unknown");
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
@@ -257,7 +264,7 @@ static ssize_t win_key_show(struct device *device,
 		case MSI_EC_WIN_KEY_RIGHT:
 			return sprintf(buf, "%s\n", "right");
 		default:
-			return sprintf(buf, "%s\n", "unknown");
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
@@ -299,7 +306,7 @@ static ssize_t battery_mode_show(struct device *device,
 		case MSI_EC_BATTERY_MODE_LOW_CAPACITY:
 			return sprintf(buf, "%s\n", "low");
 		default:
-			return sprintf(buf, "%s\n", "unknown");
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
@@ -342,7 +349,7 @@ static ssize_t cooler_boost_show(struct device *device,
 		case MSI_EC_COOLER_BOOST_OFF:
 			return sprintf(buf, "%s\n", "off");
 		default:
-			return sprintf(buf, "%s\n", "unknown");
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
@@ -364,11 +371,67 @@ static ssize_t cooler_boost_store(struct device *dev,
 	return count;
 }
 
+static ssize_t shift_mode_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_SHIFT_MODE_ADDRESS, &rdata);
+	if (result < 0)
+		return result;
+
+	switch (rdata) {
+		case MSI_EC_SHIFT_MODE_TURBO:
+			return sprintf(buf, "%s\n", "turbo");
+		case MSI_EC_SHIFT_MODE_SPORT:
+			return sprintf(buf, "%s\n", "sport");
+		case MSI_EC_SHIFT_MODE_COMFORT:
+			return sprintf(buf, "%s\n", "comfort");
+		case MSI_EC_SHIFT_MODE_ECO:
+			return sprintf(buf, "%s\n", "eco");
+		case MSI_EC_SHIFT_MODE_OFF:
+			return sprintf(buf, "%s\n", "off");
+		default:
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	}
+}
+
+
+static ssize_t shift_mode_store(struct device *dev,
+			struct device_attribute *attr,
+			const char *buf, size_t count)
+{
+	int result = -EINVAL;
+
+	if (streq(buf, "turbo"))
+		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS, MSI_EC_SHIFT_MODE_TURBO);
+
+	if (streq(buf, "sport"))
+		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS, MSI_EC_SHIFT_MODE_SPORT);
+
+	if (streq(buf, "comfort"))
+		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS, MSI_EC_SHIFT_MODE_COMFORT);
+
+	if (streq(buf, "eco"))
+		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS, MSI_EC_SHIFT_MODE_ECO);
+
+	if (streq(buf, "off"))
+		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS, MSI_EC_SHIFT_MODE_OFF);
+
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
 static DEVICE_ATTR_RW(webcam);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(battery_mode);
 static DEVICE_ATTR_RW(cooler_boost);
+static DEVICE_ATTR_RW(shift_mode);
 
 static struct attribute *msi_platform_attrs[] = {
 	&dev_attr_webcam.attr,
@@ -376,6 +439,7 @@ static struct attribute *msi_platform_attrs[] = {
 	&dev_attr_win_key.attr,
 	&dev_attr_battery_mode.attr,
 	&dev_attr_cooler_boost.attr,
+	&dev_attr_shift_mode.attr,
 	NULL,
 };
 
