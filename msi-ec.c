@@ -4,12 +4,14 @@
  * msi-ec.c - MSI Embedded Controller for laptops support.
  *
  * This driver exports a few files in /sys/devices/platform/msi-laptop:
- *   webcam         Integrated webcam activation
- *   fn_key         Function key location
- *   win_key        Windows key location
- *   battery_mode   Battery health options
- *   cooler_boost   Cooler boost function
- *   shift_mode     CPU & GPU performance modes
+ *   webcam            Integrated webcam activation
+ *   fn_key            Function key location
+ *   win_key           Windows key location
+ *   battery_mode      Battery health options
+ *   cooler_boost      Cooler boost function
+ *   shift_mode        CPU & GPU performance modes
+ *   fw_version        Firmware version
+ *   fw_release_date   Firmware release date
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -54,6 +56,12 @@
 #define MSI_EC_SHIFT_MODE_COMFORT 0xc1
 #define MSI_EC_SHIFT_MODE_ECO 0xc2
 #define MSI_EC_SHIFT_MODE_OFF 0x80
+#define MSI_EC_FW_VERSION_ADDRESS 0xa0
+#define MSI_EC_FW_VERSION_LENGTH 12
+#define MSI_EC_FW_DATE_ADDRESS 0xac
+#define MSI_EC_FW_DATE_LENGTH 8
+#define MSI_EC_FW_TIME_ADDRESS 0xb4
+#define MSI_EC_FW_TIME_LENGTH 8
 #define MSI_EC_CHARGE_CONTROL_ADDRESS 0xef
 #define MSI_EC_CHARGE_CONTROL_OFFSET_START 0x8a
 #define MSI_EC_CHARGE_CONTROL_OFFSET_END 0x80
@@ -61,6 +69,18 @@
 #define MSI_EC_CHARGE_CONTROL_RANGE_MAX 0xe4
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
+
+static int ec_read_seq(u8 addr, u8 *buf, int len)
+{
+	int result;
+	u8 i;
+	for (i = 0; i < len; i++) {
+		result = ec_read(addr + i, buf + i);
+		if (result < 0)
+			return result;
+	}
+	return 0;
+}
 
 // ============================================================ //
 // Sysfs power_supply subsystem
@@ -426,12 +446,53 @@ static ssize_t shift_mode_store(struct device *dev,
 	return count;
 }
 
+static ssize_t fw_version_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata[MSI_EC_FW_VERSION_LENGTH + 1];
+	int result;
+
+	memset(rdata, 0, MSI_EC_FW_VERSION_LENGTH + 1);
+	result = ec_read_seq(MSI_EC_FW_VERSION_ADDRESS, rdata, MSI_EC_FW_VERSION_LENGTH);
+	if (result < 0)
+		return result;
+
+	return sprintf(buf, "%s\n", rdata);
+}
+
+static ssize_t fw_release_date_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdate[MSI_EC_FW_DATE_LENGTH + 1];
+	u8 rtime[MSI_EC_FW_TIME_LENGTH + 1];
+	int result;
+	int year, month, day, hour, minute, second;
+
+	memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
+	result = ec_read_seq(MSI_EC_FW_DATE_ADDRESS, rdate, MSI_EC_FW_DATE_LENGTH);
+	if (result < 0)
+		return result;
+	sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
+
+	memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
+	result = ec_read_seq(MSI_EC_FW_TIME_ADDRESS, rtime, MSI_EC_FW_TIME_LENGTH);
+	if (result < 0)
+		return result;
+	sscanf(rtime, "%02d:%02d:%02d", &hour, &minute, &second);
+
+	return sprintf(buf, "%04d/%02d/%02d %02d:%02d:%02d\n", year, month, day, hour, minute, second);
+}
+
 static DEVICE_ATTR_RW(webcam);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(battery_mode);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RW(shift_mode);
+static DEVICE_ATTR_RO(fw_version);
+static DEVICE_ATTR_RO(fw_release_date);
 
 static struct attribute *msi_platform_attrs[] = {
 	&dev_attr_webcam.attr,
@@ -440,6 +501,8 @@ static struct attribute *msi_platform_attrs[] = {
 	&dev_attr_battery_mode.attr,
 	&dev_attr_cooler_boost.attr,
 	&dev_attr_shift_mode.attr,
+	&dev_attr_fw_version.attr,
+	&dev_attr_fw_release_date.attr,
 	NULL,
 };
 

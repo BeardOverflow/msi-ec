@@ -48,6 +48,16 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - eco: low clock frequency for the CPU & GPU, aka power saving mode
     - off: operating system decides
 
+- `/sys/devices/platform/msi-ec/fw_version`
+  - Description: This entry reports the firmware version of the motherboard.
+  - Access: Read
+  - Valid values: Represented as string
+
+- `/sys/devices/platform/msi-ec/fw_release_date`
+  - Description: This entry reports the firmware release date of the motherboard.
+  - Access: Read
+  - Valid values: Represented as string
+
 In addition to these platform device attributes the driver registers itself in the Linux power_supply subsystem (Documentation/ABI/testing/sysfs-class-power) and is available to userspace under:
 
 - `/sys/class/power_supply/<supply_name>/charge_control_start_threshold`
