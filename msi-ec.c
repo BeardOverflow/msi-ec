@@ -152,7 +152,7 @@ static struct acpi_battery_hook battery_hook = {
 };
 
 // ============================================================ //
-// Sysfs platform device attributes
+// Sysfs platform device attributes (root)
 // ============================================================ //
 
 static ssize_t webcam_show(struct device *device,
@@ -462,7 +462,7 @@ static DEVICE_ATTR_RW(shift_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
 
-static struct attribute *msi_platform_attrs[] = {
+static struct attribute *msi_root_attrs[] = {
 	&dev_attr_webcam.attr,
 	&dev_attr_fn_key.attr,
 	&dev_attr_win_key.attr,
@@ -474,7 +474,134 @@ static struct attribute *msi_platform_attrs[] = {
 	NULL,
 };
 
-ATTRIBUTE_GROUPS(msi_platform);
+static const struct attribute_group msi_root_group = {
+	.attrs = msi_root_attrs,
+};
+
+// ============================================================ //
+// Sysfs platform device attributes (cpu)
+// ============================================================ //
+
+static ssize_t cpu_realtime_temperature_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_CPU_REALTIME_TEMPERATURE, &rdata);
+	if (result < 0)
+		return result;
+
+	return sprintf(buf, "%i\n", rdata);
+}
+
+static ssize_t cpu_realtime_fan_speed_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_CPU_REALTIME_FAN_SPEED, &rdata);
+	if (result < 0)
+		return result;
+
+	return sprintf(buf, "%i\n", rdata);
+}
+
+static struct device_attribute dev_attr_cpu_realtime_temperature = {
+	.attr = {
+		.name = "realtime_temperature",
+		.mode = 0444,
+	},
+	.show = cpu_realtime_temperature_show,
+};
+
+static struct device_attribute dev_attr_cpu_realtime_fan_speed = {
+	.attr = {
+		.name = "realtime_fan_speed",
+		.mode = 0444,
+	},
+	.show = cpu_realtime_fan_speed_show,
+};
+
+static struct attribute *msi_cpu_attrs[] = {
+	&dev_attr_cpu_realtime_temperature.attr,
+	&dev_attr_cpu_realtime_fan_speed.attr,
+	NULL,
+};
+
+static const struct attribute_group msi_cpu_group = {
+	.name = "cpu",
+	.attrs = msi_cpu_attrs,
+};
+
+// ============================================================ //
+// Sysfs platform device attributes (gpu)
+// ============================================================ //
+
+static ssize_t gpu_realtime_temperature_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_GPU_REALTIME_TEMPERATURE, &rdata);
+	if (result < 0)
+		return result;
+
+	return sprintf(buf, "%i\n", rdata);
+}
+
+static ssize_t gpu_realtime_fan_speed_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_GPU_REALTIME_FAN_SPEED, &rdata);
+	if (result < 0)
+		return result;
+
+	return sprintf(buf, "%i\n", rdata);
+}
+
+static struct device_attribute dev_attr_gpu_realtime_temperature = {
+	.attr = {
+		.name = "realtime_temperature",
+		.mode = 0444,
+	},
+	.show = gpu_realtime_temperature_show,
+};
+
+static struct device_attribute dev_attr_gpu_realtime_fan_speed = {
+	.attr = {
+		.name = "realtime_fan_speed",
+		.mode = 0444,
+	},
+	.show = gpu_realtime_fan_speed_show,
+};
+
+static struct attribute *msi_gpu_attrs[] = {
+	&dev_attr_gpu_realtime_temperature.attr,
+	&dev_attr_gpu_realtime_fan_speed.attr,
+	NULL,
+};
+
+static const struct attribute_group msi_gpu_group = {
+	.name = "gpu",
+	.attrs = msi_gpu_attrs,
+};
+
+static const struct attribute_group *msi_platform_groups[] = {
+	&msi_root_group,
+	&msi_cpu_group,
+	&msi_gpu_group,
+	NULL,
+};
 
 static int msi_platform_probe(struct platform_device *pdev)
 {

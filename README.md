@@ -58,6 +58,26 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Access: Read
   - Valid values: Represented as string
 
+- `/sys/devices/platform/msi-ec/cpu/realtime_temperature`
+  - Description: This entry reports the current cpu temperature.
+  - Access: Read
+  - Valid values: 0 - 100 (celsius scale)
+
+- `/sys/devices/platform/msi-ec/cpu/realtime_fan_speed`
+  - Description: This entry reports the current cpu fan speed.
+  - Access: Read
+  - Valid values: 0 - 100 (percent)
+
+- `/sys/devices/platform/msi-ec/gpu/realtime_temperature`
+  - Description: This entry reports the current gpu temperature.
+  - Access: Read
+  - Valid values: 0 - 100 (celsius scale)
+
+- `/sys/devices/platform/msi-ec/gpu/realtime_fan_speed`
+  - Description: This entry reports the current gpu fan speed.
+  - Access: Read
+  - Valid values: 0 - 100 (percent)
+
 In addition to these platform device attributes the driver registers itself in the Linux power_supply subsystem (Documentation/ABI/testing/sysfs-class-power) and is available to userspace under:
 
 - `/sys/class/power_supply/<supply_name>/charge_control_start_threshold`
@@ -77,3 +97,7 @@ In addition to these platform device attributes the driver registers itself in t
     - 100: when max battery mode is configured
 
 This driver might not work on other laptops produced by MSI. Also, and until future enhancements, no DMI data are used to identify your compatibility.
+
+List of tested laptops:
+
+- MSI GF75 Thin 9SC (17F2EMS1.106)
