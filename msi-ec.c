@@ -12,6 +12,8 @@
  *   shift_mode        CPU & GPU performance modes
  *   fw_version        Firmware version
  *   fw_release_date   Firmware release date
+ *   cpu/*             CPU related options
+ *   gpu/*             GPU related options
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -677,7 +679,7 @@ static void __exit msi_ec_exit(void)
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.05");
+MODULE_VERSION("0.06");
 
 module_init(msi_ec_init);
 module_exit(msi_ec_exit);

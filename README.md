@@ -1,5 +1,23 @@
 # Embedded Controller for MSI laptops
 
+## Disclaimer
+
+This driver might not work on other laptops produced by MSI. Use it at your own risk, I am not responsible for any damage suffered.
+
+Also, and until future enhancements, no DMI data is used to identify your laptop model. Check the constants.h file before using.
+
+## Installation
+
+1. Install the following packages:
+- For Debian: `build-essential linux-headers-amd64`
+- For Ubuntu: `build-essential linux-headers-generic`
+2. Clone this repository and cd'ed
+3. Run `make`
+4. Run `make install`
+5. (Optional) To uninstall, run `make uninstall`
+
+## Usage
+
 This driver exports a few files in its own platform device, msi-ec, and is available to userspace under:
 
 - `/sys/devices/platform/msi-ec/webcam`
@@ -96,7 +114,6 @@ In addition to these platform device attributes the driver registers itself in t
     - 80: when medium battery mode is configured
     - 100: when max battery mode is configured
 
-This driver might not work on other laptops produced by MSI. Also, and until future enhancements, no DMI data are used to identify your compatibility.
 
 List of tested laptops:
 
