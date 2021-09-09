@@ -27,9 +27,9 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Description: This entry allows changing the battery mode for health purposes.
   - Access: Read, Write
   - Valid values:
-    - high: best for mobility. Charge the battery to 100% all the time
+    - max: best for mobility. Charge the battery to 100% all the time
     - medium: balanced. Charge the battery when under 70%, stop at 80%
-    - low: best for battery. Charge the battery when under 50%, stop at 60%
+    - min: best for battery. Charge the battery when under 50%, stop at 60%
 
 - `/sys/devices/platform/msi-ec/cooler_boost`
   - Description: This entry allows enabling the cooler boost function. It provides powerful cooling capability by boosting the airflow.
@@ -64,16 +64,16 @@ In addition to these platform device attributes the driver registers itself in t
   - Description: Represents a battery percentage level, below which charging will begin.
   - Access: Read, Write
   - Valid values: 0 - 100 (percent)
-    - 50: when low battery mode is configured
+    - 50: when min battery mode is configured
     - 70: when medium battery mode is configured
-    - 90: when high battery mode is configured
+    - 90: when max battery mode is configured
 
 - `/sys/class/power_supply/<supply_name>/charge_control_end_threshold`
   - Description: Represents a battery percentage level, above which charging will stop.
   - Access: Read, Write
   - Valid values: 0 - 100 (percent)
-    - 60: when low battery mode is configured
+    - 60: when min battery mode is configured
     - 80: when medium battery mode is configured
-    - 100: when high battery mode is configured
+    - 100: when max battery mode is configured
 
 This driver might not work on other laptops produced by MSI. Also, and until future enhancements, no DMI data are used to identify your compatibility.

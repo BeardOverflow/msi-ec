@@ -25,6 +25,8 @@
  *
  */
 
+#include "constants.h"
+
 #include <acpi/battery.h>
 #include <linux/acpi.h>
 #include <linux/init.h>
@@ -33,40 +35,6 @@
 #include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
-
-#define MSI_DRIVER_NAME "msi-ec"
-#define MSI_EC_WEBCAM_ADDRESS 0x2e
-#define MSI_EC_WEBCAM_ON 0x4a
-#define MSI_EC_WEBCAM_OFF 0x48
-#define MSI_EC_FN_WIN_ADDRESS 0xbf
-#define MSI_EC_FN_KEY_LEFT 0x40
-#define MSI_EC_FN_KEY_RIGHT 0x50
-#define MSI_EC_WIN_KEY_LEFT 0x50
-#define MSI_EC_WIN_KEY_RIGHT 0x40
-#define MSI_EC_BATTERY_MODE_ADDRESS 0xef
-#define MSI_EC_BATTERY_MODE_HIGH_CAPACITY 0xe4
-#define MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY 0xd0
-#define MSI_EC_BATTERY_MODE_LOW_CAPACITY 0xbc
-#define MSI_EC_COOLER_BOOST_ADDRESS 0x98
-#define MSI_EC_COOLER_BOOST_ON 0x82
-#define MSI_EC_COOLER_BOOST_OFF 0x02
-#define MSI_EC_SHIFT_MODE_ADDRESS 0xf2
-#define MSI_EC_SHIFT_MODE_TURBO 0xc4
-#define MSI_EC_SHIFT_MODE_SPORT 0xc0
-#define MSI_EC_SHIFT_MODE_COMFORT 0xc1
-#define MSI_EC_SHIFT_MODE_ECO 0xc2
-#define MSI_EC_SHIFT_MODE_OFF 0x80
-#define MSI_EC_FW_VERSION_ADDRESS 0xa0
-#define MSI_EC_FW_VERSION_LENGTH 12
-#define MSI_EC_FW_DATE_ADDRESS 0xac
-#define MSI_EC_FW_DATE_LENGTH 8
-#define MSI_EC_FW_TIME_ADDRESS 0xb4
-#define MSI_EC_FW_TIME_LENGTH 8
-#define MSI_EC_CHARGE_CONTROL_ADDRESS 0xef
-#define MSI_EC_CHARGE_CONTROL_OFFSET_START 0x8a
-#define MSI_EC_CHARGE_CONTROL_OFFSET_END 0x80
-#define MSI_EC_CHARGE_CONTROL_RANGE_MIN 0x8a
-#define MSI_EC_CHARGE_CONTROL_RANGE_MAX 0xe4
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
 
@@ -319,12 +287,12 @@ static ssize_t battery_mode_show(struct device *device,
 		return result;
 
 	switch (rdata) {
-		case MSI_EC_BATTERY_MODE_HIGH_CAPACITY:
-			return sprintf(buf, "%s\n", "high");
-		case MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY:
+		case MSI_EC_BATTERY_MODE_MAX_CHARGE:
+			return sprintf(buf, "%s\n", "max");
+		case MSI_EC_BATTERY_MODE_MEDIUM_CHARGE:
 			return sprintf(buf, "%s\n", "medium");
-		case MSI_EC_BATTERY_MODE_LOW_CAPACITY:
-			return sprintf(buf, "%s\n", "low");
+		case MSI_EC_BATTERY_MODE_MIN_CHARGE:
+			return sprintf(buf, "%s\n", "min");
 		default:
 			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
@@ -337,14 +305,14 @@ static ssize_t battery_mode_store(struct device *dev,
 {
 	int result = -EINVAL;
 
-	if (streq(buf, "high"))
-		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_HIGH_CAPACITY);
+	if (streq(buf, "max"))
+		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_MAX_CHARGE);
 
 	if (streq(buf, "medium"))
-		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_MEDIUM_CAPACITY);
+		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_MEDIUM_CHARGE);
 
-	if (streq(buf, "low"))
-		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_LOW_CAPACITY);
+	if (streq(buf, "min"))
+		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS, MSI_EC_BATTERY_MODE_MIN_CHARGE);
 
 	if (result < 0)
 		return result;
