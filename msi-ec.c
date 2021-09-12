@@ -10,10 +10,11 @@
  *   battery_mode      Battery health options
  *   cooler_boost      Cooler boost function
  *   shift_mode        CPU & GPU performance modes
+ *   fan_mode          FAN performance modes
  *   fw_version        Firmware version
  *   fw_release_date   Firmware release date
- *   cpu/*             CPU related options
- *   gpu/*             GPU related options
+ *   cpu/..            CPU related options
+ *   gpu/..            GPU related options
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -416,6 +417,50 @@ static ssize_t shift_mode_store(struct device *dev,
 	return count;
 }
 
+static ssize_t fan_mode_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_FAN_MODE_ADDRESS, &rdata);
+	if (result < 0)
+		return result;
+
+	switch (rdata) {
+		case MSI_EC_FAN_MODE_AUTO:
+			return sprintf(buf, "%s\n", "auto");
+		case MSI_EC_FAN_MODE_BASIC:
+			return sprintf(buf, "%s\n", "basic");
+		case MSI_EC_FAN_MODE_ADVANCED:
+			return sprintf(buf, "%s\n", "advanced");
+		default:
+			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	}
+}
+
+static ssize_t fan_mode_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	int result = -EINVAL;
+
+	if (streq(buf, "auto"))
+		result = ec_write(MSI_EC_FAN_MODE_ADDRESS, MSI_EC_FAN_MODE_AUTO);
+
+	if (streq(buf, "basic"))
+		result = ec_write(MSI_EC_FAN_MODE_ADDRESS, MSI_EC_FAN_MODE_BASIC);
+
+	if (streq(buf, "advanced"))
+		result = ec_write(MSI_EC_FAN_MODE_ADDRESS, MSI_EC_FAN_MODE_ADVANCED);
+
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
 static ssize_t fw_version_show(struct device *device,
 				struct device_attribute *attr,
 				char *buf)
@@ -461,6 +506,7 @@ static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(battery_mode);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RW(shift_mode);
+static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
 
@@ -471,6 +517,7 @@ static struct attribute *msi_root_attrs[] = {
 	&dev_attr_battery_mode.attr,
 	&dev_attr_cooler_boost.attr,
 	&dev_attr_shift_mode.attr,
+	&dev_attr_fan_mode.attr,
 	&dev_attr_fw_version.attr,
 	&dev_attr_fw_release_date.attr,
 	NULL,

@@ -66,6 +66,14 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - eco: low clock frequency for the CPU & GPU, aka power saving mode
     - off: operating system decides
 
+- `/sys/devices/platform/msi-ec/fan_mode`
+  - Description: This entry allows switching the fan mode. It provides a set of profiles for adjusting the fan speed under specific criteria.
+  - Access: Read, Write
+  - Valid values:
+    - auto: fan speed adjusts automatically
+    - basic: fixed 1-level fan speed for CPU/GPU (percent)
+    - advanced: fixed 6-levels fan speed for CPU/GPU (percent)
+
 - `/sys/devices/platform/msi-ec/fw_version`
   - Description: This entry reports the firmware version of the motherboard.
   - Access: Read
