@@ -94,6 +94,11 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Access: Read
   - Valid values: 0 - 100 (percent)
 
+- `/sys/devices/platform/msi-ec/cpu/basic_fan_speed`
+  - Description: This entry allows changing the cpu fan speed.
+  - Access: Read, Write
+  - Valid values: 0 - 100 (percent)
+
 - `/sys/devices/platform/msi-ec/gpu/realtime_temperature`
   - Description: This entry reports the current gpu temperature.
   - Access: Read
@@ -122,7 +127,6 @@ In addition to these platform device attributes the driver registers itself in t
     - 80: when medium battery mode is configured
     - 100: when max battery mode is configured
 
-
-List of tested laptops:
+## List of tested laptops:
 
 - MSI GF75 Thin 9SC (17F2EMS1.106)

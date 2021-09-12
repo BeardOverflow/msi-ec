@@ -538,7 +538,7 @@ static ssize_t cpu_realtime_temperature_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_CPU_REALTIME_TEMPERATURE, &rdata);
+	result = ec_read(MSI_EC_CPU_REALTIME_TEMPERATURE_ADDRESS, &rdata);
 	if (result < 0)
 		return result;
 
@@ -552,11 +552,52 @@ static ssize_t cpu_realtime_fan_speed_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_CPU_REALTIME_FAN_SPEED, &rdata);
+	result = ec_read(MSI_EC_CPU_REALTIME_FAN_SPEED_ADDRESS, &rdata);
 	if (result < 0)
 		return result;
 
-	return sprintf(buf, "%i\n", rdata);
+	if (rdata < MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN || rdata > MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MAX)
+		return -EINVAL;
+
+	return sprintf(buf, "%i\n", 100 * (rdata - MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN)/(MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MAX - MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN));
+}
+
+static ssize_t cpu_basic_fan_speed_show(struct device *device,
+				struct device_attribute *attr,
+				char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(MSI_EC_CPU_BASIC_FAN_SPEED_ADDRESS, &rdata);
+	if (result < 0)
+		return result;
+
+	if (rdata < MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN || rdata > MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MAX)
+		return -EINVAL;
+
+	return sprintf(buf, "%i\n", 100 * (rdata - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN)/(MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MAX - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN));
+}
+
+static ssize_t cpu_basic_fan_speed_store(struct device *dev,
+				struct device_attribute *attr,
+				const char *buf, size_t count)
+{
+	u8 wdata;
+	int result;
+
+	result = kstrtou8(buf, 10, &wdata);
+	if (result < 0)
+		return result;
+
+	if (wdata > 100)
+		return -EINVAL;
+
+	result = ec_write(MSI_EC_CPU_BASIC_FAN_SPEED_ADDRESS, (wdata * (MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MAX - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN) + 100 * MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN) / 100);
+	if (result < 0)
+		return result;
+
+	return count;
 }
 
 static struct device_attribute dev_attr_cpu_realtime_temperature = {
@@ -575,9 +616,19 @@ static struct device_attribute dev_attr_cpu_realtime_fan_speed = {
 	.show = cpu_realtime_fan_speed_show,
 };
 
+static struct device_attribute dev_attr_cpu_basic_fan_speed = {
+	.attr = {
+		.name = "basic_fan_speed",
+		.mode = 0644,
+	},
+	.show = cpu_basic_fan_speed_show,
+	.store = cpu_basic_fan_speed_store,
+};
+
 static struct attribute *msi_cpu_attrs[] = {
 	&dev_attr_cpu_realtime_temperature.attr,
 	&dev_attr_cpu_realtime_fan_speed.attr,
+	&dev_attr_cpu_basic_fan_speed.attr,
 	NULL,
 };
 
@@ -597,7 +648,7 @@ static ssize_t gpu_realtime_temperature_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_GPU_REALTIME_TEMPERATURE, &rdata);
+	result = ec_read(MSI_EC_GPU_REALTIME_TEMPERATURE_ADDRESS, &rdata);
 	if (result < 0)
 		return result;
 
@@ -611,7 +662,7 @@ static ssize_t gpu_realtime_fan_speed_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_GPU_REALTIME_FAN_SPEED, &rdata);
+	result = ec_read(MSI_EC_GPU_REALTIME_FAN_SPEED_ADDRESS, &rdata);
 	if (result < 0)
 		return result;
 
@@ -726,7 +777,7 @@ static void __exit msi_ec_exit(void)
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.06");
+MODULE_VERSION("0.07");
 
 module_init(msi_ec_init);
 module_exit(msi_ec_exit);
