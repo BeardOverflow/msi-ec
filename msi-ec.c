@@ -22,6 +22,9 @@
  *
  *   charge_control_start_threshold
  *   charge_control_end_threshold
+ * 
+ * This driver also registers available led class devices for
+ * mute, micmute and keyboard_backlight leds
  *
  * This driver might not work on other laptops produced by MSI. Also, and until
  * future enhancements, no DMI data are used to identify your compatibility
@@ -731,6 +734,71 @@ static struct platform_driver msi_platform_driver = {
 };
 
 // ============================================================ //
+// Sysfs leds subsystem
+// ============================================================ //
+
+static int micmute_led_sysfs_set(struct led_classdev *led_cdev,
+								 enum led_brightness brightness)
+{
+	u8 state = brightness ? MSI_EC_LED_STATE_ON : MSI_EC_LED_STATE_OFF;
+	int result = ec_write(MSI_EC_LED_MICMUTE_ADDRESS, state);
+	if (result < 0)
+		return result;
+	return 0;
+}
+
+static int mute_led_sysfs_set(struct led_classdev *led_cdev,
+							  enum led_brightness brightness)
+{
+	u8 state = brightness ? MSI_EC_LED_STATE_ON : MSI_EC_LED_STATE_OFF;
+	int result = ec_write(MSI_EC_LED_MUTE_ADDRESS, state);
+	if (result < 0)
+		return result;
+	return 0;
+}
+
+static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
+{
+	u8 rdata;
+	int result = ec_read(MSI_EC_KBD_BL_ADDRESS, &rdata);
+	if (result < 0)
+		return 0;
+	return rdata & MSI_EC_KBD_BL_STATE_MASK;
+}
+
+static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
+							enum led_brightness brightness)
+{
+	u8 wdata;
+	if (brightness < 0 || brightness > 3)
+		return -1;
+	wdata = MSI_EC_KBD_BL_STATE[brightness];
+	return ec_write(MSI_EC_KBD_BL_ADDRESS, wdata);
+}
+
+static struct led_classdev micmute_led_cdev = {
+	.name = "platform::micmute",
+	.max_brightness = 1,
+	.brightness_set_blocking = &micmute_led_sysfs_set,
+	.default_trigger = "audio-micmute",
+};
+
+static struct led_classdev mute_led_cdev = {
+	.name = "platform::mute",
+	.max_brightness = 1,
+	.brightness_set_blocking = &mute_led_sysfs_set,
+	.default_trigger = "audio-mute",
+};
+
+static struct led_classdev msiacpi_led_kbdlight = {
+	.name = "msiacpi::kbd_backlight",
+	.max_brightness = 3,
+	.flags = LED_BRIGHT_HW_CHANGED,
+	.brightness_set_blocking = &kbd_bl_sysfs_set,
+	.brightness_get = &kbd_bl_sysfs_get,
+};
+
+// ============================================================ //
 // Module load/unload
 // ============================================================ //
 
@@ -767,23 +835,33 @@ static int __init msi_ec_init(void)
 
 	battery_hook_register(&battery_hook);
 
+	led_classdev_register(&msi_platform_device->dev, &micmute_led_cdev);
+	led_classdev_register(&msi_platform_device->dev, &mute_led_cdev);
+	led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
+
 	pr_info("msi-ec: module_init\n");
 	return 0;
 }
 
 static void __exit msi_ec_exit(void)
 {
+	led_classdev_unregister(&mute_led_cdev);
+	led_classdev_unregister(&micmute_led_cdev);
+	led_classdev_unregister(&msiacpi_led_kbdlight);
+
+	battery_hook_unregister(&battery_hook);
+
 	platform_driver_unregister(&msi_platform_driver);
 	platform_device_del(msi_platform_device);
-	battery_hook_unregister(&battery_hook);
 
 	pr_info("msi-ec: module_exit\n");
 }
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
+MODULE_AUTHOR("Aakash Singh <mail@singhaakash.dev>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.07");
+MODULE_VERSION("0.08");
 
 module_init(msi_ec_init);
 module_exit(msi_ec_exit);
