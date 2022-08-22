@@ -1,0 +1,8 @@
+*.o
+*.cmd
+/msi-ec.ko
+/msi-ec.mod
+/msi-ec.mod.c
+/Module.symvers
+/modules.order
+.vscode
