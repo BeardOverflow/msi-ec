@@ -127,6 +127,25 @@ In addition to these platform device attributes the driver registers itself in t
     - 80: when medium battery mode is configured
     - 100: when max battery mode is configured
 
+Led subsystem allows us to control the leds on the laptop including the keyboard backlight
+
+- `/sys/class/leds/platform::<led_name>/brightness`
+  - Description: sets the current state of the led.
+  - Access: Read, Write
+  - Valid values: 0 - 1
+    - 0: Led off
+    - 1: Led on
+
+- `/sys/class/leds/msiacpi::kbd_backlight/brightness`
+  - Description: sets the current state of keyboard backlight.
+  - Access: Read, Write
+  - Valid values: 0 - 3
+    - 0: Off
+    - 1: On
+    - 2: Half
+    - 1: Full
+
+
 ## List of tested laptops:
 
 - MSI GF75 Thin 9SC (17F2EMS1.106)
