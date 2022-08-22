@@ -45,7 +45,8 @@ static int ec_read_seq(u8 addr, u8 *buf, int len)
 {
 	int result;
 	u8 i;
-	for (i = 0; i < len; i++) {
+	for (i = 0; i < len; i++)
+	{
 		result = ec_read(addr + i, buf + i);
 		if (result < 0)
 			return result;
@@ -58,9 +59,9 @@ static int ec_read_seq(u8 addr, u8 *buf, int len)
 // ============================================================ //
 
 static ssize_t charge_control_threshold_show(u8 offset,
-				struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+											 struct device *device,
+											 struct device_attribute *attr,
+											 char *buf)
 {
 	u8 rdata;
 	int result;
@@ -73,24 +74,23 @@ static ssize_t charge_control_threshold_show(u8 offset,
 }
 
 static ssize_t charge_control_start_threshold_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+												   struct device_attribute *attr,
+												   char *buf)
 {
 	return charge_control_threshold_show(MSI_EC_CHARGE_CONTROL_OFFSET_START, device, attr, buf);
 }
 
-
 static ssize_t charge_control_end_threshold_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+												 struct device_attribute *attr,
+												 char *buf)
 {
 	return charge_control_threshold_show(MSI_EC_CHARGE_CONTROL_OFFSET_END, device, attr, buf);
 }
 
 static ssize_t charge_control_threshold_store(u8 offset,
-				struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+											  struct device *dev,
+											  struct device_attribute *attr,
+											  const char *buf, size_t count)
 {
 	u8 wdata;
 	int result;
@@ -111,15 +111,15 @@ static ssize_t charge_control_threshold_store(u8 offset,
 }
 
 static ssize_t charge_control_start_threshold_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+													struct device_attribute *attr,
+													const char *buf, size_t count)
 {
 	return charge_control_threshold_store(MSI_EC_CHARGE_CONTROL_OFFSET_START, dev, attr, buf, count);
 }
 
 static ssize_t charge_control_end_threshold_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+												  struct device_attribute *attr,
+												  const char *buf, size_t count)
 {
 	return charge_control_threshold_store(MSI_EC_CHARGE_CONTROL_OFFSET_END, dev, attr, buf, count);
 }
@@ -159,8 +159,8 @@ static struct acpi_battery_hook battery_hook = {
 // ============================================================ //
 
 static ssize_t webcam_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+						   struct device_attribute *attr,
+						   char *buf)
 {
 	u8 rdata;
 	int result;
@@ -169,20 +169,20 @@ static ssize_t webcam_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_WEBCAM_ON:
-			return sprintf(buf, "%s\n", "on");
-		case MSI_EC_WEBCAM_OFF:
-			return sprintf(buf, "%s\n", "off");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_WEBCAM_ON:
+		return sprintf(buf, "%s\n", "on");
+	case MSI_EC_WEBCAM_OFF:
+		return sprintf(buf, "%s\n", "off");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
-
 static ssize_t webcam_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+							struct device_attribute *attr,
+							const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -199,8 +199,8 @@ static ssize_t webcam_store(struct device *dev,
 }
 
 static ssize_t fn_key_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+						   struct device_attribute *attr,
+						   char *buf)
 {
 	u8 rdata;
 	int result;
@@ -209,20 +209,20 @@ static ssize_t fn_key_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_FN_KEY_LEFT:
-			return sprintf(buf, "%s\n", "left");
-		case MSI_EC_FN_KEY_RIGHT:
-			return sprintf(buf, "%s\n", "right");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_FN_KEY_LEFT:
+		return sprintf(buf, "%s\n", "left");
+	case MSI_EC_FN_KEY_RIGHT:
+		return sprintf(buf, "%s\n", "right");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
-
 static ssize_t fn_key_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+							struct device_attribute *attr,
+							const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -239,8 +239,8 @@ static ssize_t fn_key_store(struct device *dev,
 }
 
 static ssize_t win_key_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+							struct device_attribute *attr,
+							char *buf)
 {
 	u8 rdata;
 	int result;
@@ -249,20 +249,20 @@ static ssize_t win_key_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_WIN_KEY_LEFT:
-			return sprintf(buf, "%s\n", "left");
-		case MSI_EC_WIN_KEY_RIGHT:
-			return sprintf(buf, "%s\n", "right");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_WIN_KEY_LEFT:
+		return sprintf(buf, "%s\n", "left");
+	case MSI_EC_WIN_KEY_RIGHT:
+		return sprintf(buf, "%s\n", "right");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
-
 static ssize_t win_key_store(struct device *dev,
-			struct device_attribute *attr,
-			const char *buf, size_t count)
+							 struct device_attribute *attr,
+							 const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -279,8 +279,8 @@ static ssize_t win_key_store(struct device *dev,
 }
 
 static ssize_t battery_mode_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+								 struct device_attribute *attr,
+								 char *buf)
 {
 	u8 rdata;
 	int result;
@@ -289,22 +289,22 @@ static ssize_t battery_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_BATTERY_MODE_MAX_CHARGE:
-			return sprintf(buf, "%s\n", "max");
-		case MSI_EC_BATTERY_MODE_MEDIUM_CHARGE:
-			return sprintf(buf, "%s\n", "medium");
-		case MSI_EC_BATTERY_MODE_MIN_CHARGE:
-			return sprintf(buf, "%s\n", "min");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_BATTERY_MODE_MAX_CHARGE:
+		return sprintf(buf, "%s\n", "max");
+	case MSI_EC_BATTERY_MODE_MEDIUM_CHARGE:
+		return sprintf(buf, "%s\n", "medium");
+	case MSI_EC_BATTERY_MODE_MIN_CHARGE:
+		return sprintf(buf, "%s\n", "min");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
-
 static ssize_t battery_mode_store(struct device *dev,
-			struct device_attribute *attr,
-			const char *buf, size_t count)
+								  struct device_attribute *attr,
+								  const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -324,8 +324,8 @@ static ssize_t battery_mode_store(struct device *dev,
 }
 
 static ssize_t cooler_boost_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+								 struct device_attribute *attr,
+								 char *buf)
 {
 	u8 rdata;
 	int result;
@@ -334,19 +334,20 @@ static ssize_t cooler_boost_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_COOLER_BOOST_ON:
-			return sprintf(buf, "%s\n", "on");
-		case MSI_EC_COOLER_BOOST_OFF:
-			return sprintf(buf, "%s\n", "off");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_COOLER_BOOST_ON:
+		return sprintf(buf, "%s\n", "on");
+	case MSI_EC_COOLER_BOOST_OFF:
+		return sprintf(buf, "%s\n", "off");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
 static ssize_t cooler_boost_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+								  struct device_attribute *attr,
+								  const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -363,8 +364,8 @@ static ssize_t cooler_boost_store(struct device *dev,
 }
 
 static ssize_t shift_mode_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+							   struct device_attribute *attr,
+							   char *buf)
 {
 	u8 rdata;
 	int result;
@@ -373,26 +374,26 @@ static ssize_t shift_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_SHIFT_MODE_TURBO:
-			return sprintf(buf, "%s\n", "turbo");
-		case MSI_EC_SHIFT_MODE_SPORT:
-			return sprintf(buf, "%s\n", "sport");
-		case MSI_EC_SHIFT_MODE_COMFORT:
-			return sprintf(buf, "%s\n", "comfort");
-		case MSI_EC_SHIFT_MODE_ECO:
-			return sprintf(buf, "%s\n", "eco");
-		case MSI_EC_SHIFT_MODE_OFF:
-			return sprintf(buf, "%s\n", "off");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_SHIFT_MODE_TURBO:
+		return sprintf(buf, "%s\n", "turbo");
+	case MSI_EC_SHIFT_MODE_SPORT:
+		return sprintf(buf, "%s\n", "sport");
+	case MSI_EC_SHIFT_MODE_COMFORT:
+		return sprintf(buf, "%s\n", "comfort");
+	case MSI_EC_SHIFT_MODE_ECO:
+		return sprintf(buf, "%s\n", "eco");
+	case MSI_EC_SHIFT_MODE_OFF:
+		return sprintf(buf, "%s\n", "off");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
-
 static ssize_t shift_mode_store(struct device *dev,
-			struct device_attribute *attr,
-			const char *buf, size_t count)
+								struct device_attribute *attr,
+								const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -418,8 +419,8 @@ static ssize_t shift_mode_store(struct device *dev,
 }
 
 static ssize_t fan_mode_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+							 struct device_attribute *attr,
+							 char *buf)
 {
 	u8 rdata;
 	int result;
@@ -428,21 +429,22 @@ static ssize_t fan_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-		case MSI_EC_FAN_MODE_AUTO:
-			return sprintf(buf, "%s\n", "auto");
-		case MSI_EC_FAN_MODE_BASIC:
-			return sprintf(buf, "%s\n", "basic");
-		case MSI_EC_FAN_MODE_ADVANCED:
-			return sprintf(buf, "%s\n", "advanced");
-		default:
-			return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	switch (rdata)
+	{
+	case MSI_EC_FAN_MODE_AUTO:
+		return sprintf(buf, "%s\n", "auto");
+	case MSI_EC_FAN_MODE_BASIC:
+		return sprintf(buf, "%s\n", "basic");
+	case MSI_EC_FAN_MODE_ADVANCED:
+		return sprintf(buf, "%s\n", "advanced");
+	default:
+		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
 static ssize_t fan_mode_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+							  struct device_attribute *attr,
+							  const char *buf, size_t count)
 {
 	int result = -EINVAL;
 
@@ -462,8 +464,8 @@ static ssize_t fan_mode_store(struct device *dev,
 }
 
 static ssize_t fw_version_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+							   struct device_attribute *attr,
+							   char *buf)
 {
 	u8 rdata[MSI_EC_FW_VERSION_LENGTH + 1];
 	int result;
@@ -477,8 +479,8 @@ static ssize_t fw_version_show(struct device *device,
 }
 
 static ssize_t fw_release_date_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+									struct device_attribute *attr,
+									char *buf)
 {
 	u8 rdate[MSI_EC_FW_DATE_LENGTH + 1];
 	u8 rtime[MSI_EC_FW_TIME_LENGTH + 1];
@@ -532,8 +534,8 @@ static const struct attribute_group msi_root_group = {
 // ============================================================ //
 
 static ssize_t cpu_realtime_temperature_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+											 struct device_attribute *attr,
+											 char *buf)
 {
 	u8 rdata;
 	int result;
@@ -546,8 +548,8 @@ static ssize_t cpu_realtime_temperature_show(struct device *device,
 }
 
 static ssize_t cpu_realtime_fan_speed_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+										   struct device_attribute *attr,
+										   char *buf)
 {
 	u8 rdata;
 	int result;
@@ -559,12 +561,12 @@ static ssize_t cpu_realtime_fan_speed_show(struct device *device,
 	if (rdata < MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN || rdata > MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MAX)
 		return -EINVAL;
 
-	return sprintf(buf, "%i\n", 100 * (rdata - MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN)/(MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MAX - MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN));
+	return sprintf(buf, "%i\n", 100 * (rdata - MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN) / (MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MAX - MSI_EC_CPU_REALTIME_FAN_SPEED_BASE_MIN));
 }
 
 static ssize_t cpu_basic_fan_speed_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+										struct device_attribute *attr,
+										char *buf)
 {
 	u8 rdata;
 	int result;
@@ -576,12 +578,12 @@ static ssize_t cpu_basic_fan_speed_show(struct device *device,
 	if (rdata < MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN || rdata > MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MAX)
 		return -EINVAL;
 
-	return sprintf(buf, "%i\n", 100 * (rdata - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN)/(MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MAX - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN));
+	return sprintf(buf, "%i\n", 100 * (rdata - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN) / (MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MAX - MSI_EC_CPU_BASIC_FAN_SPEED_BASE_MIN));
 }
 
 static ssize_t cpu_basic_fan_speed_store(struct device *dev,
-				struct device_attribute *attr,
-				const char *buf, size_t count)
+										 struct device_attribute *attr,
+										 const char *buf, size_t count)
 {
 	u8 wdata;
 	int result;
@@ -642,8 +644,8 @@ static const struct attribute_group msi_cpu_group = {
 // ============================================================ //
 
 static ssize_t gpu_realtime_temperature_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+											 struct device_attribute *attr,
+											 char *buf)
 {
 	u8 rdata;
 	int result;
@@ -656,8 +658,8 @@ static ssize_t gpu_realtime_temperature_show(struct device *device,
 }
 
 static ssize_t gpu_realtime_fan_speed_show(struct device *device,
-				struct device_attribute *attr,
-				char *buf)
+										   struct device_attribute *attr,
+										   char *buf)
 {
 	u8 rdata;
 	int result;
@@ -724,8 +726,8 @@ static struct platform_driver msi_platform_driver = {
 	.driver = {
 		.name = MSI_DRIVER_NAME,
 	},
-	.probe	= msi_platform_probe,
-	.remove	= msi_platform_remove,
+	.probe = msi_platform_probe,
+	.remove = msi_platform_remove,
 };
 
 // ============================================================ //
@@ -736,24 +738,28 @@ static int __init msi_ec_init(void)
 {
 	int result;
 
-	if (acpi_disabled) {
+	if (acpi_disabled)
+	{
 		pr_err("Unable to init because ACPI needs to be enabled first!\n");
 		return -ENODEV;
 	}
 
 	result = platform_driver_register(&msi_platform_driver);
-	if (result < 0) {
+	if (result < 0)
+	{
 		return result;
 	}
 
 	msi_platform_device = platform_device_alloc(MSI_DRIVER_NAME, -1);
-	if (msi_platform_device == NULL) {
+	if (msi_platform_device == NULL)
+	{
 		platform_driver_unregister(&msi_platform_driver);
 		return -ENOMEM;
 	}
 
 	result = platform_device_add(msi_platform_device);
-	if (result < 0) {
+	if (result < 0)
+	{
 		platform_device_del(msi_platform_device);
 		platform_driver_unregister(&msi_platform_driver);
 		return result;
