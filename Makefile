@@ -1,32 +1,16 @@
 VERSION         := 0.08
-TARGET          := $(shell uname -r)
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 
 obj-m += msi-ec.o
 
 
-KERNEL_MODULES	:= /lib/modules/$(TARGET)
-
-ifneq ("","$(wildcard /usr/src/linux-headers-$(TARGET)/*)")
-# Ubuntu
-KERNEL_BUILD	:= /usr/src/linux-headers-$(TARGET)
-else
-ifneq ("","$(wildcard /usr/src/kernels/$(TARGET)/*)")
-# Fedora
-KERNEL_BUILD	:= /usr/src/kernels/$(TARGET)
-else
-KERNEL_BUILD	:= $(KERNEL_MODULES)/build
-endif
-endif
-
-
 all: modules
 
 modules:
-	@$(MAKE) -C $(KERNEL_BUILD) M=$(CURDIR) modules
+	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
 
 clean:
-	@$(MAKE) -C $(KERNEL_BUILD) M=$(CURDIR) clean
+	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) clean
 
 load:
 	insmod msi-ec.ko
@@ -63,7 +47,6 @@ dkms-install:
 	dkms build msi_ec/$(VERSION)
 	dkms install msi_ec/$(VERSION)
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
-
 
 dkms-uninstall:
 	dkms remove msi_ec/$(VERSION) --all
