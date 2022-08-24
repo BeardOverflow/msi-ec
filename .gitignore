@@ -1,4 +1,5 @@
 *.o
+*.o.d
 *.cmd
 /msi-ec.ko
 /msi-ec.mod
