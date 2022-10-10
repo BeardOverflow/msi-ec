@@ -143,7 +143,7 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
     - 0: Off
     - 1: On
     - 2: Half
-    - 1: Full
+    - 3: Full
 
 
 ## List of tested laptops:
