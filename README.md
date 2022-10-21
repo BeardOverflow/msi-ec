@@ -8,6 +8,7 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 
 ## Installation
 
+### From GitHub
 1. Install the following packages:
 - For Debian: `build-essential linux-headers-amd64`
 - For Ubuntu: `build-essential linux-headers-generic`
@@ -15,6 +16,10 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 3. Run `make`
 4. Run `make install`
 5. (Optional) To uninstall, run `make uninstall`
+
+### From AUR (Arch Linux)
+1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
+2. Run `yay -S msi-ec-git`
 
 ## Usage
 
