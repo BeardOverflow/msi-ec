@@ -12,6 +12,8 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 1. Install the following packages:
 - For Debian: `build-essential linux-headers-amd64`
 - For Ubuntu: `build-essential linux-headers-generic`
+- For Fedora: `kernel-devel`
+
 2. Clone this repository and cd'ed
 3. Run `make`
 4. Run `make install`
