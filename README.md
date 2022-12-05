@@ -1,4 +1,4 @@
-# Embedded Controller for MSI laptops
+# Embedded Controller for MSI laptops(fedora signing secure boot supported.)
 
 ## Disclaimer
 
@@ -10,18 +10,15 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 
 ### From GitHub
 1. Install the following packages:
-- For Debian: `build-essential linux-headers-amd64`
-- For Ubuntu: `build-essential linux-headers-generic`
 - For Fedora: `kernel-devel`
 
 2. Clone this repository and cd'ed
 3. Run `make`
-4. Run `make install`
-5. (Optional) To uninstall, run `make uninstall`
+4. Run `make regkeys`
+5. Reboot
+6. Run `make install`
+7. (Optional) To uninstall, run `make uninstall`
 
-### From AUR (Arch Linux)
-1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
-2. Run `yay -S msi-ec-git`
 
 ## Usage
 
@@ -156,3 +153,4 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
 ## List of tested laptops:
 
 - MSI GF75 Thin 9SC (17F2EMS1.106)
+

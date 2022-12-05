@@ -9,6 +9,40 @@ all: modules
 modules:
 	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
 
+regkeys:
+	cat << EOF > x509-configuration.ini
+	[ req ]
+	default_bits = 4096
+	distinguished_name = req_distinguished_name
+	prompt = no
+	string_mask = utf8only
+	x509_extensions = myexts
+
+	[ req_distinguished_name ]
+	O = msiec
+	CN = msiec
+	emailAddress = emailAddress
+
+	[ myexts ]
+	basicConstraints=critical,CA:FALSE
+	keyUsage=digitalSignature
+	subjectKeyIdentifier=hash
+	authorityKeyIdentifier=keyid
+	EOF
+
+	openssl req -x509 -new -nodes -utf8 -sha256 -days 36500 -batch -config x509-configuration.ini -outform DER -out public_key.der -keyout private_key.priv
+	echo "The command prompts you to enter and confirm a password for the MOK enrollment request. You can use any password for this purpose(once only)"
+	echo "1.Enroll key 2.Continue 3.password 4.continue to boot."
+	mokutil --import public_key.der
+signkeys:
+	mkdir -p /lib/modules/$(shell uname -r)/extra
+	cp msi-ec.ko /lib/modules/$(shell uname -r)/extra
+	depmod -a
+	echo msi-ec > /etc/modules-load.d/msi-ec.conf
+	sudo /usr/src/kernels/$(uname -r)/scripts/sign-file sha256 ~/private_key.priv  ~/public_key.der msi-ec.ko
+
+	
+
 clean:
 	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) clean
 
@@ -23,6 +57,7 @@ install:
 	cp msi-ec.ko /lib/modules/$(shell uname -r)/extra
 	depmod -a
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
+	perl /usr/src/kernels/$(uname -r)/scripts/sign-file sha256 ~/private_key.priv  ~/public_key.der msi-ec.ko
 	modprobe -v msi-ec
 
 uninstall:
