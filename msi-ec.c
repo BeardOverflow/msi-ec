@@ -67,7 +67,7 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_CHARGE_CONTROL_ADDRESS, &rdata);
+	result = ec_read(conf->charge_control.address, &rdata);
 	if (result < 0)
 		return result;
 
@@ -78,7 +78,7 @@ static ssize_t
 charge_control_start_threshold_show(struct device *device,
 				    struct device_attribute *attr, char *buf)
 {
-	return charge_control_threshold_show(MSI_EC_CHARGE_CONTROL_OFFSET_START,
+	return charge_control_threshold_show(conf->charge_control.offset_start,
 					     device, attr, buf);
 }
 
@@ -86,7 +86,7 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
 						 struct device_attribute *attr,
 						 char *buf)
 {
-	return charge_control_threshold_show(MSI_EC_CHARGE_CONTROL_OFFSET_END,
+	return charge_control_threshold_show(conf->charge_control.offset_end,
 					     device, attr, buf);
 }
 
@@ -102,11 +102,11 @@ static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
 		return result;
 
 	wdata += offset;
-	if (wdata < MSI_EC_CHARGE_CONTROL_RANGE_MIN ||
-	    wdata > MSI_EC_CHARGE_CONTROL_RANGE_MAX)
+	if (wdata < conf->charge_control.range_min ||
+	    wdata > conf->charge_control.range_max)
 		return -EINVAL;
 
-	result = ec_write(MSI_EC_CHARGE_CONTROL_ADDRESS, wdata);
+	result = ec_write(conf->charge_control.address, wdata);
 	if (result < 0)
 		return result;
 
@@ -119,14 +119,14 @@ charge_control_start_threshold_store(struct device *dev,
 				     const char *buf, size_t count)
 {
 	return charge_control_threshold_store(
-		MSI_EC_CHARGE_CONTROL_OFFSET_START, dev, attr, buf, count);
+		conf->charge_control.offset_start, dev, attr, buf, count);
 }
 
 static ssize_t charge_control_end_threshold_store(struct device *dev,
 						  struct device_attribute *attr,
 						  const char *buf, size_t count)
 {
-	return charge_control_threshold_store(MSI_EC_CHARGE_CONTROL_OFFSET_END,
+	return charge_control_threshold_store(conf->charge_control.offset_end,
 					      dev, attr, buf, count);
 }
 
@@ -170,18 +170,26 @@ static ssize_t webcam_show(struct device *device, struct device_attribute *attr,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_WEBCAM_ADDRESS, &rdata);
+	result = ec_read(conf->webcam.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_WEBCAM_ON:
+	if (rdata == conf->webcam.on_value) {
 		return sprintf(buf, "%s\n", "on");
-	case MSI_EC_WEBCAM_OFF:
+	} else if (rdata == conf->webcam.off_value) {
 		return sprintf(buf, "%s\n", "off");
-	default:
+	} else {
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
+
+//	switch (rdata) {
+//	case conf->webcam.on_value:
+//		return sprintf(buf, "%s\n", "on");
+//	case conf->webcam.off_value:
+//		return sprintf(buf, "%s\n", "off");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t webcam_store(struct device *dev, struct device_attribute *attr,
@@ -190,10 +198,10 @@ static ssize_t webcam_store(struct device *dev, struct device_attribute *attr,
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
-		result = ec_write(MSI_EC_WEBCAM_ADDRESS, MSI_EC_WEBCAM_ON);
+		result = ec_write(conf->webcam.address, conf->webcam.on_value);
 
 	if (streq(buf, "off"))
-		result = ec_write(MSI_EC_WEBCAM_ADDRESS, MSI_EC_WEBCAM_OFF);
+		result = ec_write(conf->webcam.address, conf->webcam.off_value);
 
 	if (result < 0)
 		return result;
@@ -207,18 +215,26 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_FN_WIN_ADDRESS, &rdata);
+	result = ec_read(conf->fn_win_swap.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_FN_KEY_LEFT:
+	if (rdata == conf->fn_win_swap.fn_left_value) {
 		return sprintf(buf, "%s\n", "left");
-	case MSI_EC_FN_KEY_RIGHT:
+	} else if (rdata == conf->fn_win_swap.fn_right_value) {
 		return sprintf(buf, "%s\n", "right");
-	default:
+	} else {
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
+
+//	switch (rdata) {
+//	case conf->fn_win_swap.fn_left_value:
+//		return sprintf(buf, "%s\n", "left");
+//	case conf->fn_win_swap.fn_right_value:
+//		return sprintf(buf, "%s\n", "right");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
@@ -227,10 +243,10 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 	int result = -EINVAL;
 
 	if (streq(buf, "left"))
-		result = ec_write(MSI_EC_FN_WIN_ADDRESS, MSI_EC_FN_KEY_LEFT);
+		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_left_value);
 
 	if (streq(buf, "right"))
-		result = ec_write(MSI_EC_FN_WIN_ADDRESS, MSI_EC_FN_KEY_RIGHT);
+		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_right_value);
 
 	if (result < 0)
 		return result;
@@ -244,18 +260,26 @@ static ssize_t win_key_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_FN_WIN_ADDRESS, &rdata);
+	result = ec_read(conf->fn_win_swap.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_WIN_KEY_LEFT:
+	if (rdata == conf->fn_win_swap.fn_right_value) {
 		return sprintf(buf, "%s\n", "left");
-	case MSI_EC_WIN_KEY_RIGHT:
+	} else if (rdata == conf->fn_win_swap.fn_left_value) {
 		return sprintf(buf, "%s\n", "right");
-	default:
+	} else {
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
+
+//	switch (rdata) {
+//	case conf->fn_win_swap.fn_right_value:
+//		return sprintf(buf, "%s\n", "left");
+//	case conf->fn_win_swap.fn_left_value:
+//		return sprintf(buf, "%s\n", "right");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
@@ -264,10 +288,10 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 	int result = -EINVAL;
 
 	if (streq(buf, "left"))
-		result = ec_write(MSI_EC_FN_WIN_ADDRESS, MSI_EC_WIN_KEY_LEFT);
+		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_right_value);
 
 	if (streq(buf, "right"))
-		result = ec_write(MSI_EC_FN_WIN_ADDRESS, MSI_EC_WIN_KEY_RIGHT);
+		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_left_value);
 
 	if (result < 0)
 		return result;
@@ -281,20 +305,30 @@ static ssize_t battery_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_BATTERY_MODE_ADDRESS, &rdata);
+	result = ec_read(conf->battery_mode.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_BATTERY_MODE_MAX_CHARGE:
+	if (rdata == conf->battery_mode.modes[2]) {
 		return sprintf(buf, "%s\n", "max");
-	case MSI_EC_BATTERY_MODE_MEDIUM_CHARGE:
+	} else if (rdata == conf->battery_mode.modes[1]) {
 		return sprintf(buf, "%s\n", "medium");
-	case MSI_EC_BATTERY_MODE_MIN_CHARGE:
+	} else if (rdata == conf->battery_mode.modes[0]) {
 		return sprintf(buf, "%s\n", "min");
-	default:
+	} else {
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
+
+//	switch (rdata) {
+//	case conf->battery_mode.modes[2]:
+//		return sprintf(buf, "%s\n", "max");
+//	case conf->battery_mode.modes[1]:
+//		return sprintf(buf, "%s\n", "medium");
+//	case conf->battery_mode.modes[0]:
+//		return sprintf(buf, "%s\n", "min");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t battery_mode_store(struct device *dev,
@@ -304,16 +338,16 @@ static ssize_t battery_mode_store(struct device *dev,
 	int result = -EINVAL;
 
 	if (streq(buf, "max"))
-		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS,
-				  MSI_EC_BATTERY_MODE_MAX_CHARGE);
+		result = ec_write(conf->battery_mode.address,
+				  conf->battery_mode.modes[2]);
 
-	if (streq(buf, "medium"))
-		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS,
-				  MSI_EC_BATTERY_MODE_MEDIUM_CHARGE);
+	else if (streq(buf, "medium"))
+		result = ec_write(conf->battery_mode.address,
+				  conf->battery_mode.modes[1]);
 
-	if (streq(buf, "min"))
-		result = ec_write(MSI_EC_BATTERY_MODE_ADDRESS,
-				  MSI_EC_BATTERY_MODE_MIN_CHARGE);
+	else if (streq(buf, "min"))
+		result = ec_write(conf->battery_mode.address,
+				  conf->battery_mode.modes[0]);
 
 	if (result < 0)
 		return result;
@@ -327,18 +361,26 @@ static ssize_t cooler_boost_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_COOLER_BOOST_ADDRESS, &rdata);
+	result = ec_read(conf->cooler_boost.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_COOLER_BOOST_ON:
+	if (rdata == conf->cooler_boost.on_value) {
 		return sprintf(buf, "%s\n", "on");
-	case MSI_EC_COOLER_BOOST_OFF:
+	} else if (rdata == conf->cooler_boost.off_value) {
 		return sprintf(buf, "%s\n", "off");
-	default:
-		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 	}
+
+	return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+
+//	switch (rdata) {
+//	case conf->cooler_boost.on_value:
+//		return sprintf(buf, "%s\n", "on");
+//	case conf->cooler_boost.off_value:
+//		return sprintf(buf, "%s\n", "off");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t cooler_boost_store(struct device *dev,
@@ -348,12 +390,12 @@ static ssize_t cooler_boost_store(struct device *dev,
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
-		result = ec_write(MSI_EC_COOLER_BOOST_ADDRESS,
-				  MSI_EC_COOLER_BOOST_ON);
+		result = ec_write(conf->cooler_boost.address,
+				  conf->cooler_boost.on_value);
 
-	if (streq(buf, "off"))
-		result = ec_write(MSI_EC_COOLER_BOOST_ADDRESS,
-				  MSI_EC_COOLER_BOOST_OFF);
+	else if (streq(buf, "off"))
+		result = ec_write(conf->cooler_boost.address,
+				  conf->cooler_boost.off_value);
 
 	if (result < 0)
 		return result;
@@ -367,51 +409,77 @@ static ssize_t shift_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_SHIFT_MODE_ADDRESS, &rdata);
+	result = ec_read(conf->shift_mode.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_SHIFT_MODE_TURBO:
-		return sprintf(buf, "%s\n", "turbo");
-	case MSI_EC_SHIFT_MODE_SPORT:
-		return sprintf(buf, "%s\n", "sport");
-	case MSI_EC_SHIFT_MODE_COMFORT:
-		return sprintf(buf, "%s\n", "comfort");
-	case MSI_EC_SHIFT_MODE_ECO:
-		return sprintf(buf, "%s\n", "eco");
-	case MSI_EC_SHIFT_MODE_OFF:
-		return sprintf(buf, "%s\n", "off");
-	default:
+	if (rdata == conf->shift_mode.off_value)
+		return sprintf(buf, "-1\n");
+
+	unsigned int mode = rdata - conf->shift_mode.base_value;
+	if (mode > conf->shift_mode.max_mode)
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
-	}
+
+	return sprintf(buf, "%i", mode);
+
+//	switch (rdata) {
+//	case MSI_EC_SHIFT_MODE_TURBO:
+//		return sprintf(buf, "%s\n", "turbo");
+//	case MSI_EC_SHIFT_MODE_SPORT:
+//		return sprintf(buf, "%s\n", "sport");
+//	case MSI_EC_SHIFT_MODE_COMFORT:
+//		return sprintf(buf, "%s\n", "comfort");
+//	case MSI_EC_SHIFT_MODE_ECO:
+//		return sprintf(buf, "%s\n", "eco");
+//	case MSI_EC_SHIFT_MODE_OFF:
+//		return sprintf(buf, "%s\n", "off");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t shift_mode_store(struct device *dev,
 				struct device_attribute *attr, const char *buf,
 				size_t count)
 {
-	int result = -EINVAL;
+	int wdata;
+	int result;
+//	int result = -EINVAL;
 
-	if (streq(buf, "turbo"))
-		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS,
-				  MSI_EC_SHIFT_MODE_TURBO);
+	result = kstrtoint(buf, 10, &wdata);
+	if (result < 0)
+		return result;
 
-	if (streq(buf, "sport"))
-		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS,
-				  MSI_EC_SHIFT_MODE_SPORT);
+	if (wdata == -1) { // off
+		result = ec_write(conf->shift_mode.address,
+				  conf->shift_mode.off_value);
+	} else { // on (or invalid)
+		if ((unsigned int)wdata > conf->shift_mode.max_mode)
+			return -EINVAL;
 
-	if (streq(buf, "comfort"))
-		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS,
-				  MSI_EC_SHIFT_MODE_COMFORT);
+		result = ec_write(conf->shift_mode.address,
+				  wdata + conf->shift_mode.base_value);
+	}
 
-	if (streq(buf, "eco"))
-		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS,
-				  MSI_EC_SHIFT_MODE_ECO);
-
-	if (streq(buf, "off"))
-		result = ec_write(MSI_EC_SHIFT_MODE_ADDRESS,
-				  MSI_EC_SHIFT_MODE_OFF);
+//	if (streq(buf, "turbo"))
+//		result = ec_write(conf->shift_mode.address,
+//				  MSI_EC_SHIFT_MODE_TURBO);
+//
+//	else if (streq(buf, "sport"))
+//		result = ec_write(conf->shift_mode.address,
+//				  MSI_EC_SHIFT_MODE_SPORT);
+//
+//	else if (streq(buf, "comfort"))
+//		result = ec_write(conf->shift_mode.address,
+//				  MSI_EC_SHIFT_MODE_COMFORT);
+//
+//	else if (streq(buf, "eco"))
+//		result = ec_write(conf->shift_mode.address,
+//				  MSI_EC_SHIFT_MODE_ECO);
+//
+//	else if (streq(buf, "off"))
+//		result = ec_write(conf->shift_mode.address,
+//				  MSI_EC_SHIFT_MODE_OFF);
 
 	if (result < 0)
 		return result;
@@ -425,38 +493,59 @@ static ssize_t fan_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(MSI_EC_FAN_MODE_ADDRESS, &rdata);
+	result = ec_read(conf->fan_mode.address, &rdata);
 	if (result < 0)
 		return result;
 
-	switch (rdata) {
-	case MSI_EC_FAN_MODE_AUTO:
-		return sprintf(buf, "%s\n", "auto");
-	case MSI_EC_FAN_MODE_BASIC:
-		return sprintf(buf, "%s\n", "basic");
-	case MSI_EC_FAN_MODE_ADVANCED:
-		return sprintf(buf, "%s\n", "advanced");
-	default:
-		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	for (int i = 0; i <= conf->fan_mode.max_mode; i++) {
+		if (rdata == conf->fan_mode.mode_values[i]) {
+			return sprintf(buf, "%i\n", i);
+		}
 	}
+
+	return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+
+//	switch (rdata) {
+//	case MSI_EC_FAN_MODE_AUTO:
+//		return sprintf(buf, "%s\n", "auto");
+//	case MSI_EC_FAN_MODE_BASIC:
+//		return sprintf(buf, "%s\n", "basic");
+//	case MSI_EC_FAN_MODE_ADVANCED:
+//		return sprintf(buf, "%s\n", "advanced");
+//	default:
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 }
 
 static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 			      const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	u8 wdata;
+	int result;
+//	int result = -EINVAL;
 
-	if (streq(buf, "auto"))
-		result =
-			ec_write(MSI_EC_FAN_MODE_ADDRESS, MSI_EC_FAN_MODE_AUTO);
+	result = kstrtou8(buf, 10, &wdata);
+	if (result < 0)
+		return result;
 
-	if (streq(buf, "basic"))
-		result = ec_write(MSI_EC_FAN_MODE_ADDRESS,
-				  MSI_EC_FAN_MODE_BASIC);
+	if (wdata > conf->fan_mode.max_mode) {
+		result = -EINVAL;
+	} else {
+		result = ec_write(conf->fan_mode.address,
+				  conf->fan_mode.mode_values[wdata]);
+	}
 
-	if (streq(buf, "advanced"))
-		result = ec_write(MSI_EC_FAN_MODE_ADDRESS,
-				  MSI_EC_FAN_MODE_ADVANCED);
+//	if (streq(buf, "auto"))
+//		result =
+//			ec_write(MSI_EC_FAN_MODE_ADDRESS, MSI_EC_FAN_MODE_AUTO);
+//
+//	if (streq(buf, "basic"))
+//		result = ec_write(MSI_EC_FAN_MODE_ADDRESS,
+//				  MSI_EC_FAN_MODE_BASIC);
+//
+//	if (streq(buf, "advanced"))
+//		result = ec_write(MSI_EC_FAN_MODE_ADDRESS,
+//				  MSI_EC_FAN_MODE_ADVANCED);
 
 	if (result < 0)
 		return result;
@@ -471,7 +560,7 @@ static ssize_t fw_version_show(struct device *device,
 	int result;
 
 	memset(rdata, 0, MSI_EC_FW_VERSION_LENGTH + 1);
-	result = ec_read_seq(MSI_EC_FW_VERSION_ADDRESS, rdata,
+	result = ec_read_seq(conf->fw.version_address, rdata,
 			     MSI_EC_FW_VERSION_LENGTH);
 	if (result < 0)
 		return result;
@@ -488,14 +577,14 @@ static ssize_t fw_release_date_show(struct device *device,
 	int year, month, day, hour, minute, second;
 
 	memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
-	result = ec_read_seq(MSI_EC_FW_DATE_ADDRESS, rdate,
+	result = ec_read_seq(conf->fw.date_address, rdate,
 			     MSI_EC_FW_DATE_LENGTH);
 	if (result < 0)
 		return result;
 	sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
 
 	memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
-	result = ec_read_seq(MSI_EC_FW_TIME_ADDRESS, rtime,
+	result = ec_read_seq(conf->fw.time_address, rtime,
 			     MSI_EC_FW_TIME_LENGTH);
 	if (result < 0)
 		return result;
