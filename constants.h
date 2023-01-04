@@ -76,8 +76,7 @@ static int MSI_EC_KBD_BL_STATE[4] = {
 
 struct msi_ec_fn_win_swap_conf {
 	int address;
-	int fn_left_value;
-	int fn_right_value;
+	int bit;
 };
 
 struct msi_ec_battery_mode_conf {
@@ -191,7 +190,7 @@ struct msi_ec_conf {
 
 static struct msi_ec_conf CONFIGURATIONS[1] = {
 	{
-		.fn_win_swap    = { 0xbf, 0x40, 0x50 },
+		.fn_win_swap    = { 0xbf, 4 },
 		.battery_mode   = { 0xef, { 0xbc, 0xd0, 0xe4 } },
 		.power_status   = { 0x30, 1, 0 },
 		.charge         = { 0x42, 0x31 },

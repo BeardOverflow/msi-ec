@@ -219,13 +219,19 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 	if (result < 0)
 		return result;
 
-	if (rdata == conf->fn_win_swap.fn_left_value) {
-		return sprintf(buf, "%s\n", "left");
-	} else if (rdata == conf->fn_win_swap.fn_right_value) {
+	if (rdata & (1 << conf->fn_win_swap.bit)) {
 		return sprintf(buf, "%s\n", "right");
 	} else {
-		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+		return sprintf(buf, "%s\n", "left");
 	}
+
+//	if (rdata == conf->fn_win_swap.fn_left_value) {
+//		return sprintf(buf, "%s\n", "left");
+//	} else if (rdata == conf->fn_win_swap.fn_right_value) {
+//		return sprintf(buf, "%s\n", "right");
+//	} else {
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 
 //	switch (rdata) {
 //	case conf->fn_win_swap.fn_left_value:
@@ -240,13 +246,22 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	u8 rdata;
+	int result;
 
-	if (streq(buf, "left"))
-		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_left_value);
+	result = ec_read(conf->fn_win_swap.address, &rdata);
+	if (result < 0)
+		return result;
 
-	if (streq(buf, "right"))
-		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_right_value);
+	result = -EINVAL;
+
+	if (streq(buf, "right")) {
+		rdata |= 1 << conf->fn_win_swap.bit;
+		result = ec_write(conf->fn_win_swap.address, rdata);
+	} else if (streq(buf, "left")) {
+		rdata &= ~(1 << conf->fn_win_swap.bit);
+		result = ec_write(conf->fn_win_swap.address, rdata);
+	}
 
 	if (result < 0)
 		return result;
@@ -264,13 +279,19 @@ static ssize_t win_key_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	if (rdata == conf->fn_win_swap.fn_right_value) {
+	if (rdata & (1 << conf->fn_win_swap.bit)) {
 		return sprintf(buf, "%s\n", "left");
-	} else if (rdata == conf->fn_win_swap.fn_left_value) {
-		return sprintf(buf, "%s\n", "right");
 	} else {
-		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+		return sprintf(buf, "%s\n", "right");
 	}
+
+//	if (rdata == conf->fn_win_swap.fn_right_value) {
+//		return sprintf(buf, "%s\n", "left");
+//	} else if (rdata == conf->fn_win_swap.fn_left_value) {
+//		return sprintf(buf, "%s\n", "right");
+//	} else {
+//		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+//	}
 
 //	switch (rdata) {
 //	case conf->fn_win_swap.fn_right_value:
@@ -285,13 +306,22 @@ static ssize_t win_key_show(struct device *device,
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	u8 rdata;
+	int result;
 
-	if (streq(buf, "left"))
-		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_right_value);
+	result = ec_read(conf->fn_win_swap.address, &rdata);
+	if (result < 0)
+		return result;
 
-	if (streq(buf, "right"))
-		result = ec_write(conf->fn_win_swap.address, conf->fn_win_swap.fn_left_value);
+	result = -EINVAL;
+
+	if (streq(buf, "left")) {
+		rdata |= 1 << conf->fn_win_swap.bit;
+		result = ec_write(conf->fn_win_swap.address, rdata);
+	} else if (streq(buf, "right")) {
+		rdata &= ~(1 << conf->fn_win_swap.bit);
+		result = ec_write(conf->fn_win_swap.address, rdata);
+	}
 
 	if (result < 0)
 		return result;
