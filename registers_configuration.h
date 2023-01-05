@@ -11,7 +11,7 @@
 #define MSI_EC_CHARGING_STATUS_FULL          0x09
 #define MSI_EC_CHARGING_STATUS_FULL_NO_POWER 0x0D
 struct msi_ec_battery_info_conf {
-	int charge_percentage_address;
+	int capacity_address;
 	int charging_status_address;
 };
 
