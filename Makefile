@@ -18,6 +18,8 @@ load:
 unload:
 	-rmmod msi-ec
 
+reload: unload load
+
 install:
 	mkdir -p /lib/modules/$(shell uname -r)/extra
 	cp msi-ec.ko /lib/modules/$(shell uname -r)/extra
