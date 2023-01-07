@@ -50,10 +50,6 @@ static const char *ALLOWED_FW_0[] = {
 
 static struct msi_ec_conf CONF0 = {
 	.allowed_fw = ALLOWED_FW_0,
-	.battery_info = {
-		.capacity_address = 0x42,
-		.charging_status_address   = 0x31,
-	},
 	.charge_control = {
 		.address      = 0xef,
 		.offset_start = 0x8a,
@@ -134,10 +130,6 @@ static const char *ALLOWED_FW_1[] = {
 
 static struct msi_ec_conf CONF1 = {
 	.allowed_fw = ALLOWED_FW_1,
-	.battery_info = {
-		.capacity_address = 0x42,
-		.charging_status_address   = 0x31,
-	},
 	.charge_control = {
 		.address      = 0xd7,
 		.offset_start = 0x8a,
@@ -296,47 +288,6 @@ static int ec_get_firmware_version_common_address(u8 buf[MSI_EC_FW_VERSION_LENGT
 // Sysfs power_supply subsystem
 // ============================================================ //
 
-static ssize_t capacity_show(struct device *device,
-			     struct device_attribute *attr,
-			     char *buf)
-{
-	u8 rdata;
-	int result;
-
-	result = ec_read(conf->battery_info.capacity_address, &rdata);
-	if (result < 0)
-		return result;
-
-	return sprintf(buf, "%i\n", rdata - 1);
-}
-
-static ssize_t status_show(struct device *device,
-			   struct device_attribute *attr,
-			   char *buf)
-{
-	u8 rdata;
-	int result;
-
-	result = ec_read(conf->battery_info.charging_status_address, &rdata);
-	if (result < 0)
-		return result;
-
-	switch (rdata) {
-	case MSI_EC_CHARGING_STATUS_NOT_CHARGING:
-		return sprintf(buf, "%s\n", "Not charging");
-	case MSI_EC_CHARGING_STATUS_CHARGING:
-		return sprintf(buf, "%s\n", "Charging");
-	case MSI_EC_CHARGING_STATUS_DISCHARGING:
-		return sprintf(buf, "%s\n", "Discharging");
-	case MSI_EC_CHARGING_STATUS_FULL:
-		return sprintf(buf, "%s\n", "Full");
-	case MSI_EC_CHARGING_STATUS_FULL_NO_POWER:
-		return sprintf(buf, "%s\n", "Full");
-	default:
-		return sprintf(buf, "%s (%i)\n", "Unknown", rdata);
-	}
-}
-
 static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 					     struct device_attribute *attr,
 					     char *buf)
@@ -407,14 +358,10 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
 					      dev, attr, buf, count);
 }
 
-static DEVICE_ATTR_RO(capacity);
-static DEVICE_ATTR_RO(status);
 static DEVICE_ATTR_RW(charge_control_start_threshold);
 static DEVICE_ATTR_RW(charge_control_end_threshold);
 
 static struct attribute *msi_battery_attrs[] = {
-	&dev_attr_capacity.attr,
-	&dev_attr_status.attr,
 	&dev_attr_charge_control_start_threshold.attr,
 	&dev_attr_charge_control_end_threshold.attr,
 	NULL,

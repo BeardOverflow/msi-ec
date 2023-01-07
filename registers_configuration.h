@@ -5,16 +5,6 @@
 
 #define MSI_DRIVER_NAME "msi-ec"
 
-#define MSI_EC_CHARGING_STATUS_NOT_CHARGING  0x01
-#define MSI_EC_CHARGING_STATUS_CHARGING      0x03
-#define MSI_EC_CHARGING_STATUS_DISCHARGING   0x05
-#define MSI_EC_CHARGING_STATUS_FULL          0x09
-#define MSI_EC_CHARGING_STATUS_FULL_NO_POWER 0x0D
-struct msi_ec_battery_info_conf {
-	int capacity_address;
-	int charging_status_address;
-};
-
 struct msi_ec_charge_control_conf {
 	int address;
 	int offset_start;
@@ -108,7 +98,6 @@ struct msi_ec_kbd_bl_conf {
 struct msi_ec_conf {
 	const char **allowed_fw;
 
-	struct msi_ec_battery_info_conf   battery_info;
 	struct msi_ec_charge_control_conf charge_control;
 	struct msi_ec_webcam_conf         webcam;
 	struct msi_ec_fn_win_swap_conf    fn_win_swap;
