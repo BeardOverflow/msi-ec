@@ -284,8 +284,8 @@ static struct msi_ec_conf CONF2 = {
 		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
+		.micmute_led_address = 0x2b,
+		.mute_led_address    = 0x2c,
 		.bit                 = 1,
 	},
 	.kbd_bl = {
