@@ -215,9 +215,93 @@ static struct msi_ec_conf CONF1 = {
 	},
 };
 
+static const char *ALLOWED_FW_2[] = {
+	"1592EMS1.111",
+	"E1592IMS.10C",
+	NULL,
+};
+
+static struct msi_ec_conf CONF2 = {
+	.allowed_fw = ALLOWED_FW_2,
+	.charge_control = {
+		.address      = 0xef,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = {
+		.address      = 0x2e,
+		.hard_address = 0x2f,
+		.bit          = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4,
+	},
+	.battery_mode = {
+		.address = 0xef,
+		.modes   = { 0xbc, 0xd0, 0xe4 },
+	},
+	.power_status = {
+		.address          = 0x30,
+		.lid_open_bit     = 1,
+		.ac_connected_bit = 0,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_OFF_NAME,       0x80 },
+			{ SM_ECO_NAME,       0xc2 },
+			{ SM_COMFORT_NAME,   0xc1 },
+			{ SM_OVERCLOCK_NAME, 0xc0 },
+		},
+		.modes_count = 4,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+	},
+	.fw = {
+		.version_address = 0xa0,
+		.date_address    = 0xac,
+		.time_address    = 0xb4,
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0xc9,
+		.rt_fan_speed_base_min = 0x19,
+		.rt_fan_speed_base_max = 0x37,
+		.bs_fan_speed_address  = 0x89, // ?
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+	},
+	.leds = {
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = 0x2c, // ?
+		.bl_modes         = { 0x00, 0x08 }, // ?
+		.max_mode         = 1, // ?
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] = {
 	&CONF0,
 	&CONF1,
+	&CONF2,
 	NULL,
 };
 
