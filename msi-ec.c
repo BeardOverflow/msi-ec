@@ -42,11 +42,11 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 
-static const char *const SM_OFF_NAME = "off";
-static const char *const SM_ECO_NAME = "eco";
-static const char *const SM_COMFORT_NAME = "comfort";
-static const char *const SM_SPORT_NAME = "sport";
-static const char *const SM_TURBO_NAME = "turbo";
+static const char *const SM_OFF_NAME       = "off";
+static const char *const SM_ECO_NAME       = "eco";
+static const char *const SM_COMFORT_NAME   = "comfort";
+static const char *const SM_SPORT_NAME     = "sport";
+static const char *const SM_TURBO_NAME     = "turbo";
 static const char *const SM_OVERCLOCK_NAME = "overclock";
 
 static const char *ALLOWED_FW_0[] = {
@@ -98,9 +98,7 @@ static struct msi_ec_conf CONF0 = {
 		.modes_count = 5,
 	},
 	.fan_mode = {
-		.address     = 0xf4,
-		.mode_values = { 0x0d, 0x4d, 0x8d },
-		.max_mode    = 2,
+		.address = 0xf4,
 	},
 	.fw = {
 		.version_address = 0xa0,
@@ -182,9 +180,7 @@ static struct msi_ec_conf CONF1 = {
 		.modes_count = 4,
 	},
 	.fan_mode = {
-		.address     = 0xd4,
-		.mode_values = { 0x1d, 0x4d, 0x8d },
-		.max_mode    = 2,
+		.address = 0xd4,
 	},
 	.fw = {
 		.version_address = 0xa0,
@@ -226,6 +222,18 @@ static struct msi_ec_conf *CONFIGURATIONS[] = {
 };
 
 static struct msi_ec_conf *conf = &CONF0; // current configuration
+
+#define FAN_MODES_COUNT 4
+static const char *const FM_AUTO_NAME     = "auto";
+static const char *const FM_SILENT_NAME   = "silent";
+static const char *const FM_BASIC_NAME    = "basic";
+static const char *const FM_ADVANCED_NAME = "advanced";
+static const struct msi_ec_mode FAN_MODES[] = {
+	{ FM_AUTO_NAME,     0x0d },
+	{ FM_SILENT_NAME,   0x1d },
+	{ FM_BASIC_NAME,    0x4d },
+	{ FM_ADVANCED_NAME, 0x8d }
+};
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
 
@@ -695,9 +703,9 @@ static ssize_t fan_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	for (int i = 0; i <= conf->fan_mode.max_mode; i++) {
-		if (rdata == conf->fan_mode.mode_values[i]) {
-			return sprintf(buf, "%i\n", i);
+	for (int i = 0; i < FAN_MODES_COUNT; i++) {
+		if (rdata == FAN_MODES[i].value) {
+			return sprintf(buf, "%s\n", FAN_MODES[i].name);
 		}
 	}
 
@@ -707,24 +715,19 @@ static ssize_t fan_mode_show(struct device *device,
 static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 			      const char *buf, size_t count)
 {
-	u8 wdata;
 	int result;
 
-	result = kstrtou8(buf, 10, &wdata);
-	if (result < 0)
-		return result;
+	for (int i = 0; i < FAN_MODES_COUNT; i++) {
+		if (strcmp_trim_newline2(FAN_MODES[i].name, buf) == 0) {
+			result = ec_write(conf->fan_mode.address, FAN_MODES[i].value);
+			if (result < 0)
+				return result;
 
-	if (wdata > conf->fan_mode.max_mode) {
-		result = -EINVAL;
-	} else {
-		result = ec_write(conf->fan_mode.address,
-				  conf->fan_mode.mode_values[wdata]);
+			return count;
+		}
 	}
 
-	if (result < 0)
-		return result;
-
-	return count;
+	return -EINVAL;
 }
 
 static ssize_t fw_version_show(struct device *device,

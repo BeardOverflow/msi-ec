@@ -40,23 +40,20 @@ struct msi_ec_cooler_boost_conf {
 	int bit;
 };
 
-#define MSI_EC_SHIFT_MODE_NAME_LIMIT 20
-
-struct msi_ec_shift_mode {
+struct msi_ec_mode {
 	const char *name;
 	int value;
 };
 
+#define MSI_EC_SHIFT_MODE_NAME_LIMIT 20
 struct msi_ec_shift_mode_conf {
 	int address;
-	struct msi_ec_shift_mode modes[5]; // fixed size for easier hard coding
+	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
 	int modes_count;
 };
 
 struct msi_ec_fan_mode_conf {
 	int address;
-	int mode_values[4];
-	int max_mode;
 };
 
 #define MSI_EC_FW_VERSION_ADDRESS 0xa0
