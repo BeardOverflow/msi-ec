@@ -42,6 +42,13 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 
+static const char *const SM_OFF_NAME = "off";
+static const char *const SM_ECO_NAME = "eco";
+static const char *const SM_COMFORT_NAME = "comfort";
+static const char *const SM_SPORT_NAME = "sport";
+static const char *const SM_TURBO_NAME = "turbo";
+static const char *const SM_OVERCLOCK_NAME = "overclock";
+
 static const char *ALLOWED_FW_0[] = {
 	"14C1EMS1.101",
 	"17F2EMS1.106",
@@ -80,10 +87,15 @@ static struct msi_ec_conf CONF0 = {
 		.bit     = 7,
 	},
 	.shift_mode = {
-		.address    = 0xf2,
-		.off_value  = 0x80,
-		.base_value = 0xc0,
-		.max_mode   = 4,
+		.address = 0xf2,
+		.modes = {
+			{ SM_OFF_NAME,     0x80 },
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc4 },
+		},
+		.modes_number = 5,
 	},
 	.fan_mode = {
 		.address     = 0xf4,
@@ -160,10 +172,14 @@ static struct msi_ec_conf CONF1 = {
 		.bit     = 7,
 	},
 	.shift_mode = {
-		.address    = 0xf2,
-		.off_value  = 0x80,
-		.base_value = 0xc0,
-		.max_mode   = 2,
+		.address = 0xf2,
+		.modes = {
+			{ SM_OFF_NAME,       0x80 },
+			{ SM_ECO_NAME,       0xc2 },
+			{ SM_COMFORT_NAME,   0xc1 },
+			{ SM_OVERCLOCK_NAME, 0xc0 },
+		},
+		.modes_number = 4,
 	},
 	.fan_mode = {
 		.address     = 0xd4,
@@ -216,6 +232,24 @@ static struct msi_ec_conf *conf = &CONF0; // current configuration
 #define set_bit(v, b)   (v |= (1 << b))
 #define unset_bit(v, b) (v &= ~(1 << b))
 #define check_bit(v, b) ((bool)((v >> b) & 1))
+
+// compares two, trimming newline at the end the second
+static int strcmp_trim_newline2(const char *s, const char *s_nl)
+{
+	size_t s_nl_length = strlen(s_nl);
+
+	if (s_nl_length - 1 > MSI_EC_SHIFT_MODE_NAME_LIMIT)
+		return -1;
+
+	if (s_nl[s_nl_length - 1] == '\n') {
+		char s2[MSI_EC_SHIFT_MODE_NAME_LIMIT + 1];
+		memcpy(s2, s_nl, s_nl_length - 1);
+		s2[s_nl_length - 1] = '\0';
+		return strcmp(s, s2);
+	}
+
+	return strcmp(s, s_nl);
+}
 
 static int ec_read_seq(u8 addr, u8 *buf, int len)
 {
@@ -595,7 +629,8 @@ static ssize_t cooler_boost_store(struct device *dev,
 }
 
 static ssize_t shift_mode_show(struct device *device,
-			       struct device_attribute *attr, char *buf)
+			       struct device_attribute *attr,
+			       char *buf)
 {
 	u8 rdata;
 	int result;
@@ -604,42 +639,33 @@ static ssize_t shift_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	if (rdata == conf->shift_mode.off_value)
-		return sprintf(buf, "-1\n");
+	for (int i = 0; i < conf->shift_mode.modes_number; i++) {
+		if (rdata == conf->shift_mode.modes[i].value) {
+			return sprintf(buf, "%s\n", conf->shift_mode.modes[i].name);
+		}
+	}
 
-	unsigned int mode = rdata - conf->shift_mode.base_value;
-	if (mode > conf->shift_mode.max_mode)
-		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
-
-	return sprintf(buf, "%i\n", mode);
+	return sprintf(buf, "%s (%i)\n", "unknown", rdata);
 }
 
 static ssize_t shift_mode_store(struct device *dev,
 				struct device_attribute *attr, const char *buf,
 				size_t count)
 {
-	int wdata;
 	int result;
 
-	result = kstrtoint(buf, 10, &wdata);
-	if (result < 0)
-		return result;
+	for (int i = 0; i < conf->shift_mode.modes_number; i++) {
+		if (strcmp_trim_newline2(conf->shift_mode.modes[i].name, buf) == 0) {
+			result = ec_write(conf->shift_mode.address,
+					  conf->shift_mode.modes[i].value);
+			if (result < 0)
+				return result;
 
-	if (wdata == -1) { // off
-		result = ec_write(conf->shift_mode.address,
-				  conf->shift_mode.off_value);
-	} else { // on (or invalid)
-		if ((unsigned int)wdata > conf->shift_mode.max_mode)
-			return -EINVAL;
-
-		result = ec_write(conf->shift_mode.address,
-				  wdata + conf->shift_mode.base_value);
+			return count;
+		}
 	}
 
-	if (result < 0)
-		return result;
-
-	return count;
+	return -EINVAL;
 }
 
 static ssize_t fan_mode_show(struct device *device,
