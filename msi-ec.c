@@ -95,7 +95,7 @@ static struct msi_ec_conf CONF0 = {
 			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 		},
-		.modes_number = 5,
+		.modes_count = 5,
 	},
 	.fan_mode = {
 		.address     = 0xf4,
@@ -179,7 +179,7 @@ static struct msi_ec_conf CONF1 = {
 			{ SM_COMFORT_NAME,   0xc1 },
 			{ SM_OVERCLOCK_NAME, 0xc0 },
 		},
-		.modes_number = 4,
+		.modes_count = 4,
 	},
 	.fan_mode = {
 		.address     = 0xd4,
@@ -628,6 +628,23 @@ static ssize_t cooler_boost_store(struct device *dev,
 	return count;
 }
 
+static ssize_t available_shift_modes_show(struct device *device,
+				          struct device_attribute *attr,
+				          char *buf)
+{
+	int result = 0;
+	int count = 0;
+
+	for (int i = 0; i < conf->shift_mode.modes_count; i++) {
+		result = sprintf(buf + count, "%s\n", conf->shift_mode.modes[i].name);
+		if (result < 0)
+			return result;
+		count += result;
+	}
+
+	return count;
+}
+
 static ssize_t shift_mode_show(struct device *device,
 			       struct device_attribute *attr,
 			       char *buf)
@@ -639,7 +656,7 @@ static ssize_t shift_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	for (int i = 0; i < conf->shift_mode.modes_number; i++) {
+	for (int i = 0; i < conf->shift_mode.modes_count; i++) {
 		if (rdata == conf->shift_mode.modes[i].value) {
 			return sprintf(buf, "%s\n", conf->shift_mode.modes[i].name);
 		}
@@ -654,7 +671,7 @@ static ssize_t shift_mode_store(struct device *dev,
 {
 	int result;
 
-	for (int i = 0; i < conf->shift_mode.modes_number; i++) {
+	for (int i = 0; i < conf->shift_mode.modes_count; i++) {
 		if (strcmp_trim_newline2(conf->shift_mode.modes[i].name, buf) == 0) {
 			result = ec_write(conf->shift_mode.address,
 					  conf->shift_mode.modes[i].value);
@@ -758,18 +775,26 @@ static DEVICE_ATTR_RW(battery_mode);
 static DEVICE_ATTR_RO(lid_status);
 static DEVICE_ATTR_RO(ac_connected);
 static DEVICE_ATTR_RW(cooler_boost);
+static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
 static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
 
 static struct attribute *msi_root_attrs[] = {
-	&dev_attr_webcam.attr,		&dev_attr_fn_key.attr,
-	&dev_attr_win_key.attr,		&dev_attr_battery_mode.attr,
-	&dev_attr_lid_status.attr,      &dev_attr_ac_connected.attr,
-	&dev_attr_cooler_boost.attr,	&dev_attr_shift_mode.attr,
-	&dev_attr_fan_mode.attr,	&dev_attr_fw_version.attr,
-	&dev_attr_fw_release_date.attr, NULL,
+	&dev_attr_webcam.attr,
+	&dev_attr_fn_key.attr,
+	&dev_attr_win_key.attr,
+	&dev_attr_battery_mode.attr,
+	&dev_attr_lid_status.attr,
+	&dev_attr_ac_connected.attr,
+	&dev_attr_cooler_boost.attr,
+	&dev_attr_available_shift_modes.attr,
+	&dev_attr_shift_mode.attr,
+	&dev_attr_fan_mode.attr,
+	&dev_attr_fw_version.attr,
+	&dev_attr_fw_release_date.attr,
+	NULL,
 };
 
 static const struct attribute_group msi_root_group = {

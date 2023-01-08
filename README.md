@@ -66,12 +66,17 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
 - `/sys/devices/platform/msi-ec/shift_mode`
   - Description: This entry allows switching the shift mode. It provides a set of profiles for gaining CPU & GPU overclock/underclock.
   - Access: Read, Write
-  - Valid values:
-    - turbo: over-voltage and over-clock for the CPU & GPU, aka overcloking mode
-    - sport: full clock frequency for the CPU & GPU, aka default desktop mode
-    - comfort: dynamic clock frequency for the CPU & GPU, aka power balanced mode
+  - Valid values: Values reported by `/sys/devices/platform/msi-ec/available_shift_modes`. Some of the possible values:
+    - off (necessary): operating system decides
     - eco: low clock frequency for the CPU & GPU, aka power saving mode
-    - off: operating system decides
+    - comfort: dynamic clock frequency for the CPU & GPU, aka power balanced mode
+    - sport: full clock frequency for the CPU & GPU, aka default desktop mode
+    - turbo: over-voltage and over-clock for the CPU & GPU, aka overclocking mode
+
+- `/sys/devices/platform/msi-ec/available_shift_modes`
+  - Description: This entry reports all supported shift modes.
+  - Access: Read
+  - Valid values: Newline separated list of strings.
 
 - `/sys/devices/platform/msi-ec/fan_mode`
   - Description: This entry allows switching the fan mode. It provides a set of profiles for adjusting the fan speed under specific criteria.
