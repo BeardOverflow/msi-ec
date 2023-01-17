@@ -1167,6 +1167,31 @@ static struct led_classdev msiacpi_led_kbdlight = {
 // Module load/unload
 // ============================================================ //
 
+static int __init load_configuration(void)
+{
+	int result;
+
+	// get firmware version
+	u8 fw_version[MSI_EC_FW_VERSION_LENGTH + 1];
+	result = ec_get_firmware_version(fw_version);
+	if (result < 0) {
+		return result;
+	}
+
+	// load the suitable configuration, if exists
+	for (int i = 0; CONFIGURATIONS[i]; i++) {
+		for (int j = 0; CONFIGURATIONS[i]->allowed_fw[j]; j++) {
+			if (strcmp(CONFIGURATIONS[i]->allowed_fw[j], fw_version) == 0) {
+				memcpy(&conf, CONFIGURATIONS[i], sizeof(struct msi_ec_conf));
+				return 0;
+			}
+		}
+	}
+
+	pr_err("Your firmware version is not supported!\n");
+	return -EOPNOTSUPP;
+}
+
 static int __init msi_ec_init(void)
 {
 	int result;
@@ -1176,33 +1201,13 @@ static int __init msi_ec_init(void)
 		return -ENODEV;
 	}
 
-	// get firmware version
-	u8 fw_version[MSI_EC_FW_VERSION_LENGTH + 1];
-	result = ec_get_firmware_version(fw_version);
-	if (result < 0) {
+	result = load_configuration();
+	if (result < 0)
 		return result;
-	}
-
-	// check if this firmware's configuration is implemented
-	bool found = false;
-	for (int i = 0; CONFIGURATIONS[i]; i++) {
-		for (int j = 0; CONFIGURATIONS[i]->allowed_fw[j]; j++) {
-			if (strcmp(CONFIGURATIONS[i]->allowed_fw[j], fw_version) == 0) {
-				found = true;
-				memcpy(&conf, CONFIGURATIONS[i], sizeof(struct msi_ec_conf));
-				break;
-			}
-		}
-	}
-	if (!found) {
-		pr_err("Your firmware version is not supported!\n");
-		return -EOPNOTSUPP;
-	}
 
 	result = platform_driver_register(&msi_platform_driver);
-	if (result < 0) {
+	if (result < 0)
 		return result;
-	}
 
 	msi_platform_device = platform_device_alloc(MSI_DRIVER_NAME, -1);
 	if (msi_platform_device == NULL) {
