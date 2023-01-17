@@ -55,7 +55,7 @@ static const char *ALLOWED_FW_0[] = {
 	NULL,
 };
 
-static struct msi_ec_conf CONF0 = {
+static struct msi_ec_conf CONF0 __initdata = {
 	.allowed_fw = ALLOWED_FW_0,
 	.charge_control = {
 		.address      = 0xef,
@@ -138,7 +138,7 @@ static const char *ALLOWED_FW_1[] = {
 	NULL,
 };
 
-static struct msi_ec_conf CONF1 = {
+static struct msi_ec_conf CONF1 __initdata = {
 	.allowed_fw = ALLOWED_FW_1,
 	.charge_control = {
 		.address      = 0xd7,
@@ -221,7 +221,7 @@ static const char *ALLOWED_FW_2[] = {
 	NULL,
 };
 
-static struct msi_ec_conf CONF2 = {
+static struct msi_ec_conf CONF2 __initdata = {
 	.allowed_fw = ALLOWED_FW_2,
 	.charge_control = {
 		.address      = 0xef,
@@ -298,14 +298,14 @@ static struct msi_ec_conf CONF2 = {
 	},
 };
 
-static struct msi_ec_conf *CONFIGURATIONS[] = {
+static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
 	&CONF2,
 	NULL,
 };
 
-static struct msi_ec_conf *conf = &CONF0; // current configuration
+static struct msi_ec_conf conf; // current configuration
 
 #define FAN_MODES_COUNT 4
 static const char *const FM_AUTO_NAME     = "auto";
@@ -421,7 +421,7 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->charge_control.address, &rdata);
+	result = ec_read(conf.charge_control.address, &rdata);
 	if (result < 0)
 		return result;
 
@@ -432,7 +432,7 @@ static ssize_t
 charge_control_start_threshold_show(struct device *device,
 				    struct device_attribute *attr, char *buf)
 {
-	return charge_control_threshold_show(conf->charge_control.offset_start,
+	return charge_control_threshold_show(conf.charge_control.offset_start,
 					     device, attr, buf);
 }
 
@@ -440,7 +440,7 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
 						 struct device_attribute *attr,
 						 char *buf)
 {
-	return charge_control_threshold_show(conf->charge_control.offset_end,
+	return charge_control_threshold_show(conf.charge_control.offset_end,
 					     device, attr, buf);
 }
 
@@ -456,11 +456,11 @@ static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
 		return result;
 
 	wdata += offset;
-	if (wdata < conf->charge_control.range_min ||
-	    wdata > conf->charge_control.range_max)
+	if (wdata < conf.charge_control.range_min ||
+	    wdata > conf.charge_control.range_max)
 		return -EINVAL;
 
-	result = ec_write(conf->charge_control.address, wdata);
+	result = ec_write(conf.charge_control.address, wdata);
 	if (result < 0)
 		return result;
 
@@ -473,14 +473,14 @@ charge_control_start_threshold_store(struct device *dev,
 				     const char *buf, size_t count)
 {
 	return charge_control_threshold_store(
-		conf->charge_control.offset_start, dev, attr, buf, count);
+		conf.charge_control.offset_start, dev, attr, buf, count);
 }
 
 static ssize_t charge_control_end_threshold_store(struct device *dev,
 						  struct device_attribute *attr,
 						  const char *buf, size_t count)
 {
-	return charge_control_threshold_store(conf->charge_control.offset_end,
+	return charge_control_threshold_store(conf.charge_control.offset_end,
 					      dev, attr, buf, count);
 }
 
@@ -524,7 +524,7 @@ static ssize_t webcam_show(struct device *device, struct device_attribute *attr,
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf->webcam.address, conf->webcam.bit, &bit_value);
+	result = ec_check_bit(conf.webcam.address, conf.webcam.bit, &bit_value);
 
 	if (bit_value) {
 		return sprintf(buf, "%s\n", "on");
@@ -539,10 +539,10 @@ static ssize_t webcam_store(struct device *dev, struct device_attribute *attr,
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
-		result = ec_set_bit(conf->webcam.address, conf->webcam.bit);
+		result = ec_set_bit(conf.webcam.address, conf.webcam.bit);
 
 	if (streq(buf, "off"))
-		result = ec_unset_bit(conf->webcam.address, conf->webcam.bit);
+		result = ec_unset_bit(conf.webcam.address, conf.webcam.bit);
 
 	if (result < 0)
 		return result;
@@ -556,7 +556,7 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf->fn_win_swap.address, conf->fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
 
 	if (bit_value) {
 		return sprintf(buf, "%s\n", "right");
@@ -571,9 +571,9 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 	int result;
 
 	if (streq(buf, "right")) {
-		result = ec_set_bit(conf->fn_win_swap.address, conf->fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
 	} else if (streq(buf, "left")) {
-		result = ec_unset_bit(conf->fn_win_swap.address, conf->fn_win_swap.bit);
+		result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
 	}
 
 	if (result < 0)
@@ -588,7 +588,7 @@ static ssize_t win_key_show(struct device *device,
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf->fn_win_swap.address, conf->fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
 
 	if (bit_value) {
 		return sprintf(buf, "%s\n", "left");
@@ -603,9 +603,9 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 	int result;
 
 	if (streq(buf, "right")) {
-		result = ec_unset_bit(conf->fn_win_swap.address, conf->fn_win_swap.bit);
+		result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
 	} else if (streq(buf, "left")) {
-		result = ec_set_bit(conf->fn_win_swap.address, conf->fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
 	}
 
 	if (result < 0)
@@ -620,15 +620,15 @@ static ssize_t battery_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->battery_mode.address, &rdata);
+	result = ec_read(conf.battery_mode.address, &rdata);
 	if (result < 0)
 		return result;
 
-	if (rdata == conf->battery_mode.modes[2]) {
+	if (rdata == conf.battery_mode.modes[2]) {
 		return sprintf(buf, "%s\n", "max");
-	} else if (rdata == conf->battery_mode.modes[1]) {
+	} else if (rdata == conf.battery_mode.modes[1]) {
 		return sprintf(buf, "%s\n", "medium");
-	} else if (rdata == conf->battery_mode.modes[0]) {
+	} else if (rdata == conf.battery_mode.modes[0]) {
 		return sprintf(buf, "%s\n", "min");
 	} else {
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
@@ -642,16 +642,16 @@ static ssize_t battery_mode_store(struct device *dev,
 	int result = -EINVAL;
 
 	if (streq(buf, "max"))
-		result = ec_write(conf->battery_mode.address,
-				  conf->battery_mode.modes[2]);
+		result = ec_write(conf.battery_mode.address,
+				  conf.battery_mode.modes[2]);
 
 	else if (streq(buf, "medium"))
-		result = ec_write(conf->battery_mode.address,
-				  conf->battery_mode.modes[1]);
+		result = ec_write(conf.battery_mode.address,
+				  conf.battery_mode.modes[1]);
 
 	else if (streq(buf, "min"))
-		result = ec_write(conf->battery_mode.address,
-				  conf->battery_mode.modes[0]);
+		result = ec_write(conf.battery_mode.address,
+				  conf.battery_mode.modes[0]);
 
 	if (result < 0)
 		return result;
@@ -665,7 +665,7 @@ static ssize_t lid_status_show(struct device *device,
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf->power_status.address, conf->power_status.lid_open_bit, &bit_value);
+	result = ec_check_bit(conf.power_status.address, conf.power_status.lid_open_bit, &bit_value);
 	if (result < 0)
 		return result;
 
@@ -678,7 +678,7 @@ static ssize_t ac_connected_show(struct device *device,
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf->power_status.address, conf->power_status.ac_connected_bit, &bit_value);
+	result = ec_check_bit(conf.power_status.address, conf.power_status.ac_connected_bit, &bit_value);
 	if (result < 0)
 		return result;
 
@@ -691,7 +691,7 @@ static ssize_t cooler_boost_show(struct device *device,
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf->cooler_boost.address, conf->cooler_boost.bit, &bit_value);
+	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &bit_value);
 
 	if (bit_value) {
 		return sprintf(buf, "%s\n", "on");
@@ -707,12 +707,12 @@ static ssize_t cooler_boost_store(struct device *dev,
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
-		result = ec_set_bit(conf->cooler_boost.address,
-				  conf->cooler_boost.bit);
+		result = ec_set_bit(conf.cooler_boost.address,
+				  conf.cooler_boost.bit);
 
 	else if (streq(buf, "off"))
-		result = ec_unset_bit(conf->cooler_boost.address,
-				    conf->cooler_boost.bit);
+		result = ec_unset_bit(conf.cooler_boost.address,
+				    conf.cooler_boost.bit);
 
 	if (result < 0)
 		return result;
@@ -727,8 +727,8 @@ static ssize_t available_shift_modes_show(struct device *device,
 	int result = 0;
 	int count = 0;
 
-	for (int i = 0; i < conf->shift_mode.modes_count; i++) {
-		result = sprintf(buf + count, "%s\n", conf->shift_mode.modes[i].name);
+	for (int i = 0; i < conf.shift_mode.modes_count; i++) {
+		result = sprintf(buf + count, "%s\n", conf.shift_mode.modes[i].name);
 		if (result < 0)
 			return result;
 		count += result;
@@ -744,13 +744,13 @@ static ssize_t shift_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->shift_mode.address, &rdata);
+	result = ec_read(conf.shift_mode.address, &rdata);
 	if (result < 0)
 		return result;
 
-	for (int i = 0; i < conf->shift_mode.modes_count; i++) {
-		if (rdata == conf->shift_mode.modes[i].value) {
-			return sprintf(buf, "%s\n", conf->shift_mode.modes[i].name);
+	for (int i = 0; i < conf.shift_mode.modes_count; i++) {
+		if (rdata == conf.shift_mode.modes[i].value) {
+			return sprintf(buf, "%s\n", conf.shift_mode.modes[i].name);
 		}
 	}
 
@@ -763,10 +763,10 @@ static ssize_t shift_mode_store(struct device *dev,
 {
 	int result;
 
-	for (int i = 0; i < conf->shift_mode.modes_count; i++) {
-		if (strcmp_trim_newline2(conf->shift_mode.modes[i].name, buf) == 0) {
-			result = ec_write(conf->shift_mode.address,
-					  conf->shift_mode.modes[i].value);
+	for (int i = 0; i < conf.shift_mode.modes_count; i++) {
+		if (strcmp_trim_newline2(conf.shift_mode.modes[i].name, buf) == 0) {
+			result = ec_write(conf.shift_mode.address,
+					  conf.shift_mode.modes[i].value);
 			if (result < 0)
 				return result;
 
@@ -783,7 +783,7 @@ static ssize_t fan_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->fan_mode.address, &rdata);
+	result = ec_read(conf.fan_mode.address, &rdata);
 	if (result < 0)
 		return result;
 
@@ -803,7 +803,7 @@ static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 
 	for (int i = 0; i < FAN_MODES_COUNT; i++) {
 		if (strcmp_trim_newline2(FAN_MODES[i].name, buf) == 0) {
-			result = ec_write(conf->fan_mode.address, FAN_MODES[i].value);
+			result = ec_write(conf.fan_mode.address, FAN_MODES[i].value);
 			if (result < 0)
 				return result;
 
@@ -821,7 +821,7 @@ static ssize_t fw_version_show(struct device *device,
 	int result;
 
 	memset(rdata, 0, MSI_EC_FW_VERSION_LENGTH + 1);
-	result = ec_read_seq(conf->fw.version_address, rdata,
+	result = ec_read_seq(conf.fw.version_address, rdata,
 			     MSI_EC_FW_VERSION_LENGTH);
 	if (result < 0)
 		return result;
@@ -838,14 +838,14 @@ static ssize_t fw_release_date_show(struct device *device,
 	int year, month, day, hour, minute, second;
 
 	memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
-	result = ec_read_seq(conf->fw.date_address, rdate,
+	result = ec_read_seq(conf.fw.date_address, rdate,
 			     MSI_EC_FW_DATE_LENGTH);
 	if (result < 0)
 		return result;
 	sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
 
 	memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
-	result = ec_read_seq(conf->fw.time_address, rtime,
+	result = ec_read_seq(conf.fw.time_address, rtime,
 			     MSI_EC_FW_TIME_LENGTH);
 	if (result < 0)
 		return result;
@@ -899,7 +899,7 @@ static ssize_t cpu_realtime_temperature_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->cpu.rt_temp_address, &rdata);
+	result = ec_read(conf.cpu.rt_temp_address, &rdata);
 	if (result < 0)
 		return result;
 
@@ -913,18 +913,18 @@ static ssize_t cpu_realtime_fan_speed_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->cpu.rt_fan_speed_address, &rdata);
+	result = ec_read(conf.cpu.rt_fan_speed_address, &rdata);
 	if (result < 0)
 		return result;
 
-	if ((rdata < conf->cpu.rt_fan_speed_base_min ||
-	    rdata > conf->cpu.rt_fan_speed_base_max))
+	if ((rdata < conf.cpu.rt_fan_speed_base_min ||
+	    rdata > conf.cpu.rt_fan_speed_base_max))
 		return -EINVAL;
 
 	return sprintf(buf, "%i\n",
-		       100 * (rdata - conf->cpu.rt_fan_speed_base_min) /
-			       (conf->cpu.rt_fan_speed_base_max -
-				conf->cpu.rt_fan_speed_base_min));
+		       100 * (rdata - conf.cpu.rt_fan_speed_base_min) /
+			       (conf.cpu.rt_fan_speed_base_max -
+				conf.cpu.rt_fan_speed_base_min));
 }
 
 static ssize_t cpu_basic_fan_speed_show(struct device *device,
@@ -934,18 +934,18 @@ static ssize_t cpu_basic_fan_speed_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->cpu.bs_fan_speed_address, &rdata);
+	result = ec_read(conf.cpu.bs_fan_speed_address, &rdata);
 	if (result < 0)
 		return result;
 
-	if (rdata < conf->cpu.bs_fan_speed_base_min ||
-	    rdata > conf->cpu.bs_fan_speed_base_max)
+	if (rdata < conf.cpu.bs_fan_speed_base_min ||
+	    rdata > conf.cpu.bs_fan_speed_base_max)
 		return -EINVAL;
 
 	return sprintf(buf, "%i\n",
-		       100 * (rdata - conf->cpu.bs_fan_speed_base_min) /
-			       (conf->cpu.bs_fan_speed_base_max -
-				conf->cpu.bs_fan_speed_base_min));
+		       100 * (rdata - conf.cpu.bs_fan_speed_base_min) /
+			       (conf.cpu.bs_fan_speed_base_max -
+				conf.cpu.bs_fan_speed_base_min));
 }
 
 static ssize_t cpu_basic_fan_speed_store(struct device *dev,
@@ -962,10 +962,10 @@ static ssize_t cpu_basic_fan_speed_store(struct device *dev,
 	if (wdata > 100)
 		return -EINVAL;
 
-	result = ec_write(conf->cpu.bs_fan_speed_address,
-			  (wdata * (conf->cpu.bs_fan_speed_base_max -
-				    conf->cpu.bs_fan_speed_base_min) +
-			   100 * conf->cpu.bs_fan_speed_base_min) /
+	result = ec_write(conf.cpu.bs_fan_speed_address,
+			  (wdata * (conf.cpu.bs_fan_speed_base_max -
+				    conf.cpu.bs_fan_speed_base_min) +
+			   100 * conf.cpu.bs_fan_speed_base_min) /
 				  100);
 	if (result < 0)
 		return result;
@@ -1021,7 +1021,7 @@ static ssize_t gpu_realtime_temperature_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->gpu.rt_temp_address, &rdata);
+	result = ec_read(conf.gpu.rt_temp_address, &rdata);
 	if (result < 0)
 		return result;
 
@@ -1035,7 +1035,7 @@ static ssize_t gpu_realtime_fan_speed_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf->gpu.rt_fan_speed_address, &rdata);
+	result = ec_read(conf.gpu.rt_fan_speed_address, &rdata);
 	if (result < 0)
 		return result;
 
@@ -1111,9 +1111,9 @@ static int micmute_led_sysfs_set(struct led_classdev *led_cdev,
 	int result;
 
 	if (brightness) {
-		result = ec_set_bit(conf->leds.micmute_led_address, conf->leds.bit);
+		result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit);
 	} else {
-		result = ec_unset_bit(conf->leds.micmute_led_address, conf->leds.bit);
+		result = ec_unset_bit(conf.leds.micmute_led_address, conf.leds.bit);
 	}
 
 	if (result < 0)
@@ -1128,9 +1128,9 @@ static int mute_led_sysfs_set(struct led_classdev *led_cdev,
 	int result;
 
 	if (brightness) {
-		result = ec_set_bit(conf->leds.mute_led_address, conf->leds.bit);
+		result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit);
 	} else {
-		result = ec_unset_bit(conf->leds.mute_led_address, conf->leds.bit);
+		result = ec_unset_bit(conf.leds.mute_led_address, conf.leds.bit);
 	}
 
 	if (result < 0)
@@ -1142,7 +1142,7 @@ static int mute_led_sysfs_set(struct led_classdev *led_cdev,
 static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
 {
 	u8 rdata;
-	int result = ec_read(conf->kbd_bl.bl_state_address, &rdata);
+	int result = ec_read(conf.kbd_bl.bl_state_address, &rdata);
 	if (result < 0)
 		return 0;
 	return rdata & MSI_EC_KBD_BL_STATE_MASK;
@@ -1154,8 +1154,8 @@ static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
 	u8 wdata;
 	if (brightness < 0 || brightness > 3)
 		return -1;
-	wdata = conf->kbd_bl.state_base_value | brightness;
-	return ec_write(conf->kbd_bl.bl_state_address, wdata);
+	wdata = conf.kbd_bl.state_base_value | brightness;
+	return ec_write(conf.kbd_bl.bl_state_address, wdata);
 }
 
 static struct led_classdev micmute_led_cdev = {
@@ -1201,17 +1201,17 @@ static int __init msi_ec_init(void)
 	}
 
 	// check if this firmware's configuration is implemented
-	bool allowed = false;
+	bool found = false;
 	for (int i = 0; CONFIGURATIONS[i]; i++) {
 		for (int j = 0; CONFIGURATIONS[i]->allowed_fw[j]; j++) {
 			if (strcmp(CONFIGURATIONS[i]->allowed_fw[j], fw_version) == 0) {
-				allowed = true;
-				conf = CONFIGURATIONS[i];
+				found = true;
+				memcpy(&conf, CONFIGURATIONS[i], sizeof(struct msi_ec_conf));
 				break;
 			}
 		}
 	}
-	if (!allowed) {
+	if (!found) {
 		pr_err("Your firmware version is not supported!\n");
 		return -EOPNOTSUPP;
 	}
