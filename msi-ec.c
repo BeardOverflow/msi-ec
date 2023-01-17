@@ -100,11 +100,6 @@ static struct msi_ec_conf CONF0 __initdata = {
 	.fan_mode = {
 		.address = 0xf4,
 	},
-	.fw = {
-		.version_address = 0xa0,
-		.date_address    = 0xac,
-		.time_address    = 0xb4,
-	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
 		.rt_fan_speed_address  = 0x71,
@@ -181,11 +176,6 @@ static struct msi_ec_conf CONF1 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xd4,
-	},
-	.fw = {
-		.version_address = 0xa0,
-		.date_address    = 0xac,
-		.time_address    = 0xb4,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -264,11 +254,6 @@ static struct msi_ec_conf CONF2 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xd4,
-	},
-	.fw = {
-		.version_address = 0xa0,
-		.date_address    = 0xac,
-		.time_address    = 0xb4,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -397,7 +382,7 @@ static int ec_check_bit(u8 addr, u8 bit, bool *output)
 	return 0;
 }
 
-static int ec_get_firmware_version_common_address(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
+static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
 {
 	int result;
 
@@ -820,9 +805,7 @@ static ssize_t fw_version_show(struct device *device,
 	u8 rdata[MSI_EC_FW_VERSION_LENGTH + 1];
 	int result;
 
-	memset(rdata, 0, MSI_EC_FW_VERSION_LENGTH + 1);
-	result = ec_read_seq(conf.fw.version_address, rdata,
-			     MSI_EC_FW_VERSION_LENGTH);
+	result = ec_get_firmware_version(rdata);
 	if (result < 0)
 		return result;
 
@@ -838,14 +821,14 @@ static ssize_t fw_release_date_show(struct device *device,
 	int year, month, day, hour, minute, second;
 
 	memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
-	result = ec_read_seq(conf.fw.date_address, rdate,
+	result = ec_read_seq(MSI_EC_FW_DATE_ADDRESS, rdate,
 			     MSI_EC_FW_DATE_LENGTH);
 	if (result < 0)
 		return result;
 	sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
 
 	memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
-	result = ec_read_seq(conf.fw.time_address, rtime,
+	result = ec_read_seq(MSI_EC_FW_TIME_ADDRESS, rtime,
 			     MSI_EC_FW_TIME_LENGTH);
 	if (result < 0)
 		return result;
@@ -1195,7 +1178,7 @@ static int __init msi_ec_init(void)
 
 	// get firmware version
 	u8 fw_version[MSI_EC_FW_VERSION_LENGTH + 1];
-	result = ec_get_firmware_version_common_address(fw_version);
+	result = ec_get_firmware_version(fw_version);
 	if (result < 0) {
 		return result;
 	}

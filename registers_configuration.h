@@ -5,6 +5,14 @@
 
 #define MSI_DRIVER_NAME "msi-ec"
 
+// Firmware info addresses are universal
+#define MSI_EC_FW_VERSION_ADDRESS 0xa0
+#define MSI_EC_FW_DATE_ADDRESS    0xac
+#define MSI_EC_FW_TIME_ADDRESS    0xb4
+#define MSI_EC_FW_VERSION_LENGTH  12
+#define MSI_EC_FW_DATE_LENGTH     8
+#define MSI_EC_FW_TIME_LENGTH     8
+
 struct msi_ec_charge_control_conf {
 	int address;
 	int offset_start;
@@ -56,16 +64,6 @@ struct msi_ec_fan_mode_conf {
 	int address;
 };
 
-#define MSI_EC_FW_VERSION_ADDRESS 0xa0
-#define MSI_EC_FW_VERSION_LENGTH 12
-#define MSI_EC_FW_DATE_LENGTH 8
-#define MSI_EC_FW_TIME_LENGTH 8
-struct msi_ec_fw_conf {
-	int version_address;
-	int date_address;
-	int time_address;
-};
-
 struct msi_ec_cpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime
@@ -109,7 +107,6 @@ struct msi_ec_conf {
 	struct msi_ec_cooler_boost_conf   cooler_boost;
 	struct msi_ec_shift_mode_conf     shift_mode;
 	struct msi_ec_fan_mode_conf       fan_mode;
-	struct msi_ec_fw_conf             fw;
 	struct msi_ec_cpu_conf            cpu;
 	struct msi_ec_gpu_conf            gpu;
 	struct msi_ec_led_conf            leds;
