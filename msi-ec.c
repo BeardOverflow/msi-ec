@@ -42,7 +42,6 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 
-static const char *const SM_OFF_NAME       = "off";
 static const char *const SM_ECO_NAME       = "eco";
 static const char *const SM_COMFORT_NAME   = "comfort";
 static const char *const SM_SPORT_NAME     = "sport";
@@ -87,12 +86,11 @@ static struct msi_ec_conf CONF0 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_OFF_NAME,     0x80 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
 		},
-		.modes_count = 4,
+		.modes_count = 3,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -164,13 +162,12 @@ static struct msi_ec_conf CONF1 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_OFF_NAME,     0x80 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 		},
-		.modes_count = 5,
+		.modes_count = 4,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -242,12 +239,11 @@ static struct msi_ec_conf CONF2 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_OFF_NAME,     0x80 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
 		},
-		.modes_count = 4,
+		.modes_count = 3,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -320,12 +316,11 @@ static struct msi_ec_conf CONF3 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_OFF_NAME,     0x80 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
 		},
-		.modes_count = 4,
+		.modes_count = 3,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -386,7 +381,7 @@ static const struct msi_ec_mode FAN_MODES[] = {
 #define unset_bit(v, b) (v &= ~(1 << b))
 #define check_bit(v, b) ((bool)((v >> b) & 1))
 
-// compares two, trimming newline at the end the second
+// compares two strings, trimming newline at the end the second
 static int strcmp_trim_newline2(const char *s, const char *s_nl)
 {
 	size_t s_nl_length = strlen(s_nl);
@@ -769,11 +764,11 @@ static ssize_t cooler_boost_store(struct device *dev,
 
 	if (streq(buf, "on"))
 		result = ec_set_bit(conf.cooler_boost.address,
-				  conf.cooler_boost.bit);
+				    conf.cooler_boost.bit);
 
 	else if (streq(buf, "off"))
 		result = ec_unset_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit);
+				      conf.cooler_boost.bit);
 
 	if (result < 0)
 		return result;
@@ -808,6 +803,9 @@ static ssize_t shift_mode_show(struct device *device,
 	result = ec_read(conf.shift_mode.address, &rdata);
 	if (result < 0)
 		return result;
+
+	if (rdata == 0x80)
+		return sprintf(buf, "%s\n", "unspecified");
 
 	for (int i = 0; i < conf.shift_mode.modes_count; i++) {
 		if (rdata == conf.shift_mode.modes[i].value) {
