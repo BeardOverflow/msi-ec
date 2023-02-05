@@ -92,6 +92,9 @@ static struct msi_ec_conf CONF0 __initdata = {
 		},
 		.modes_count = 3,
 	},
+	.super_battery = {
+		.supported = false,
+	},
 	.fan_mode = {
 		.address = 0xf4,
 	},
@@ -169,6 +172,9 @@ static struct msi_ec_conf CONF1 __initdata = {
 		},
 		.modes_count = 4,
 	},
+	.super_battery = {
+		.supported = false,
+	},
 	.fan_mode = {
 		.address = 0xf4,
 	},
@@ -244,6 +250,11 @@ static struct msi_ec_conf CONF2 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 		},
 		.modes_count = 3,
+	},
+	.super_battery = {
+		.supported = true,
+		.address   = 0xeb,
+		.mask      = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -321,6 +332,11 @@ static struct msi_ec_conf CONF3 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 		},
 		.modes_count = 3,
+	},
+	.super_battery = {
+		.supported = true,
+		.address   = 0xeb,
+		.mask      = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -408,6 +424,48 @@ static int ec_read_seq(u8 addr, u8 *buf, int len)
 		if (result < 0)
 			return result;
 	}
+	return 0;
+}
+
+static int ec_set_by_mask(u8 addr, u8 mask)
+{
+	int result;
+	u8 stored;
+
+	result = ec_read(addr, &stored);
+	if (result < 0)
+		return result;
+
+	stored |= mask;
+
+	return ec_write(addr, stored);
+}
+
+static int ec_unset_by_mask(u8 addr, u8 mask)
+{
+	int result;
+	u8 stored;
+
+	result = ec_read(addr, &stored);
+	if (result < 0)
+		return result;
+
+	stored &= ~mask;
+
+	return ec_write(addr, stored);
+}
+
+static int ec_check_by_mask(u8 addr, u8 mask, bool *output)
+{
+	int result;
+	u8 stored;
+
+	result = ec_read(addr, &stored);
+	if (result < 0)
+		return result;
+
+	*output = ((stored & mask) == mask);
+
 	return 0;
 }
 
@@ -836,6 +894,49 @@ static ssize_t shift_mode_store(struct device *dev,
 	return -EINVAL;
 }
 
+static ssize_t super_battery_show(struct device *device,
+				  struct device_attribute *attr, char *buf)
+{
+	if (!conf.super_battery.supported)
+		return -EOPNOTSUPP;
+
+	int result;
+	bool enabled;
+
+	result = ec_check_by_mask(conf.super_battery.address,
+				  conf.super_battery.mask,
+				  &enabled);
+
+	if (enabled) {
+		return sprintf(buf, "%s\n", "on");
+	} else {
+		return sprintf(buf, "%s\n", "off");
+	}
+}
+
+static ssize_t super_battery_store(struct device *dev,
+				   struct device_attribute *attr,
+				   const char *buf, size_t count)
+{
+	if (!conf.super_battery.supported)
+		return -EOPNOTSUPP;
+
+	int result = -EINVAL;
+
+	if (streq(buf, "on"))
+		result = ec_set_by_mask(conf.super_battery.address,
+				        conf.super_battery.mask);
+
+	else if (streq(buf, "off"))
+		result = ec_unset_by_mask(conf.super_battery.address,
+					  conf.super_battery.mask);
+
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
 static ssize_t fan_mode_show(struct device *device,
 			     struct device_attribute *attr, char *buf)
 {
@@ -921,6 +1022,7 @@ static DEVICE_ATTR_RO(ac_connected);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
+static DEVICE_ATTR_RW(super_battery);
 static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
@@ -935,6 +1037,7 @@ static struct attribute *msi_root_attrs[] = {
 	&dev_attr_cooler_boost.attr,
 	&dev_attr_available_shift_modes.attr,
 	&dev_attr_shift_mode.attr,
+	&dev_attr_super_battery.attr,
 	&dev_attr_fan_mode.attr,
 	&dev_attr_fw_version.attr,
 	&dev_attr_fw_release_date.attr,

@@ -79,6 +79,13 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Access: Read
   - Valid values: Newline separated list of strings.
 
+- `/sys/devices/platform/msi-ec/super_battery`
+  - Description: This entry allows switching the super battery function.
+  - Access: Read, Write
+  - Valid values:
+    - on: super battery function is enabled
+    - off: super battery function is disabled
+
 - `/sys/devices/platform/msi-ec/fan_mode`
   - Description: This entry allows switching the fan mode. It provides a set of profiles for adjusting the fan speed under specific criteria.
   - Access: Read, Write

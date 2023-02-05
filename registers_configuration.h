@@ -60,6 +60,12 @@ struct msi_ec_shift_mode_conf {
 	int modes_count;
 };
 
+struct msi_ec_super_battery_conf {
+	bool supported;
+	int address;
+	int mask;
+};
+
 struct msi_ec_fan_mode_conf {
 	int address;
 };
@@ -106,6 +112,7 @@ struct msi_ec_conf {
 	struct msi_ec_power_status_conf   power_status;
 	struct msi_ec_cooler_boost_conf   cooler_boost;
 	struct msi_ec_shift_mode_conf     shift_mode;
+	struct msi_ec_super_battery_conf  super_battery;
 	struct msi_ec_fan_mode_conf       fan_mode;
 	struct msi_ec_cpu_conf            cpu;
 	struct msi_ec_gpu_conf            gpu;
