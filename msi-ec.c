@@ -47,7 +47,7 @@ static const char *const SM_COMFORT_NAME   = "comfort";
 static const char *const SM_SPORT_NAME     = "sport";
 static const char *const SM_TURBO_NAME     = "turbo";
 
-static const char *ALLOWED_FW_0[] = {
+static const char *ALLOWED_FW_0[] __initdata = {
 	"14C1EMS1.101",
 	NULL,
 };
@@ -126,7 +126,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_1[] = {
+static const char *ALLOWED_FW_1[] __initdata = {
 	"17F2EMS1.106",
 	NULL,
 };
@@ -206,7 +206,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_2[] = {
+static const char *ALLOWED_FW_2[] __initdata = {
 	"1552EMS1.118",
 	NULL,
 };
@@ -287,7 +287,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_3[] = {
+static const char *ALLOWED_FW_3[] __initdata = {
 	"1592EMS1.111",
 	"E1592IMS.10C",
 	NULL,
@@ -1360,6 +1360,7 @@ static int __init load_configuration(void)
 		for (int j = 0; CONFIGURATIONS[i]->allowed_fw[j]; j++) {
 			if (strcmp(CONFIGURATIONS[i]->allowed_fw[j], fw_version) == 0) {
 				memcpy(&conf, CONFIGURATIONS[i], sizeof(struct msi_ec_conf));
+				conf.allowed_fw = NULL;
 				return 0;
 			}
 		}
