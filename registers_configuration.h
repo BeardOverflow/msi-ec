@@ -23,7 +23,7 @@ struct msi_ec_charge_control_conf {
 
 struct msi_ec_webcam_conf {
 	int address;
-	int hard_address;
+	int block_address;
 	int bit;
 };
 

@@ -28,11 +28,18 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 This driver exports a few files in its own platform device, msi-ec, and is available to userspace under:
 
 - `/sys/devices/platform/msi-ec/webcam`
-  - Description: This entry allows enabling the integrated webcam.
+  - Description: This entry allows enabling the integrated webcam (as if it was done by a keyboard button).
   - Access: Read, Write
   - Valid values:
     - on: integrated webcam is enabled
     - off: integrated webcam is disabled
+
+- `/sys/devices/platform/msi-ec/webcam_block`
+  - Description: This entry allows blocking the integrated webcam. Being blocked by this entry, webcam can't be enabled by a keyboard button or by writing into the webcam file.
+  - Access: Read, Write
+  - Valid values:
+    - on: integrated webcam is blocked
+    - off: integrated webcam is not blocked
 
 - `/sys/devices/platform/msi-ec/fn_key`
   - Description: This entry allows switching the position between the function key and the windows key.

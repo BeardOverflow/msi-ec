@@ -62,9 +62,9 @@ static struct msi_ec_conf CONF0 __initdata = {
 		.range_max    = 0xe4,
 	},
 	.webcam = {
-		.address      = 0x2e,
-		.hard_address = 0x2f,
-		.bit          = 1,
+		.address       = 0x2e,
+		.block_address = 0x2f,
+		.bit           = 1,
 	},
 	.fn_win_swap = {
 		.address = 0xbf,
@@ -142,7 +142,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 	},
 	.webcam = {
 		.address      = 0x2e,
-		.hard_address = 0x2f,
+		.block_address = 0x2f,
 		.bit          = 1,
 	},
 	.fn_win_swap = {
@@ -222,7 +222,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 	},
 	.webcam = {
 		.address      = 0x2e,
-		.hard_address = 0x2f,
+		.block_address = 0x2f,
 		.bit          = 1,
 	},
 	.fn_win_swap = {
@@ -304,7 +304,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 	},
 	.webcam = {
 		.address      = 0x2e,
-		.hard_address = 0x2f,
+		.block_address = 0x2f,
 		.bit          = 1,
 	},
 	.fn_win_swap = {
@@ -542,22 +542,6 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	return sprintf(buf, "%i\n", rdata - offset);
 }
 
-static ssize_t
-charge_control_start_threshold_show(struct device *device,
-				    struct device_attribute *attr, char *buf)
-{
-	return charge_control_threshold_show(conf.charge_control.offset_start,
-					     device, attr, buf);
-}
-
-static ssize_t charge_control_end_threshold_show(struct device *device,
-						 struct device_attribute *attr,
-						 char *buf)
-{
-	return charge_control_threshold_show(conf.charge_control.offset_end,
-					     device, attr, buf);
-}
-
 static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
 					      struct device_attribute *attr,
 					      const char *buf, size_t count)
@@ -582,12 +566,28 @@ static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
 }
 
 static ssize_t
+charge_control_start_threshold_show(struct device *device,
+				    struct device_attribute *attr, char *buf)
+{
+	return charge_control_threshold_show(conf.charge_control.offset_start,
+					     device, attr, buf);
+}
+
+static ssize_t
 charge_control_start_threshold_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
 	return charge_control_threshold_store(
 		conf.charge_control.offset_start, dev, attr, buf, count);
+}
+
+static ssize_t charge_control_end_threshold_show(struct device *device,
+						 struct device_attribute *attr,
+						 char *buf)
+{
+	return charge_control_threshold_show(conf.charge_control.offset_end,
+					     device, attr, buf);
 }
 
 static ssize_t charge_control_end_threshold_store(struct device *dev,
@@ -632,36 +632,79 @@ static struct acpi_battery_hook battery_hook = {
 // Sysfs platform device attributes (root)
 // ============================================================ //
 
-static ssize_t webcam_show(struct device *device, struct device_attribute *attr,
-			   char *buf)
+static ssize_t webcam_common_show(u8 address,
+			          char *buf,
+				  const char *str_on_0,
+				  const char *str_on_1)
 {
 	int result;
 	bool bit_value;
 
-	result = ec_check_bit(conf.webcam.address, conf.webcam.bit, &bit_value);
+	result = ec_check_bit(address, conf.webcam.bit, &bit_value);
+	if (result < 0)
+		return result;
 
 	if (bit_value) {
-		return sprintf(buf, "%s\n", "on");
+		return sprintf(buf, "%s\n", str_on_1);
 	} else {
-		return sprintf(buf, "%s\n", "off");
+		return sprintf(buf, "%s\n", str_on_0);
 	}
 }
 
-static ssize_t webcam_store(struct device *dev, struct device_attribute *attr,
-			    const char *buf, size_t count)
+static ssize_t webcam_common_store(u8 address,
+				   const char *buf,
+				   size_t count,
+				   const char *str_for_0,
+				   const char *str_for_1)
 {
 	int result = -EINVAL;
 
-	if (streq(buf, "on"))
-		result = ec_set_bit(conf.webcam.address, conf.webcam.bit);
+	if (strcmp_trim_newline2(str_for_1, buf) == 0)
+		result = ec_set_bit(address, conf.webcam.bit);
 
-	if (streq(buf, "off"))
-		result = ec_unset_bit(conf.webcam.address, conf.webcam.bit);
+	if (strcmp_trim_newline2(str_for_0, buf) == 0)
+		result = ec_unset_bit(address, conf.webcam.bit);
 
 	if (result < 0)
 		return result;
 
 	return count;
+}
+
+static ssize_t webcam_show(struct device *device,
+			   struct device_attribute *attr,
+			   char *buf)
+{
+	return webcam_common_show(conf.webcam.address,
+				  buf,
+				  "off", "on");
+}
+
+static ssize_t webcam_store(struct device *dev,
+			    struct device_attribute *attr,
+			    const char *buf, size_t count)
+{
+	return webcam_common_store(conf.webcam.address,
+				   buf, count,
+				   "off", "on");
+}
+
+static ssize_t webcam_block_show(struct device *device,
+				 struct device_attribute *attr,
+				 char *buf)
+{
+	return webcam_common_show(conf.webcam.block_address,
+				  buf,
+				  "on", "off");
+}
+
+static ssize_t webcam_block_store(struct device *dev,
+				  struct device_attribute *attr,
+			          const char *buf, size_t count)
+{
+	return webcam_common_store(conf.webcam.block_address,
+				   buf, count,
+				   "on", "off");
 }
 
 static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
@@ -1014,6 +1057,7 @@ static ssize_t fw_release_date_show(struct device *device,
 }
 
 static DEVICE_ATTR_RW(webcam);
+static DEVICE_ATTR_RW(webcam_block);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(battery_mode);
@@ -1029,6 +1073,7 @@ static DEVICE_ATTR_RO(fw_release_date);
 
 static struct attribute *msi_root_attrs[] = {
 	&dev_attr_webcam.attr,
+	&dev_attr_webcam_block.attr,
 	&dev_attr_fn_key.attr,
 	&dev_attr_win_key.attr,
 	&dev_attr_battery_mode.attr,
