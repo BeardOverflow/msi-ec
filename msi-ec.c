@@ -70,10 +70,6 @@ static struct msi_ec_conf CONF0 __initdata = {
 		.address = 0xbf,
 		.bit     = 4,
 	},
-	.battery_mode = {
-		.address = 0xef,
-		.modes   = { 0xbc, 0xd0, 0xe4 },
-	},
 	.power_status = {
 		.address          = 0x30,
 		.lid_open_bit     = 1,
@@ -148,10 +144,6 @@ static struct msi_ec_conf CONF1 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-	},
-	.battery_mode = {
-		.address = 0xef,
-		.modes   = { 0xbc, 0xd0, 0xe4 },
 	},
 	.power_status = {
 		.address          = 0x30,
@@ -228,10 +220,6 @@ static struct msi_ec_conf CONF2 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-	},
-	.battery_mode = {
-		.address = 0xd7,
-		.modes   = { 0xbc, 0xd0, 0xe4 },
 	},
 	.power_status = {
 		.address          = 0x30,
@@ -310,10 +298,6 @@ static struct msi_ec_conf CONF3 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-	},
-	.battery_mode = {
-		.address = 0xef,
-		.modes   = { 0xbc, 0xd0, 0xe4 },
 	},
 	.power_status = {
 		.address          = 0x30,
@@ -777,15 +761,15 @@ static ssize_t battery_mode_show(struct device *device,
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf.battery_mode.address, &rdata);
+	result = ec_read(conf.charge_control.address, &rdata);
 	if (result < 0)
 		return result;
 
-	if (rdata == conf.battery_mode.modes[2]) {
+	if (rdata == conf.charge_control.range_max) {
 		return sprintf(buf, "%s\n", "max");
-	} else if (rdata == conf.battery_mode.modes[1]) {
+	} else if (rdata == conf.charge_control.offset_end + 80) { // up to 80%
 		return sprintf(buf, "%s\n", "medium");
-	} else if (rdata == conf.battery_mode.modes[0]) {
+	} else if (rdata == conf.charge_control.offset_end + 60) { // up to 60%
 		return sprintf(buf, "%s\n", "min");
 	} else {
 		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
@@ -799,16 +783,16 @@ static ssize_t battery_mode_store(struct device *dev,
 	int result = -EINVAL;
 
 	if (streq(buf, "max"))
-		result = ec_write(conf.battery_mode.address,
-				  conf.battery_mode.modes[2]);
+		result = ec_write(conf.charge_control.address,
+				  conf.charge_control.range_max);
 
-	else if (streq(buf, "medium"))
-		result = ec_write(conf.battery_mode.address,
-				  conf.battery_mode.modes[1]);
+	else if (streq(buf, "medium")) // up to 80%
+		result = ec_write(conf.charge_control.address,
+				  conf.charge_control.offset_end + 80);
 
-	else if (streq(buf, "min"))
-		result = ec_write(conf.battery_mode.address,
-				  conf.battery_mode.modes[0]);
+	else if (streq(buf, "min")) // up to 60%
+		result = ec_write(conf.charge_control.address,
+				  conf.charge_control.offset_end + 60);
 
 	if (result < 0)
 		return result;
