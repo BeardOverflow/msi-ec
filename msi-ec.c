@@ -137,9 +137,9 @@ static struct msi_ec_conf CONF1 __initdata = {
 		.range_max    = 0xe4,
 	},
 	.webcam = {
-		.address      = 0x2e,
+		.address       = 0x2e,
 		.block_address = 0x2f,
-		.bit          = 1,
+		.bit           = 1,
 	},
 	.fn_win_swap = {
 		.address = 0xbf,
@@ -213,9 +213,9 @@ static struct msi_ec_conf CONF2 __initdata = {
 		.range_max    = 0xe4,
 	},
 	.webcam = {
-		.address      = 0x2e,
+		.address       = 0x2e,
 		.block_address = 0x2f,
-		.bit          = 1,
+		.bit           = 1,
 	},
 	.fn_win_swap = {
 		.address = 0xe8,
@@ -291,9 +291,9 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.range_max    = 0xe4,
 	},
 	.webcam = {
-		.address      = 0x2e,
+		.address       = 0x2e,
 		.block_address = 0x2f,
-		.bit          = 1,
+		.bit           = 1,
 	},
 	.fn_win_swap = {
 		.address = 0xe8,
@@ -353,11 +353,89 @@ static struct msi_ec_conf CONF3 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_4[] __initdata = {
+	"16V4EMS1.114",
+	NULL,
+};
+
+static struct msi_ec_conf CONF4 __initdata = {
+	.allowed_fw = ALLOWED_FW_4,
+	.charge_control = {
+		.address      = 0xd7,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = {
+		.address       = 0x2e,
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = MSI_EC_ADDR_UNKNOWN, // supported, but unknown
+		.bit     = 4,
+	},
+	.power_status = {
+		.address          = 0x30,
+		.lid_open_bit     = 1,
+		.ac_connected_bit = 0,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
+		},
+		.modes_count = 3,
+	},
+	.super_battery = {
+		.supported = false, // supported, but address is unknown
+		.address   = MSI_EC_ADDR_UNKNOWN,
+		.mask      = 0x0f,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
+		.rt_fan_speed_base_min = 0x19,
+		.rt_fan_speed_base_max = 0x37,
+		.bs_fan_speed_address  = 0x89,
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNKNOWN,
+		.mute_led_address    = MSI_EC_ADDR_UNKNOWN,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
+		.bl_modes         = { 0x00, 0x08 }, // ?
+		.max_mode         = 1, // ?
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
 	&CONF2,
 	&CONF3,
+	&CONF4,
 	NULL,
 };
 
@@ -609,7 +687,7 @@ static int msi_battery_remove(struct power_supply *battery)
 static struct acpi_battery_hook battery_hook = {
 	.add_battery = msi_battery_add,
 	.remove_battery = msi_battery_remove,
-	.name = MSI_DRIVER_NAME,
+	.name = MSI_EC_DRIVER_NAME,
 };
 
 // ============================================================ //
@@ -1284,7 +1362,7 @@ static struct platform_device *msi_platform_device;
 
 static struct platform_driver msi_platform_driver = {
 	.driver = {
-		.name = MSI_DRIVER_NAME,
+		.name = MSI_EC_DRIVER_NAME,
 	},
 	.probe = msi_platform_probe,
 	.remove = msi_platform_remove,
@@ -1416,7 +1494,7 @@ static int __init msi_ec_init(void)
 	if (result < 0)
 		return result;
 
-	msi_platform_device = platform_device_alloc(MSI_DRIVER_NAME, -1);
+	msi_platform_device = platform_device_alloc(MSI_EC_DRIVER_NAME, -1);
 	if (msi_platform_device == NULL) {
 		platform_driver_unregister(&msi_platform_driver);
 		return -ENOMEM;

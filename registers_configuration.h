@@ -1,9 +1,11 @@
-#ifndef __MSI_EC_CONSTANTS__
-#define __MSI_EC_CONSTANTS__
+#ifndef __MSI_EC_REGISTERS_CONFIG__
+#define __MSI_EC_REGISTERS_CONFIG__
 
 #include <linux/types.h>
 
-#define MSI_DRIVER_NAME "msi-ec"
+#define MSI_EC_DRIVER_NAME "msi-ec"
+
+#define MSI_EC_ADDR_UNKNOWN 0xff00 // unknown address
 
 // Firmware info addresses are universal
 #define MSI_EC_FW_VERSION_ADDRESS 0xa0
@@ -114,4 +116,4 @@ struct msi_ec_conf {
 	struct msi_ec_kbd_bl_conf         kbd_bl;
 };
 
-#endif // __MSI_EC_CONSTANTS__
+#endif // __MSI_EC_REGISTERS_CONFIG__
