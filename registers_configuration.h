@@ -58,7 +58,6 @@ struct msi_ec_shift_mode_conf {
 };
 
 struct msi_ec_super_battery_conf {
-	bool supported;
 	int address;
 	int mask;
 };

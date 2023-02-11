@@ -89,7 +89,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 		.modes_count = 3,
 	},
 	.super_battery = {
-		.supported = false,
+		.address   = MSI_EC_ADDR_UNKNOWN,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -165,7 +165,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 		.modes_count = 4,
 	},
 	.super_battery = {
-		.supported = false,
+		.address   = MSI_EC_ADDR_UNKNOWN,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -240,7 +240,6 @@ static struct msi_ec_conf CONF2 __initdata = {
 		.modes_count = 3,
 	},
 	.super_battery = {
-		.supported = true,
 		.address   = 0xeb,
 		.mask      = 0x0f,
 	},
@@ -318,7 +317,6 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.modes_count = 3,
 	},
 	.super_battery = {
-		.supported = true,
 		.address   = 0xeb,
 		.mask      = 0x0f,
 	},
@@ -394,8 +392,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 		},
 		.modes_count = 3,
 	},
-	.super_battery = {
-		.supported = false, // supported, but address is unknown
+	.super_battery = { // supported, but address is unknown
 		.address   = MSI_EC_ADDR_UNKNOWN,
 		.mask      = 0x0f,
 	},
@@ -451,6 +448,11 @@ static const struct msi_ec_mode FAN_MODES[] = {
 	{ FM_SILENT_NAME,   0x1d },
 	{ FM_BASIC_NAME,    0x4d },
 	{ FM_ADVANCED_NAME, 0x8d }
+};
+
+struct attribute_support {
+	struct attribute *attribute;
+	bool supported;
 };
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
@@ -699,9 +701,6 @@ static ssize_t webcam_common_show(u8 address,
 				  const char *str_on_0,
 				  const char *str_on_1)
 {
-	if (address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 	bool bit_value;
 
@@ -722,9 +721,6 @@ static ssize_t webcam_common_store(u8 address,
 				   const char *str_for_0,
 				   const char *str_for_1)
 {
-	if (address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result = -EINVAL;
 
 	if (strcmp_trim_newline2(str_for_1, buf) == 0)
@@ -778,9 +774,6 @@ static ssize_t webcam_block_store(struct device *dev,
 static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 			   char *buf)
 {
-	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 	bool bit_value;
 
@@ -796,9 +789,6 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
-	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 
 	if (streq(buf, "right")) {
@@ -816,9 +806,6 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 static ssize_t win_key_show(struct device *device,
 			    struct device_attribute *attr, char *buf)
 {
-	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 	bool bit_value;
 
@@ -834,9 +821,6 @@ static ssize_t win_key_show(struct device *device,
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
-	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 
 	if (streq(buf, "right")) {
@@ -925,9 +909,6 @@ static ssize_t ac_connected_show(struct device *device,
 static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
-	if (conf.cooler_boost.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 	bool bit_value;
 
@@ -944,9 +925,6 @@ static ssize_t cooler_boost_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count)
 {
-	if (conf.cooler_boost.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
@@ -1026,9 +1004,6 @@ static ssize_t shift_mode_store(struct device *dev,
 static ssize_t super_battery_show(struct device *device,
 				  struct device_attribute *attr, char *buf)
 {
-	if (conf.super_battery.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 	bool enabled;
 
@@ -1047,12 +1022,6 @@ static ssize_t super_battery_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
 {
-	if (conf.super_battery.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
-	if (!conf.super_battery.supported)
-		return -EOPNOTSUPP;
-
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
@@ -1072,9 +1041,6 @@ static ssize_t super_battery_store(struct device *dev,
 static ssize_t fan_mode_show(struct device *device,
 			     struct device_attribute *attr, char *buf)
 {
-	if (conf.fan_mode.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	u8 rdata;
 	int result;
 
@@ -1094,9 +1060,6 @@ static ssize_t fan_mode_show(struct device *device,
 static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 			      const char *buf, size_t count)
 {
-	if (conf.fan_mode.address == MSI_EC_ADDR_UNKNOWN)
-		return -EOPNOTSUPP;
-
 	int result;
 
 	for (int i = 0; i < FAN_MODES_COUNT; i++) {
@@ -1165,28 +1128,6 @@ static DEVICE_ATTR_RW(super_battery);
 static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
-
-static struct attribute *msi_root_attrs[] = {
-	&dev_attr_webcam.attr,
-	&dev_attr_webcam_block.attr,
-	&dev_attr_fn_key.attr,
-	&dev_attr_win_key.attr,
-	&dev_attr_battery_mode.attr,
-	&dev_attr_lid_status.attr,
-	&dev_attr_ac_connected.attr,
-	&dev_attr_cooler_boost.attr,
-	&dev_attr_available_shift_modes.attr,
-	&dev_attr_shift_mode.attr,
-	&dev_attr_super_battery.attr,
-	&dev_attr_fan_mode.attr,
-	&dev_attr_fw_version.attr,
-	&dev_attr_fw_release_date.attr,
-	NULL,
-};
-
-static const struct attribute_group msi_root_group = {
-	.attrs = msi_root_attrs,
-};
 
 // ============================================================ //
 // Sysfs platform device attributes (cpu)
@@ -1369,6 +1310,8 @@ static const struct attribute_group msi_gpu_group = {
 	.attrs = msi_gpu_attrs,
 };
 
+static struct attribute_group msi_root_group;
+
 static const struct attribute_group *msi_platform_groups[] = {
 	&msi_root_group,
 	&msi_cpu_group,
@@ -1379,15 +1322,94 @@ static const struct attribute_group *msi_platform_groups[] = {
 static int msi_platform_probe(struct platform_device *pdev)
 {
 	int result;
+
+	// ALL root attributes and their support flags
+	struct attribute_support msi_root_attrs_support[] = {
+		{
+			&dev_attr_webcam.attr,
+			conf.webcam.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_webcam_block.attr,
+			conf.webcam.block_address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_fn_key.attr,
+			conf.fn_win_swap.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_win_key.attr,
+			conf.fn_win_swap.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_battery_mode.attr,
+			conf.charge_control.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_lid_status.attr,
+			conf.power_status.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_ac_connected.attr,
+			conf.power_status.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_cooler_boost.attr,
+			conf.cooler_boost.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_available_shift_modes.attr,
+			conf.shift_mode.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_shift_mode.attr,
+			conf.shift_mode.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_super_battery.attr,
+			conf.super_battery.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_fan_mode.attr,
+			conf.fan_mode.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_fw_version.attr,
+			true,
+		},
+		{
+			&dev_attr_fw_release_date.attr,
+			true,
+		},
+	};
+
+	const int attributes_count =
+		sizeof(msi_root_attrs_support) / sizeof(msi_root_attrs_support[0]);
+
+	// supported root attributes
+	struct attribute **msi_root_attrs =
+		kcalloc(attributes_count, sizeof(struct attribute *), GFP_KERNEL);
+
+	// copy supported attributes only
+	for (int i = 0, j = 0; i < attributes_count; i++) {
+		if (msi_root_attrs_support[i].supported)
+			msi_root_attrs[j++] = msi_root_attrs_support[i].attribute;
+	}
+
+	// save attributes in the group
+	msi_root_group.attrs = msi_root_attrs;
+
 	result = sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
 	if (result < 0)
 		return result;
+
 	return 0;
 }
 
 static int msi_platform_remove(struct platform_device *pdev)
 {
 	sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
+	kvfree(msi_root_group.attrs);
 	return 0;
 }
 
@@ -1484,6 +1506,7 @@ static struct led_classdev msiacpi_led_kbdlight = {
 // Module load/unload
 // ============================================================ //
 
+// must be called before msi_platform_probe()
 static int __init load_configuration(void)
 {
 	int result;
