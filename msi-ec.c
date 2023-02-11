@@ -699,6 +699,9 @@ static ssize_t webcam_common_show(u8 address,
 				  const char *str_on_0,
 				  const char *str_on_1)
 {
+	if (address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 	bool bit_value;
 
@@ -719,6 +722,9 @@ static ssize_t webcam_common_store(u8 address,
 				   const char *str_for_0,
 				   const char *str_for_1)
 {
+	if (address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result = -EINVAL;
 
 	if (strcmp_trim_newline2(str_for_1, buf) == 0)
@@ -772,6 +778,9 @@ static ssize_t webcam_block_store(struct device *dev,
 static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 			   char *buf)
 {
+	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 	bool bit_value;
 
@@ -787,6 +796,9 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
+	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 
 	if (streq(buf, "right")) {
@@ -804,6 +816,9 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 static ssize_t win_key_show(struct device *device,
 			    struct device_attribute *attr, char *buf)
 {
+	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 	bool bit_value;
 
@@ -819,6 +834,9 @@ static ssize_t win_key_show(struct device *device,
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
+	if (conf.fn_win_swap.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 
 	if (streq(buf, "right")) {
@@ -907,6 +925,9 @@ static ssize_t ac_connected_show(struct device *device,
 static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
+	if (conf.cooler_boost.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 	bool bit_value;
 
@@ -923,6 +944,9 @@ static ssize_t cooler_boost_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count)
 {
+	if (conf.cooler_boost.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result = -EINVAL;
 
 	if (streq(buf, "on"))
@@ -1002,7 +1026,7 @@ static ssize_t shift_mode_store(struct device *dev,
 static ssize_t super_battery_show(struct device *device,
 				  struct device_attribute *attr, char *buf)
 {
-	if (!conf.super_battery.supported)
+	if (conf.super_battery.address == MSI_EC_ADDR_UNKNOWN)
 		return -EOPNOTSUPP;
 
 	int result;
@@ -1023,6 +1047,9 @@ static ssize_t super_battery_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
 {
+	if (conf.super_battery.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	if (!conf.super_battery.supported)
 		return -EOPNOTSUPP;
 
@@ -1045,6 +1072,9 @@ static ssize_t super_battery_store(struct device *dev,
 static ssize_t fan_mode_show(struct device *device,
 			     struct device_attribute *attr, char *buf)
 {
+	if (conf.fan_mode.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	u8 rdata;
 	int result;
 
@@ -1064,6 +1094,9 @@ static ssize_t fan_mode_show(struct device *device,
 static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 			      const char *buf, size_t count)
 {
+	if (conf.fan_mode.address == MSI_EC_ADDR_UNKNOWN)
+		return -EOPNOTSUPP;
+
 	int result;
 
 	for (int i = 0; i < FAN_MODES_COUNT; i++) {
@@ -1509,9 +1542,15 @@ static int __init msi_ec_init(void)
 
 	battery_hook_register(&battery_hook);
 
-	led_classdev_register(&msi_platform_device->dev, &micmute_led_cdev);
-	led_classdev_register(&msi_platform_device->dev, &mute_led_cdev);
-	led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
+	// register LED classdevs
+	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
+		led_classdev_register(&msi_platform_device->dev, &micmute_led_cdev);
+
+	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
+		led_classdev_register(&msi_platform_device->dev, &mute_led_cdev);
+
+	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
+		led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
 
 	pr_info("msi-ec: module_init\n");
 	return 0;
@@ -1519,9 +1558,15 @@ static int __init msi_ec_init(void)
 
 static void __exit msi_ec_exit(void)
 {
-	led_classdev_unregister(&mute_led_cdev);
-	led_classdev_unregister(&micmute_led_cdev);
-	led_classdev_unregister(&msiacpi_led_kbdlight);
+	// unregister LED classdevs
+	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
+		led_classdev_unregister(&micmute_led_cdev);
+
+	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
+		led_classdev_unregister(&mute_led_cdev);
+
+	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
+		led_classdev_unregister(&msiacpi_led_kbdlight);
 
 	battery_hook_unregister(&battery_hook);
 
