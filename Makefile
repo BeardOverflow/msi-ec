@@ -18,6 +18,8 @@ load:
 unload:
 	-rmmod msi-ec
 
+reload: unload load
+
 install:
 	mkdir -p /lib/modules/$(shell uname -r)/extra
 	cp msi-ec.ko /lib/modules/$(shell uname -r)/extra
@@ -37,7 +39,7 @@ dkms-install:
 	cp $(CURDIR)/dkms.conf $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/constants.h $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/registers_configuration.h $(DKMS_ROOT_PATH)
 
 	sed -e "s/@CFLGS@/${MCFLAGS}/" \
 	    -e "s/@VERSION@/$(VERSION)/" \

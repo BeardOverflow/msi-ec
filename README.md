@@ -28,11 +28,18 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 This driver exports a few files in its own platform device, msi-ec, and is available to userspace under:
 
 - `/sys/devices/platform/msi-ec/webcam`
-  - Description: This entry allows enabling the integrated webcam.
+  - Description: This entry allows enabling the integrated webcam (as if it was done by a keyboard button).
   - Access: Read, Write
   - Valid values:
     - on: integrated webcam is enabled
     - off: integrated webcam is disabled
+
+- `/sys/devices/platform/msi-ec/webcam_block`
+  - Description: This entry allows blocking the integrated webcam. Being blocked by this entry, webcam can't be enabled by a keyboard button or by writing into the webcam file.
+  - Access: Read, Write
+  - Valid values:
+    - on: integrated webcam is blocked
+    - off: integrated webcam is not blocked
 
 - `/sys/devices/platform/msi-ec/fn_key`
   - Description: This entry allows switching the position between the function key and the windows key.
@@ -63,23 +70,43 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - on: cooler boost function is enabled
     - off: cooler boost function is disabled
 
+- `/sys/devices/platform/msi-ec/available_shift_modes`
+  - Description: This entry reports all supported shift modes.
+  - Access: Read
+  - Valid values: Newline separated list of strings.
+
 - `/sys/devices/platform/msi-ec/shift_mode`
   - Description: This entry allows switching the shift mode. It provides a set of profiles for gaining CPU & GPU overclock/underclock.
   - Access: Read, Write
   - Valid values:
-    - turbo: over-voltage and over-clock for the CPU & GPU, aka overcloking mode
-    - sport: full clock frequency for the CPU & GPU, aka default desktop mode
-    - comfort: dynamic clock frequency for the CPU & GPU, aka power balanced mode
-    - eco: low clock frequency for the CPU & GPU, aka power saving mode
-    - off: operating system decides
+    - unspecified (read-only)
+    - Values reported by `/sys/devices/platform/msi-ec/available_shift_modes`. Some of the possible values:
+      - eco: low clock frequency and voltage for the CPU & GPU, aka power saving mode
+      - comfort: dynamic clock frequency and voltage for the CPU & GPU, aka power balanced mode
+      - sport: full clock frequency and voltage for the CPU & GPU, aka default desktop mode
+      - turbo: over-voltage and over-clock for the CPU & GPU, aka overclocking mode
+
+- `/sys/devices/platform/msi-ec/super_battery`
+  - Description: This entry allows switching the super battery function.
+  - Access: Read, Write
+  - Valid values:
+    - on: super battery function is enabled
+    - off: super battery function is disabled
+
+- `/sys/devices/platform/msi-ec/available_fan_modes`
+  - Description: This entry reports all supported fan modes.
+  - Access: Read
+  - Valid values: Newline separated list of strings.
 
 - `/sys/devices/platform/msi-ec/fan_mode`
   - Description: This entry allows switching the fan mode. It provides a set of profiles for adjusting the fan speed under specific criteria.
   - Access: Read, Write
   - Valid values:
-    - auto: fan speed adjusts automatically
-    - basic: fixed 1-level fan speed for CPU/GPU (percent)
-    - advanced: fixed 6-levels fan speed for CPU/GPU (percent)
+    - Values reported by `/sys/devices/platform/msi-ec/available_fan_modes`. Some of the possible values:
+      - auto: fan speed adjusts automatically
+      - silent: fan is disabled
+      - basic: fixed 1-level fan speed for CPU/GPU (percent)
+      - advanced: fixed 6-levels fan speed for CPU/GPU (percent)
 
 - `/sys/devices/platform/msi-ec/fw_version`
   - Description: This entry reports the firmware version of the motherboard.
