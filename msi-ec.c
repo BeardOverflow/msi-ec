@@ -31,7 +31,7 @@
  *
  */
 
-#include "registers_configuration.h"
+#include "ec_memory_configuration.h"
 
 #include <acpi/battery.h>
 #include <linux/acpi.h>
@@ -41,6 +41,7 @@
 #include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
+#include <linux/string.h>
 
 static const char *const SM_ECO_NAME       = "eco";
 static const char *const SM_COMFORT_NAME   = "comfort";
@@ -1512,20 +1513,20 @@ static int __init load_configuration(void)
 	int result;
 
 	// get firmware version
-	u8 fw_version[MSI_EC_FW_VERSION_LENGTH + 1];
-	result = ec_get_firmware_version(fw_version);
+	u8 ver[MSI_EC_FW_VERSION_LENGTH + 1];
+	result = ec_get_firmware_version(ver);
 	if (result < 0) {
 		return result;
 	}
 
 	// load the suitable configuration, if exists
 	for (int i = 0; CONFIGURATIONS[i]; i++) {
-		for (int j = 0; CONFIGURATIONS[i]->allowed_fw[j]; j++) {
-			if (strcmp(CONFIGURATIONS[i]->allowed_fw[j], fw_version) == 0) {
-				memcpy(&conf, CONFIGURATIONS[i], sizeof(struct msi_ec_conf));
-				conf.allowed_fw = NULL;
-				return 0;
-			}
+		if (match_string(CONFIGURATIONS[i]->allowed_fw, -1, ver) != -EINVAL) {
+			memcpy(&conf,
+			       CONFIGURATIONS[i],
+			       sizeof(struct msi_ec_conf));
+			conf.allowed_fw = NULL;
+			return 0;
 		}
 	}
 
@@ -1602,7 +1603,7 @@ static void __exit msi_ec_exit(void)
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_AUTHOR("Aakash Singh <mail@singhaakash.dev>");
-MODULE_AUTHOR("Nikita Kravets <k.qovekt@gmail.com>");
+MODULE_AUTHOR("Nikita Kravets <teackot@gmail.com>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
 MODULE_VERSION("0.08");
 
