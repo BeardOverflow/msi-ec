@@ -76,11 +76,6 @@ static struct msi_ec_conf CONF0 __initdata = {
 		.address = 0xbf,
 		.bit     = 4,
 	},
-	.power_status = {
-		.address          = 0x30,
-		.lid_open_bit     = 1,
-		.ac_connected_bit = 0,
-	},
 	.cooler_boost = {
 		.address = 0x98,
 		.bit     = 7,
@@ -158,11 +153,6 @@ static struct msi_ec_conf CONF1 __initdata = {
 		.address = 0xbf,
 		.bit     = 4,
 	},
-	.power_status = {
-		.address          = 0x30,
-		.lid_open_bit     = 1,
-		.ac_connected_bit = 0,
-	},
 	.cooler_boost = {
 		.address = 0x98,
 		.bit     = 7,
@@ -239,11 +229,6 @@ static struct msi_ec_conf CONF2 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-	},
-	.power_status = {
-		.address          = 0x30,
-		.lid_open_bit     = 1,
-		.ac_connected_bit = 0,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -324,11 +309,6 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.address = 0xe8,
 		.bit     = 4,
 	},
-	.power_status = {
-		.address          = 0x30,
-		.lid_open_bit     = 1,
-		.ac_connected_bit = 0,
-	},
 	.cooler_boost = {
 		.address = 0x98,
 		.bit     = 7,
@@ -406,11 +386,6 @@ static struct msi_ec_conf CONF4 __initdata = {
 	.fn_win_swap = {
 		.address = MSI_EC_ADDR_UNKNOWN, // supported, but unknown
 		.bit     = 4,
-	},
-	.power_status = {
-		.address          = 0x30,
-		.lid_open_bit     = 1,
-		.ac_connected_bit = 0,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -908,32 +883,6 @@ static ssize_t battery_mode_store(struct device *dev,
 	return count;
 }
 
-static ssize_t lid_status_show(struct device *device,
-			       struct device_attribute *attr, char *buf)
-{
-	int result;
-	bool bit_value;
-
-	result = ec_check_bit(conf.power_status.address, conf.power_status.lid_open_bit, &bit_value);
-	if (result < 0)
-		return result;
-
-	return sprintf(buf, "%s\n", bit_value ? "open" : "closed");
-}
-
-static ssize_t ac_connected_show(struct device *device,
-			         struct device_attribute *attr, char *buf)
-{
-	int result;
-	bool bit_value;
-
-	result = ec_check_bit(conf.power_status.address, conf.power_status.ac_connected_bit, &bit_value);
-	if (result < 0)
-		return result;
-
-	return sprintf(buf, "%s\n", bit_value ? "1" : "0");
-}
-
 static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
@@ -1165,8 +1114,6 @@ static DEVICE_ATTR_RW(webcam_block);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(battery_mode);
-static DEVICE_ATTR_RO(lid_status);
-static DEVICE_ATTR_RO(ac_connected);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
@@ -1391,14 +1338,6 @@ static int msi_platform_probe(struct platform_device *pdev)
 		{
 			&dev_attr_battery_mode.attr,
 			conf.charge_control.address != MSI_EC_ADDR_UNKNOWN,
-		},
-		{
-			&dev_attr_lid_status.attr,
-			conf.power_status.address != MSI_EC_ADDR_UNKNOWN,
-		},
-		{
-			&dev_attr_ac_connected.attr,
-			conf.power_status.address != MSI_EC_ADDR_UNKNOWN,
 		},
 		{
 			&dev_attr_cooler_boost.attr,

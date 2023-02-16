@@ -34,12 +34,6 @@ struct msi_ec_fn_win_swap_conf {
 	int bit;
 };
 
-struct msi_ec_power_status_conf {
-	int address;
-	int lid_open_bit;
-	int ac_connected_bit;
-};
-
 struct msi_ec_cooler_boost_conf {
 	int address;
 	int bit;
@@ -106,7 +100,6 @@ struct msi_ec_conf {
 	struct msi_ec_charge_control_conf charge_control;
 	struct msi_ec_webcam_conf         webcam;
 	struct msi_ec_fn_win_swap_conf    fn_win_swap;
-	struct msi_ec_power_status_conf   power_status;
 	struct msi_ec_cooler_boost_conf   cooler_boost;
 	struct msi_ec_shift_mode_conf     shift_mode;
 	struct msi_ec_super_battery_conf  super_battery;
