@@ -39,6 +39,7 @@ struct msi_ec_cooler_boost_conf {
 	int bit;
 };
 
+#define MSI_EC_MODE_NULL { NULL, 0 }
 struct msi_ec_mode {
 	const char *name;
 	int value;
@@ -48,7 +49,6 @@ struct msi_ec_mode {
 struct msi_ec_shift_mode_conf {
 	int address;
 	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
-	int modes_count;
 };
 
 struct msi_ec_super_battery_conf {
@@ -59,7 +59,6 @@ struct msi_ec_super_battery_conf {
 struct msi_ec_fan_mode_conf {
 	int address;
 	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
-	int modes_count;
 };
 
 struct msi_ec_cpu_conf {
