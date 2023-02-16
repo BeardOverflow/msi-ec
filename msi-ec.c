@@ -48,6 +48,11 @@ static const char *const SM_COMFORT_NAME   = "comfort";
 static const char *const SM_SPORT_NAME     = "sport";
 static const char *const SM_TURBO_NAME     = "turbo";
 
+static const char *const FM_AUTO_NAME     = "auto";
+static const char *const FM_SILENT_NAME   = "silent";
+static const char *const FM_BASIC_NAME    = "basic";
+static const char *const FM_ADVANCED_NAME = "advanced";
+
 static const char *ALLOWED_FW_0[] __initdata = {
 	"14C1EMS1.101",
 	NULL,
@@ -94,6 +99,13 @@ static struct msi_ec_conf CONF0 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xf4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d }
+		},
+		.modes_count = 4,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -170,6 +182,12 @@ static struct msi_ec_conf CONF1 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xf4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d }
+		},
+		.modes_count = 3,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -246,6 +264,13 @@ static struct msi_ec_conf CONF2 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d }
+		},
+		.modes_count = 4,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -323,6 +348,13 @@ static struct msi_ec_conf CONF3 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d }
+		},
+		.modes_count = 4,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -399,6 +431,13 @@ static struct msi_ec_conf CONF4 __initdata = {
 	},
 	.fan_mode = {
 		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d }
+		},
+		.modes_count = 4,
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
@@ -438,18 +477,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 };
 
 static struct msi_ec_conf conf; // current configuration
-
-#define FAN_MODES_COUNT 4
-static const char *const FM_AUTO_NAME     = "auto";
-static const char *const FM_SILENT_NAME   = "silent";
-static const char *const FM_BASIC_NAME    = "basic";
-static const char *const FM_ADVANCED_NAME = "advanced";
-static const struct msi_ec_mode FAN_MODES[] = {
-	{ FM_AUTO_NAME,     0x0d },
-	{ FM_SILENT_NAME,   0x1d },
-	{ FM_BASIC_NAME,    0x4d },
-	{ FM_ADVANCED_NAME, 0x8d }
-};
 
 struct attribute_support {
 	struct attribute *attribute;
@@ -1039,6 +1066,23 @@ static ssize_t super_battery_store(struct device *dev,
 	return count;
 }
 
+static ssize_t available_fan_modes_show(struct device *device,
+					struct device_attribute *attr,
+					char *buf)
+{
+	int result = 0;
+	int count = 0;
+
+	for (int i = 0; i < conf.fan_mode.modes_count; i++) {
+		result = sprintf(buf + count, "%s\n", conf.fan_mode.modes[i].name);
+		if (result < 0)
+			return result;
+		count += result;
+	}
+
+	return count;
+}
+
 static ssize_t fan_mode_show(struct device *device,
 			     struct device_attribute *attr, char *buf)
 {
@@ -1049,9 +1093,9 @@ static ssize_t fan_mode_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	for (int i = 0; i < FAN_MODES_COUNT; i++) {
-		if (rdata == FAN_MODES[i].value) {
-			return sprintf(buf, "%s\n", FAN_MODES[i].name);
+	for (int i = 0; i < conf.fan_mode.modes_count; i++) {
+		if (rdata == conf.fan_mode.modes[i].value) {
+			return sprintf(buf, "%s\n", conf.fan_mode.modes[i].name);
 		}
 	}
 
@@ -1063,9 +1107,10 @@ static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 {
 	int result;
 
-	for (int i = 0; i < FAN_MODES_COUNT; i++) {
-		if (strcmp_trim_newline2(FAN_MODES[i].name, buf) == 0) {
-			result = ec_write(conf.fan_mode.address, FAN_MODES[i].value);
+	for (int i = 0; i < conf.fan_mode.modes_count; i++) {
+		if (strcmp_trim_newline2(conf.fan_mode.modes[i].name, buf) == 0) {
+			result = ec_write(conf.fan_mode.address,
+					  conf.fan_mode.modes[i].value);
 			if (result < 0)
 				return result;
 
@@ -1126,6 +1171,7 @@ static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
 static DEVICE_ATTR_RW(super_battery);
+static DEVICE_ATTR_RO(available_fan_modes);
 static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
@@ -1369,6 +1415,10 @@ static int msi_platform_probe(struct platform_device *pdev)
 		{
 			&dev_attr_super_battery.attr,
 			conf.super_battery.address != MSI_EC_ADDR_UNKNOWN,
+		},
+		{
+			&dev_attr_available_fan_modes.attr,
+			conf.fan_mode.address != MSI_EC_ADDR_UNKNOWN,
 		},
 		{
 			&dev_attr_fan_mode.attr,

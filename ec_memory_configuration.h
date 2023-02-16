@@ -64,6 +64,8 @@ struct msi_ec_super_battery_conf {
 
 struct msi_ec_fan_mode_conf {
 	int address;
+	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
+	int modes_count;
 };
 
 struct msi_ec_cpu_conf {

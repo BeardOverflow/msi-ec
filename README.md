@@ -70,6 +70,11 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - on: cooler boost function is enabled
     - off: cooler boost function is disabled
 
+- `/sys/devices/platform/msi-ec/available_shift_modes`
+  - Description: This entry reports all supported shift modes.
+  - Access: Read
+  - Valid values: Newline separated list of strings.
+
 - `/sys/devices/platform/msi-ec/shift_mode`
   - Description: This entry allows switching the shift mode. It provides a set of profiles for gaining CPU & GPU overclock/underclock.
   - Access: Read, Write
@@ -81,11 +86,6 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
       - sport: full clock frequency and voltage for the CPU & GPU, aka default desktop mode
       - turbo: over-voltage and over-clock for the CPU & GPU, aka overclocking mode
 
-- `/sys/devices/platform/msi-ec/available_shift_modes`
-  - Description: This entry reports all supported shift modes.
-  - Access: Read
-  - Valid values: Newline separated list of strings.
-
 - `/sys/devices/platform/msi-ec/super_battery`
   - Description: This entry allows switching the super battery function.
   - Access: Read, Write
@@ -93,13 +93,20 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - on: super battery function is enabled
     - off: super battery function is disabled
 
+- `/sys/devices/platform/msi-ec/available_fan_modes`
+  - Description: This entry reports all supported fan modes.
+  - Access: Read
+  - Valid values: Newline separated list of strings.
+
 - `/sys/devices/platform/msi-ec/fan_mode`
   - Description: This entry allows switching the fan mode. It provides a set of profiles for adjusting the fan speed under specific criteria.
   - Access: Read, Write
   - Valid values:
-    - auto: fan speed adjusts automatically
-    - basic: fixed 1-level fan speed for CPU/GPU (percent)
-    - advanced: fixed 6-levels fan speed for CPU/GPU (percent)
+    - Values reported by `/sys/devices/platform/msi-ec/available_fan_modes`. Some of the possible values:
+      - auto: fan speed adjusts automatically
+      - silent: fan is disabled
+      - basic: fixed 1-level fan speed for CPU/GPU (percent)
+      - advanced: fixed 6-levels fan speed for CPU/GPU (percent)
 
 - `/sys/devices/platform/msi-ec/fw_version`
   - Description: This entry reports the firmware version of the motherboard.
