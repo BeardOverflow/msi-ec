@@ -482,11 +482,10 @@ static int strcmp_trim_newline2(const char *s, const char *s_nl)
 	return strcmp(s, s_nl);
 }
 
-static int ec_read_seq(u8 addr, u8 *buf, int len)
+static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 {
 	int result;
-	u8 i;
-	for (i = 0; i < len; i++) {
+	for (u8 i = 0; i < len; i++) {
 		result = ec_read(addr + i, buf + i);
 		if (result < 0)
 			return result;
@@ -678,9 +677,7 @@ ATTRIBUTE_GROUPS(msi_battery);
 
 static int msi_battery_add(struct power_supply *battery)
 {
-	if (device_add_groups(&battery->dev, msi_battery_groups))
-		return -ENODEV;
-	return 0;
+	return device_add_groups(&battery->dev, msi_battery_groups);
 }
 
 static int msi_battery_remove(struct power_supply *battery)
@@ -1401,11 +1398,7 @@ static int msi_platform_probe(struct platform_device *pdev)
 	// save attributes in the group
 	msi_root_group.attrs = msi_root_attrs;
 
-	result = sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
-	if (result < 0)
-		return result;
-
-	return 0;
+	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
 }
 
 static int msi_platform_remove(struct platform_device *pdev)
