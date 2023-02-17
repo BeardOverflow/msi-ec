@@ -1324,8 +1324,6 @@ static const struct attribute_group *msi_platform_groups[] = {
 
 static int msi_platform_probe(struct platform_device *pdev)
 {
-	int result;
-
 	// ALL root attributes and their support flags
 	struct attribute_support msi_root_attrs_support[] = {
 		{
@@ -1531,11 +1529,6 @@ static int __init load_configuration(void)
 static int __init msi_ec_init(void)
 {
 	int result;
-
-	if (acpi_disabled) {
-		pr_err("Unable to init because ACPI needs to be enabled first!\n");
-		return -ENODEV;
-	}
 
 	result = load_configuration();
 	if (result < 0)
