@@ -606,7 +606,7 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	if (result < 0)
 		return result;
 
-	return sprintf(buf, "%i\n", rdata - offset);
+	return sysfs_emit(buf, "%i\n", rdata - offset);
 }
 
 static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
@@ -712,9 +712,9 @@ static ssize_t webcam_common_show(u8 address,
 		return result;
 
 	if (bit_value) {
-		return sprintf(buf, "%s\n", str_on_1);
+		return sysfs_emit(buf, "%s\n", str_on_1);
 	} else {
-		return sprintf(buf, "%s\n", str_on_0);
+		return sysfs_emit(buf, "%s\n", str_on_0);
 	}
 }
 
@@ -783,9 +783,9 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
 
 	if (bit_value) {
-		return sprintf(buf, "%s\n", "right");
+		return sysfs_emit(buf, "%s\n", "right");
 	} else {
-		return sprintf(buf, "%s\n", "left");
+		return sysfs_emit(buf, "%s\n", "left");
 	}
 }
 
@@ -815,9 +815,9 @@ static ssize_t win_key_show(struct device *device,
 	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
 
 	if (bit_value) {
-		return sprintf(buf, "%s\n", "left");
+		return sysfs_emit(buf, "%s\n", "left");
 	} else {
-		return sprintf(buf, "%s\n", "right");
+		return sysfs_emit(buf, "%s\n", "right");
 	}
 }
 
@@ -849,13 +849,13 @@ static ssize_t battery_mode_show(struct device *device,
 		return result;
 
 	if (rdata == conf.charge_control.range_max) {
-		return sprintf(buf, "%s\n", "max");
+		return sysfs_emit(buf, "%s\n", "max");
 	} else if (rdata == conf.charge_control.offset_end + 80) { // up to 80%
-		return sprintf(buf, "%s\n", "medium");
+		return sysfs_emit(buf, "%s\n", "medium");
 	} else if (rdata == conf.charge_control.offset_end + 60) { // up to 60%
-		return sprintf(buf, "%s\n", "min");
+		return sysfs_emit(buf, "%s\n", "min");
 	} else {
-		return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+		return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
 	}
 }
 
@@ -892,9 +892,9 @@ static ssize_t cooler_boost_show(struct device *device,
 	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &bit_value);
 
 	if (bit_value) {
-		return sprintf(buf, "%s\n", "on");
+		return sysfs_emit(buf, "%s\n", "on");
 	} else {
-		return sprintf(buf, "%s\n", "off");
+		return sysfs_emit(buf, "%s\n", "off");
 	}
 }
 
@@ -928,7 +928,7 @@ static ssize_t available_shift_modes_show(struct device *device,
 	for (int i = 0; conf.shift_mode.modes[i].name; i++) {
 		// NULL entries have NULL name
 
-		result = sprintf(buf + count, "%s\n", conf.shift_mode.modes[i].name);
+		result = sysfs_emit_at(buf, count, "%s\n", conf.shift_mode.modes[i].name);
 		if (result < 0)
 			return result;
 		count += result;
@@ -949,17 +949,17 @@ static ssize_t shift_mode_show(struct device *device,
 		return result;
 
 	if (rdata == 0x80)
-		return sprintf(buf, "%s\n", "unspecified");
+		return sysfs_emit(buf, "%s\n", "unspecified");
 
 	for (int i = 0; conf.shift_mode.modes[i].name; i++) {
 		// NULL entries have NULL name
 
 		if (rdata == conf.shift_mode.modes[i].value) {
-			return sprintf(buf, "%s\n", conf.shift_mode.modes[i].name);
+			return sysfs_emit(buf, "%s\n", conf.shift_mode.modes[i].name);
 		}
 	}
 
-	return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
 }
 
 static ssize_t shift_mode_store(struct device *dev,
@@ -995,9 +995,9 @@ static ssize_t super_battery_show(struct device *device,
 				  &enabled);
 
 	if (enabled) {
-		return sprintf(buf, "%s\n", "on");
+		return sysfs_emit(buf, "%s\n", "on");
 	} else {
-		return sprintf(buf, "%s\n", "off");
+		return sysfs_emit(buf, "%s\n", "off");
 	}
 }
 
@@ -1031,7 +1031,7 @@ static ssize_t available_fan_modes_show(struct device *device,
 	for (int i = 0; conf.fan_mode.modes[i].name; i++) {
 		// NULL entries have NULL name
 
-		result = sprintf(buf + count, "%s\n", conf.fan_mode.modes[i].name);
+		result = sysfs_emit_at(buf, count, "%s\n", conf.fan_mode.modes[i].name);
 		if (result < 0)
 			return result;
 		count += result;
@@ -1054,11 +1054,11 @@ static ssize_t fan_mode_show(struct device *device,
 		// NULL entries have NULL name
 
 		if (rdata == conf.fan_mode.modes[i].value) {
-			return sprintf(buf, "%s\n", conf.fan_mode.modes[i].name);
+			return sysfs_emit(buf, "%s\n", conf.fan_mode.modes[i].name);
 		}
 	}
 
-	return sprintf(buf, "%s (%i)\n", "unknown", rdata);
+	return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
 }
 
 static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
@@ -1092,7 +1092,7 @@ static ssize_t fw_version_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	return sprintf(buf, "%s\n", rdata);
+	return sysfs_emit(buf, "%s\n", rdata);
 }
 
 static ssize_t fw_release_date_show(struct device *device,
@@ -1117,8 +1117,8 @@ static ssize_t fw_release_date_show(struct device *device,
 		return result;
 	sscanf(rtime, "%02d:%02d:%02d", &hour, &minute, &second);
 
-	return sprintf(buf, "%04d/%02d/%02d %02d:%02d:%02d\n", year, month, day,
-		       hour, minute, second);
+	return sysfs_emit(buf, "%04d/%02d/%02d %02d:%02d:%02d\n", year, month, day,
+		          hour, minute, second);
 }
 
 static DEVICE_ATTR_RW(webcam);
@@ -1150,7 +1150,7 @@ static ssize_t cpu_realtime_temperature_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	return sprintf(buf, "%i\n", rdata);
+	return sysfs_emit(buf, "%i\n", rdata);
 }
 
 static ssize_t cpu_realtime_fan_speed_show(struct device *device,
@@ -1168,10 +1168,10 @@ static ssize_t cpu_realtime_fan_speed_show(struct device *device,
 	    rdata > conf.cpu.rt_fan_speed_base_max))
 		return -EINVAL;
 
-	return sprintf(buf, "%i\n",
-		       100 * (rdata - conf.cpu.rt_fan_speed_base_min) /
-			       (conf.cpu.rt_fan_speed_base_max -
-				conf.cpu.rt_fan_speed_base_min));
+	return sysfs_emit(buf, "%i\n",
+		          100 * (rdata - conf.cpu.rt_fan_speed_base_min) /
+				  (conf.cpu.rt_fan_speed_base_max -
+				   conf.cpu.rt_fan_speed_base_min));
 }
 
 static ssize_t cpu_basic_fan_speed_show(struct device *device,
@@ -1189,10 +1189,10 @@ static ssize_t cpu_basic_fan_speed_show(struct device *device,
 	    rdata > conf.cpu.bs_fan_speed_base_max)
 		return -EINVAL;
 
-	return sprintf(buf, "%i\n",
-		       100 * (rdata - conf.cpu.bs_fan_speed_base_min) /
-			       (conf.cpu.bs_fan_speed_base_max -
-				conf.cpu.bs_fan_speed_base_min));
+	return sysfs_emit(buf, "%i\n",
+		          100 * (rdata - conf.cpu.bs_fan_speed_base_min) /
+				  (conf.cpu.bs_fan_speed_base_max -
+				   conf.cpu.bs_fan_speed_base_min));
 }
 
 static ssize_t cpu_basic_fan_speed_store(struct device *dev,
@@ -1272,7 +1272,7 @@ static ssize_t gpu_realtime_temperature_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	return sprintf(buf, "%i\n", rdata);
+	return sysfs_emit(buf, "%i\n", rdata);
 }
 
 static ssize_t gpu_realtime_fan_speed_show(struct device *device,
@@ -1286,7 +1286,7 @@ static ssize_t gpu_realtime_fan_speed_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	return sprintf(buf, "%i\n", rdata);
+	return sysfs_emit(buf, "%i\n", rdata);
 }
 
 static struct device_attribute dev_attr_gpu_realtime_temperature = {
