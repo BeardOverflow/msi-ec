@@ -31,6 +31,8 @@
  *
  */
 
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
 #include "ec_memory_configuration.h"
 
 #include <acpi/battery.h>
@@ -1563,7 +1565,7 @@ static int __init msi_ec_init(void)
 	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
 		led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
 
-	pr_info("msi-ec: module_init\n");
+	pr_info("module_init\n");
 	return 0;
 }
 
@@ -1584,7 +1586,7 @@ static void __exit msi_ec_exit(void)
 	platform_driver_unregister(&msi_platform_driver);
 	platform_device_del(msi_platform_device);
 
-	pr_info("msi-ec: module_exit\n");
+	pr_info("module_exit\n");
 }
 
 MODULE_LICENSE("GPL");
