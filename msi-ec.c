@@ -44,6 +44,7 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/string.h>
+#include <linux/slab.h>
 
 static const char *const SM_ECO_NAME       = "eco";
 static const char *const SM_COMFORT_NAME   = "comfort";
@@ -1388,6 +1389,8 @@ static int msi_platform_probe(struct platform_device *pdev)
 	// supported root attributes
 	struct attribute **msi_root_attrs =
 		kcalloc(attributes_count, sizeof(struct attribute *), GFP_KERNEL);
+	if (!msi_root_attrs)
+		return -ENOMEM;
 
 	// copy supported attributes only
 	for (int i = 0, j = 0; i < attributes_count; i++) {
@@ -1404,7 +1407,7 @@ static int msi_platform_probe(struct platform_device *pdev)
 static int msi_platform_remove(struct platform_device *pdev)
 {
 	sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-	kvfree(msi_root_group.attrs);
+	kfree(msi_root_group.attrs);
 	return 0;
 }
 
