@@ -17,10 +17,15 @@ clean:
 load:
 	insmod msi-ec.ko
 
+load-debug:
+	insmod msi-ec.ko debug=1
+
 unload:
 	-rmmod msi-ec
 
 reload: unload load
+
+reload-debug: unload load-debug
 
 install:
 	mkdir -p /lib/modules/$(shell uname -r)/extra
