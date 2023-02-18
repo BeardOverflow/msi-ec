@@ -1329,11 +1329,37 @@ static const struct attribute_group msi_gpu_group = {
 // Sysfs platform device attributes (debug)
 // ============================================================ //
 
+// Prints an EC memory dump in form of a table
 static ssize_t ec_dump_show(struct device *device,
 			    struct device_attribute *attr,
 			    char *buf)
 {
-	return sysfs_emit_at(buf, 0, "todo\n");
+	int count = 0;
+
+	// print header
+	count += sysfs_emit(
+		buf,
+		"     | _0 _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f\n"
+		"-----+------------------------------------------------\n");
+
+	// print dump
+	for (u8 i = 0x0; i <= 0xf; i++) {
+		u8 addr_base = i * 16;
+
+		count += sysfs_emit_at(buf, count, "%#x_ |", i);
+		for (u8 j = 0x0; j <= 0xf; j++) {
+			u8 rdata;
+			int result = ec_read(addr_base + j, &rdata);
+			if (result < 0)
+				return result;
+
+			count += sysfs_emit_at(buf, count, " %02x", rdata);
+		}
+
+		count += sysfs_emit_at(buf, count, "\n");
+	}
+
+	return count;
 }
 
 static DEVICE_ATTR_RO(ec_dump);
