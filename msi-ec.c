@@ -1365,12 +1365,12 @@ static ssize_t ec_dump_show(struct device *device,
 static DEVICE_ATTR_RO(ec_dump);
 
 static struct attribute *msi_debug_attrs[] = {
+	&dev_attr_fw_version.attr,
 	&dev_attr_ec_dump.attr,
 	NULL
 };
 
 static const struct attribute_group msi_debug_group = {
-	.name = "debug",
 	.attrs = msi_debug_attrs,
 };
 
