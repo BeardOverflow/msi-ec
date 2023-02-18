@@ -40,6 +40,7 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
@@ -460,6 +461,14 @@ struct attribute_support {
 	struct attribute *attribute;
 	bool supported;
 };
+
+static bool debug = false;
+module_param(debug, bool, 0);
+MODULE_PARM_DESC(debug, "Load driver in debug mode, only export debug attributes");
+
+// ============================================================ //
+// Helper functions
+// ============================================================ //
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
 
@@ -1316,6 +1325,33 @@ static const struct attribute_group msi_gpu_group = {
 	.attrs = msi_gpu_attrs,
 };
 
+// ============================================================ //
+// Sysfs platform device attributes (debug)
+// ============================================================ //
+
+static ssize_t ec_dump_show(struct device *device,
+			    struct device_attribute *attr,
+			    char *buf)
+{
+	return sysfs_emit_at(buf, 0, "todo\n");
+}
+
+static DEVICE_ATTR_RO(ec_dump);
+
+static struct attribute *msi_debug_attrs[] = {
+	&dev_attr_ec_dump.attr,
+	NULL
+};
+
+static const struct attribute_group msi_debug_group = {
+	.name = "debug",
+	.attrs = msi_debug_attrs,
+};
+
+// ============================================================ //
+// Sysfs platform driver
+// ============================================================ //
+
 static struct attribute_group msi_root_group;
 
 static const struct attribute_group *msi_platform_groups[] = {
@@ -1327,6 +1363,10 @@ static const struct attribute_group *msi_platform_groups[] = {
 
 static int msi_platform_probe(struct platform_device *pdev)
 {
+	if (debug)
+		return sysfs_create_group(&pdev->dev.kobj,
+					   &msi_debug_group);
+
 	// ALL root attributes and their support flags
 	struct attribute_support msi_root_attrs_support[] = {
 		{
@@ -1406,8 +1446,13 @@ static int msi_platform_probe(struct platform_device *pdev)
 
 static int msi_platform_remove(struct platform_device *pdev)
 {
-	sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-	kfree(msi_root_group.attrs);
+	if (debug) {
+		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
+	} else {
+		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
+		kfree(msi_root_group.attrs);
+	}
+
 	return 0;
 }
 
@@ -1507,6 +1552,9 @@ static struct led_classdev msiacpi_led_kbdlight = {
 // must be called before msi_platform_probe()
 static int __init load_configuration(void)
 {
+	if (debug)
+		return 0;
+
 	int result;
 
 	// get firmware version
@@ -1556,17 +1604,24 @@ static int __init msi_ec_init(void)
 		return result;
 	}
 
-	battery_hook_register(&battery_hook);
+	if (!debug) {
+		// these aren't allowed in debug mode
 
-	// register LED classdevs
-	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
-		led_classdev_register(&msi_platform_device->dev, &micmute_led_cdev);
+		battery_hook_register(&battery_hook);
 
-	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
-		led_classdev_register(&msi_platform_device->dev, &mute_led_cdev);
+		// register LED classdevs
+		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
+			led_classdev_register(&msi_platform_device->dev,
+					      &micmute_led_cdev);
 
-	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
-		led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
+		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
+			led_classdev_register(&msi_platform_device->dev,
+					      &mute_led_cdev);
+
+		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
+			led_classdev_register(&msi_platform_device->dev,
+					      &msiacpi_led_kbdlight);
+	}
 
 	pr_info("module_init\n");
 	return 0;
@@ -1574,17 +1629,19 @@ static int __init msi_ec_init(void)
 
 static void __exit msi_ec_exit(void)
 {
-	// unregister LED classdevs
-	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
-		led_classdev_unregister(&micmute_led_cdev);
+	if (!debug) {
+		// unregister LED classdevs
+		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
+			led_classdev_unregister(&micmute_led_cdev);
 
-	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
-		led_classdev_unregister(&mute_led_cdev);
+		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
+			led_classdev_unregister(&mute_led_cdev);
 
-	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
-		led_classdev_unregister(&msiacpi_led_kbdlight);
+		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
+			led_classdev_unregister(&msiacpi_led_kbdlight);
 
-	battery_hook_unregister(&battery_hook);
+		battery_hook_unregister(&battery_hook);
+	}
 
 	platform_driver_unregister(&msi_platform_driver);
 	platform_device_del(msi_platform_device);
