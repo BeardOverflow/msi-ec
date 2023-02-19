@@ -1362,11 +1362,47 @@ static ssize_t ec_dump_show(struct device *device,
 	return count;
 }
 
+// stores a value in the specified EC memory address. Format: "xx=xx", xx - hex u8
+static ssize_t ec_set_store(struct device *dev, struct device_attribute *attr,
+			    const char *buf, size_t count)
+{
+	if (count > 6) // "xx=xx\n" - 6 chars
+		return -EINVAL;
+
+	int result;
+
+	char addr_s[3], val_s[3];
+	result = sscanf(buf, "%2s=%2s", addr_s, val_s);
+	if (result != 2)
+		return -EINVAL;
+
+	u8 addr, val;
+
+	// convert addr
+	result = kstrtou8(addr_s, 16, &addr);
+	if (result < 0)
+		return result;
+
+	// convert val
+	result = kstrtou8(val_s, 16, &val);
+	if (result < 0)
+		return result;
+
+	// write val to EC[addr]
+	result = ec_write(addr, val);
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
 static DEVICE_ATTR_RO(ec_dump);
+static DEVICE_ATTR_WO(ec_set);
 
 static struct attribute *msi_debug_attrs[] = {
 	&dev_attr_fw_version.attr,
 	&dev_attr_ec_dump.attr,
+	&dev_attr_ec_set.attr,
 	NULL
 };
 
