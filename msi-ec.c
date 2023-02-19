@@ -400,7 +400,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = { // supported, but address is unknown
+	.super_battery = { // may be supported, but address is unknown
 		.address   = MSI_EC_ADDR_UNKNOWN,
 		.mask      = 0x0f,
 	},
@@ -409,23 +409,22 @@ static struct msi_ec_conf CONF4 __initdata = {
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
-			{ FM_BASIC_NAME,    0x4d },
 			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
+		.rt_temp_address       = 0x68, // needs testing
+		.rt_fan_speed_address  = 0x71, // needs testing
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
-		.bs_fan_speed_address  = 0x89,
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
 	},
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNKNOWN,
@@ -436,7 +435,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
 		.bl_modes         = { 0x00, 0x08 }, // ?
 		.max_mode         = 1, // ?
-		.bl_state_address = 0xd3,
+		.bl_state_address = MSI_EC_ADDR_UNKNOWN, // 0xd3, not functional
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
