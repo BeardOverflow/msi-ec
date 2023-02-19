@@ -5,7 +5,7 @@
 
 #define MSI_EC_DRIVER_NAME "msi-ec"
 
-#define MSI_EC_ADDR_UNKNOWN 0xff00 // unknown address
+#define MSI_EC_ADDR_UNKNOWN 0xff01 // unknown address
 
 // Firmware info addresses are universal
 #define MSI_EC_FW_VERSION_ADDRESS 0xa0
