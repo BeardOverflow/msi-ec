@@ -54,7 +54,9 @@ static const char *const FM_BASIC_NAME    = "basic";
 static const char *const FM_ADVANCED_NAME = "advanced";
 
 static const char *ALLOWED_FW_0[] __initdata = {
+	"14C1EMS1.012",
 	"14C1EMS1.101",
+	"14C1EMS1.102",
 	NULL
 };
 
@@ -131,7 +133,10 @@ static struct msi_ec_conf CONF0 __initdata = {
 };
 
 static const char *ALLOWED_FW_1[] __initdata = {
+	"17F2EMS1.103",
+	"17F2EMS1.104",
 	"17F2EMS1.106",
+	"17F2EMS1.107",
 	NULL
 };
 
