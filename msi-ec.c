@@ -455,6 +455,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	NULL
 };
 
+static bool conf_loaded = false;
 static struct msi_ec_conf conf; // current configuration
 
 struct attribute_support {
@@ -1407,6 +1408,7 @@ static struct attribute *msi_debug_attrs[] = {
 };
 
 static const struct attribute_group msi_debug_group = {
+	.name = "debug",
 	.attrs = msi_debug_attrs,
 };
 
@@ -1425,9 +1427,15 @@ static const struct attribute_group *msi_platform_groups[] = {
 
 static int msi_platform_probe(struct platform_device *pdev)
 {
-	if (debug)
-		return sysfs_create_group(&pdev->dev.kobj,
-					   &msi_debug_group);
+	if (debug) {
+		int result = sysfs_create_group(&pdev->dev.kobj,
+						&msi_debug_group);
+		if (result < 0)
+			return result;
+
+		if (!conf_loaded) // debug mode on an unsupported device
+			return 0;
+	}
 
 	// ALL root attributes and their support flags
 	struct attribute_support msi_root_attrs_support[] = {
@@ -1508,9 +1516,10 @@ static int msi_platform_probe(struct platform_device *pdev)
 
 static int msi_platform_remove(struct platform_device *pdev)
 {
-	if (debug) {
+	if (debug)
 		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
-	} else {
+
+	if (conf_loaded) {
 		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
 		kfree(msi_root_group.attrs);
 	}
@@ -1614,9 +1623,6 @@ static struct led_classdev msiacpi_led_kbdlight = {
 // must be called before msi_platform_probe()
 static int __init load_configuration(void)
 {
-	if (debug)
-		return 0;
-
 	int result;
 
 	// get firmware version
@@ -1633,9 +1639,14 @@ static int __init load_configuration(void)
 			       CONFIGURATIONS[i],
 			       sizeof(struct msi_ec_conf));
 			conf.allowed_fw = NULL;
+			conf_loaded = true;
 			return 0;
 		}
 	}
+
+	// debug mode works regardless of whether the firmware is supported
+	if (debug)
+		return 0;
 
 	pr_err("Your firmware version is not supported!\n");
 	return -EOPNOTSUPP;
@@ -1666,9 +1677,7 @@ static int __init msi_ec_init(void)
 		return result;
 	}
 
-	if (!debug) {
-		// these aren't allowed in debug mode
-
+	if (conf_loaded) {
 		battery_hook_register(&battery_hook);
 
 		// register LED classdevs
@@ -1691,7 +1700,7 @@ static int __init msi_ec_init(void)
 
 static void __exit msi_ec_exit(void)
 {
-	if (!debug) {
+	if (conf_loaded) {
 		// unregister LED classdevs
 		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
 			led_classdev_unregister(&micmute_led_cdev);
