@@ -92,7 +92,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address   = MSI_EC_ADDR_UNKNOWN,
+		.address = MSI_EC_ADDR_UNKNOWN,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -173,7 +173,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address   = MSI_EC_ADDR_UNKNOWN,
+		.address = MSI_EC_ADDR_UNKNOWN,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -249,8 +249,8 @@ static struct msi_ec_conf CONF2 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address   = 0xeb,
-		.mask      = 0x0f,
+		.address = 0xeb,
+		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -328,8 +328,8 @@ static struct msi_ec_conf CONF3 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address   = 0xeb,
-		.mask      = 0x0f,
+		.address = 0xeb,
+		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -406,8 +406,8 @@ static struct msi_ec_conf CONF4 __initdata = {
 		},
 	},
 	.super_battery = { // may be supported, but address is unknown
-		.address   = MSI_EC_ADDR_UNKNOWN,
-		.mask      = 0x0f,
+		.address = MSI_EC_ADDR_UNKNOWN,
+		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -485,8 +485,8 @@ static struct msi_ec_conf CONF5 __initdata = {
 		},
 	},
 	.super_battery = { // unsupported?
-		.address   = MSI_EC_ADDR_UNKNOWN,
-		.mask      = 0x0f,
+		.address = MSI_EC_ADDR_UNKNOWN,
+		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -542,11 +542,11 @@ static struct msi_ec_conf CONF6 __initdata = {
 	},
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNKNOWN,
+		.block_address = MSI_EC_ADDR_UNKNOWN, // unsupported
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = MSI_EC_ADDR_UNKNOWN,
+		.address = 0xbf, // todo: reverse
 		.bit     = 4,
 	},
 	.cooler_boost = {
@@ -564,8 +564,8 @@ static struct msi_ec_conf CONF6 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address   = 0xd5,
-		.mask      = 0x0f,
+		.address = 0xd5,
+		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xf4,
