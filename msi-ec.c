@@ -622,7 +622,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 	},
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = 0x2f, // needs testing
+		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
