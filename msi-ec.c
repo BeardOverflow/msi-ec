@@ -463,6 +463,10 @@ struct attribute_support {
 	bool supported;
 };
 
+static char *firmware = NULL;
+module_param(firmware, charp, 0);
+MODULE_PARM_DESC(firmware, "Load a configuration for a specified firmware version");
+
 static bool debug = false;
 module_param(debug, bool, 0);
 MODULE_PARM_DESC(debug, "Load driver in debug mode, only export debug attributes");
@@ -1625,11 +1629,20 @@ static int __init load_configuration(void)
 {
 	int result;
 
-	// get firmware version
-	u8 ver[MSI_EC_FW_VERSION_LENGTH + 1];
-	result = ec_get_firmware_version(ver);
-	if (result < 0) {
-		return result;
+	char *ver;
+	char ver_by_ec[MSI_EC_FW_VERSION_LENGTH + 1]; // to store version read from EC
+
+	if (firmware) {
+		// use fw version passed as a parameter
+		ver = firmware;
+	} else {
+		// get fw version from EC
+		result = ec_get_firmware_version(ver_by_ec);
+		if (result < 0) {
+			return result;
+		}
+
+		ver = ver_by_ec;
 	}
 
 	// load the suitable configuration, if exists
