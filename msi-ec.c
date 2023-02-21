@@ -92,7 +92,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN,
+		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 needs testing
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -440,7 +440,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
 		.bl_modes         = { 0x00, 0x08 }, // ?
 		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNKNOWN, // 0xd3, not functional
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xd3, not functional
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -502,7 +502,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 		.rt_fan_speed_address  = 0x71, // needs testing
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
-		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN, // not supported
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
@@ -519,7 +519,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
 		.bl_modes         = { 0x00, 0x08 }, // ?
 		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNKNOWN, // 0xf3, not functional
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -542,7 +542,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 	},
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNKNOWN, // unsupported
+		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -581,7 +581,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 		.rt_fan_speed_address  = 0xc9,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
-		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN, // not supported
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
@@ -590,15 +590,15 @@ static struct msi_ec_conf CONF6 __initdata = {
 		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
 	},
 	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNKNOWN,
-		.mute_led_address    = MSI_EC_ADDR_UNKNOWN,
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 2,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
 		.bl_modes         = { 0x00, 0x08 }, // ?
 		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNKNOWN, // 0xf3, not functional
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -1497,47 +1497,47 @@ static int msi_platform_probe(struct platform_device *pdev)
 	struct attribute_support msi_root_attrs_support[] = {
 		{
 			&dev_attr_webcam.attr,
-			conf.webcam.address != MSI_EC_ADDR_UNKNOWN,
+			conf.webcam.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_webcam_block.attr,
-			conf.webcam.block_address != MSI_EC_ADDR_UNKNOWN,
+			conf.webcam.block_address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_fn_key.attr,
-			conf.fn_win_swap.address != MSI_EC_ADDR_UNKNOWN,
+			conf.fn_win_swap.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_win_key.attr,
-			conf.fn_win_swap.address != MSI_EC_ADDR_UNKNOWN,
+			conf.fn_win_swap.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_battery_mode.attr,
-			conf.charge_control.address != MSI_EC_ADDR_UNKNOWN,
+			conf.charge_control.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_cooler_boost.attr,
-			conf.cooler_boost.address != MSI_EC_ADDR_UNKNOWN,
+			conf.cooler_boost.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_available_shift_modes.attr,
-			conf.shift_mode.address != MSI_EC_ADDR_UNKNOWN,
+			conf.shift_mode.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_shift_mode.attr,
-			conf.shift_mode.address != MSI_EC_ADDR_UNKNOWN,
+			conf.shift_mode.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_super_battery.attr,
-			conf.super_battery.address != MSI_EC_ADDR_UNKNOWN,
+			conf.super_battery.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_available_fan_modes.attr,
-			conf.fan_mode.address != MSI_EC_ADDR_UNKNOWN,
+			conf.fan_mode.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_fan_mode.attr,
-			conf.fan_mode.address != MSI_EC_ADDR_UNKNOWN,
+			conf.fan_mode.address != MSI_EC_ADDR_UNSUPP,
 		},
 		{
 			&dev_attr_fw_version.attr,
@@ -1732,13 +1732,13 @@ static int __init msi_ec_init(void)
 	battery_hook_register(&battery_hook);
 
 	// register LED classdevs
-	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
+	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_register(&msi_platform_device->dev, &micmute_led_cdev);
 
-	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
+	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_register(&msi_platform_device->dev, &mute_led_cdev);
 
-	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
+	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
 
 	pr_info("msi-ec: module_init\n");
@@ -1748,13 +1748,13 @@ static int __init msi_ec_init(void)
 static void __exit msi_ec_exit(void)
 {
 	// unregister LED classdevs
-	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNKNOWN)
+	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_unregister(&micmute_led_cdev);
 
-	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNKNOWN)
+	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_unregister(&mute_led_cdev);
 
-	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNKNOWN)
+	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_unregister(&msiacpi_led_kbdlight);
 
 	battery_hook_unregister(&battery_hook);
