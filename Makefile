@@ -8,6 +8,9 @@ obj-m += msi-ec.o
 
 all: modules
 
+patch-pre-6.2:
+	git apply pre-6.2.patch
+
 modules:
 	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
 
