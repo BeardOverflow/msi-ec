@@ -1,0 +1,21 @@
+diff --git a/msi-ec.c b/msi-ec.c
+index 406f493..a3477ea 100644
+--- a/msi-ec.c
++++ b/msi-ec.c
+@@ -923,14 +923,12 @@ static struct attribute *msi_battery_attrs[] = {
+ 
+ ATTRIBUTE_GROUPS(msi_battery);
+ 
+-static int msi_battery_add(struct power_supply *battery,
+-			   struct acpi_battery_hook *hook)
++static int msi_battery_add(struct power_supply *battery)
+ {
+ 	return device_add_groups(&battery->dev, msi_battery_groups);
+ }
+ 
+-static int msi_battery_remove(struct power_supply *battery,
+-			      struct acpi_battery_hook *hook)
++static int msi_battery_remove(struct power_supply *battery)
+ {
+ 	device_remove_groups(&battery->dev, msi_battery_groups);
+ 	return 0;
