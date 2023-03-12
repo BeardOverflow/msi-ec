@@ -56,7 +56,7 @@ static const char *const FM_SILENT_NAME   = "silent";
 static const char *const FM_BASIC_NAME    = "basic";
 static const char *const FM_ADVANCED_NAME = "advanced";
 
-static const char *ALLOWED_FW_0[] __initdata = {
+static const char *ALLOWED_FW_0[] __initconst = {
 	"14C1EMS1.012",
 	"14C1EMS1.101",
 	"14C1EMS1.102",
@@ -135,7 +135,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_1[] __initdata = {
+static const char *ALLOWED_FW_1[] __initconst = {
 	"17F2EMS1.103",
 	"17F2EMS1.104",
 	"17F2EMS1.106",
@@ -215,7 +215,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_2[] __initdata = {
+static const char *ALLOWED_FW_2[] __initconst = {
 	"1552EMS1.118",
 	NULL
 };
@@ -293,7 +293,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_3[] __initdata = {
+static const char *ALLOWED_FW_3[] __initconst = {
 	"1592EMS1.111",
 	"E1592IMS.10C",
 	NULL
@@ -372,7 +372,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_4[] __initdata = {
+static const char *ALLOWED_FW_4[] __initconst = {
 	"16V4EMS1.114",
 	NULL
 };
@@ -449,7 +449,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_5[] __initdata = {
+static const char *ALLOWED_FW_5[] __initconst = {
 	"158LEMS1.103",
 	"158LEMS1.105",
 	"158LEMS1.106",
@@ -528,7 +528,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_6[] __initdata = {
+static const char *ALLOWED_FW_6[] __initconst = {
 	"1542EMS1.102",
 	"1542EMS1.104",
 	NULL
@@ -607,7 +607,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_7[] __initdata = {
+static const char *ALLOWED_FW_7[] __initconst = {
 	"17FKEMS1.108",
 	"17FKEMS1.109",
 	"17FKEMS1.10A",
