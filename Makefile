@@ -46,7 +46,7 @@ dkms-install:
 	cp $(CURDIR)/dkms.conf $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/registers_configuration.h $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
 
 	sed -e "s/@CFLGS@/${MCFLAGS}/" \
 	    -e "s/@VERSION@/$(VERSION)/" \
