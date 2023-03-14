@@ -4,7 +4,12 @@
 
 This driver might not work on other laptops produced by MSI. Use it at your own risk, I am not responsible for any damage suffered.
 
-Also, and until future enhancements, no DMI data is used to identify your laptop model. Check the constants.h file before using.
+Also, and until future enhancements, no DMI data is used to identify your laptop model. 
+
+## List of tested laptops:
+
+- MSI GF75 Thin 9SC (17F2EMS1.106)
+- MSI summit e14 evo (a12m-066)
 
 ## Installation
 
@@ -179,7 +184,3 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
     - 2: Half
     - 3: Full
 
-
-## List of tested laptops:
-
-- MSI GF75 Thin 9SC (17F2EMS1.106)
