@@ -1646,13 +1646,52 @@ static ssize_t ec_set_store(struct device *dev, struct device_attribute *attr,
 	return count;
 }
 
+// ec_get. stores the specified EC memory address. MAY BE UNSAFE!!!
+static u8 ec_get_addr = 0;
+
+// ec_get. reads and stores the specified EC memory address. Format: "xx", xx - hex u8
+static ssize_t ec_get_store(struct device *dev, struct device_attribute *attr,
+			    const char *buf, size_t count){
+	if (count > 3) // "xx\n" - 3 chars
+		return -EINVAL;
+
+	int result;
+
+	char addr_s[3];
+	result = sscanf(buf, "%2s", addr_s);
+	if (result != 1)
+		return -EINVAL;
+
+	// convert addr
+	result = kstrtou8(addr_s, 16, &ec_get_addr);
+	if (result < 0)
+		return result;
+
+	return count;
+};
+
+// ec_get. prints value of previously stored EC memory address
+static ssize_t ec_get_show(struct device *device,
+			   struct device_attribute *attr,
+			   char *buf){
+	u8 rdata;
+	int result = ec_read(ec_get_addr, &rdata);
+	if (result < 0)
+		return result;
+
+	//	return sysfs_emit(buf, "%02x=%02x\n", ec_get_addr, rdata);
+	return sysfs_emit(buf, "%02x\n", rdata);
+};
+
 static DEVICE_ATTR_RO(ec_dump);
 static DEVICE_ATTR_WO(ec_set);
+static DEVICE_ATTR_RW(ec_get);
 
 static struct attribute *msi_debug_attrs[] = {
 	&dev_attr_fw_version.attr,
 	&dev_attr_ec_dump.attr,
 	&dev_attr_ec_set.attr,
+	&dev_attr_ec_get.attr,
 	NULL
 };
 
