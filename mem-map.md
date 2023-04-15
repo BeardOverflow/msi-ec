@@ -178,54 +178,53 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 
 ## extras
 
-<details>
+<!--<details>
     <summary>14C1EMS1.{012,101,102}</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>17F2EMS1.{103,104,106,107}</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>1552EMS1.118</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>1592EMS1.111, E1592IMS.10C</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>16V4EMS1.114</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>158LEMS1.{103,105,106}</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>1542EMS1.{102,104}</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>17FKEMS1.{108,109,10A}</summary>
-</details>
+</details>-->
 
-<details>
+<!--<details>
     <summary>14F1EMS1.115</summary>
-</details>
+</details>-->
 
 <details>
     <summary>14JKEMS1.104</summary>
 
-| name                | address, bit, value          | description                                                                                                                                                         |
-|---------------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| FN-lock get         | 0x2b bit 3                   | writing does nothing                                                                                                                                                |
-| cooling profile     | 0x72-77, 0-150% in hex       | seems default                                                                                                                                                       |
-| fan mode            | 0xf4 (bit 4-7)               | under windows may be 0x0c or 0x1c, on linux return 0x2d                                                                                                             |
-| charging state      | 0x30-31, DANGEROUS!!!        | something related to charging, setting 0x30 bit 0 to HIGH with unplugged charger triggers charging state with powering on charging led and charging mark on windows |
-| realtime cooler RPM | 0xcd, around 4e-d2, inverted | value proportional to EC cooler RPM in HWINFO64 (max 6128 = 0x4e, min around 2k = 0xd2)                                                                             |
-| cooler enabled      | 0x33 bit 3                   |                                                                                                                                                                     |
-| battery level       | 0x42                         | value in %                                                                                                                                                          |
-| power-bank mode     | to be researched             |                                                                                                                                                                     |
+| name             | address, bit, value          | description                                                                                                                                                         |
+|------------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| FN-lock get      | 0x2b bit 3                   | read only                                                                                                                                                           |
+| cooling profile  | 0x72-77, 0-150% in hex       | advanced fan mode, but works in other modes                                                                                                                         |
+| charging state   | 0x30-31, DANGEROUS!!!        | something related to charging, setting 0x30 bit 0 to HIGH with unplugged charger triggers charging state with powering on charging led and charging mark on windows |
+| realtime fan RPM | 0xcd, around 4e-d2, inverted | value proportional to EC cooler RPM in HWINFO64 (max 6128 = 0x4e, min around 2k = 0xd2)                                                                             |
+| fan enabled      | 0x33 bit 3                   |                                                                                                                                                                     |
+| battery level    | 0x42                         | value in %                                                                                                                                                          |
+| power-bank mode  | to be researched             |                                                                                                                                                                     |
 
 </details>
