@@ -18,6 +18,7 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | 0xef    | 0x8a         | 0x80       | 0x8a      | 0xe4      |
 | 14F1EMS1.115               | 0xd7    | 0x8a         | 0x80       | 0x8a      | 0xe4      |
 | 14JKEMS1.104               | 0xef    | 0x8a         | 0x80       | 0x8a      | 0xe4      |
+| 1581EMS1.107 //d7=80 ef=00 | unknown | 0x8a         | 0x80       | 0x8a      | 0xe4      |
 
 ## webcam
 
@@ -33,21 +34,23 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | 0x2e    | MSI_EC_ADDR_UNSUPP | 1   |
 | 14F1EMS1.115               | 0x2e    | MSI_EC_ADDR_UNSUPP | 1   |
 | 14JKEMS1.104               | 0x2e    | 0x2f               | 1   |
+| 1581EMS1.107 // untested   | 0x2e ?  | 0x2f or unsupp     | 1 ? |
 
 ## fn_win_swap
 
-| FW                         | address             | bit |
-|----------------------------|---------------------|-----|
-| 14C1EMS1.{012,101,102}     | 0xbf                | 4   |
-| 17F2EMS1.{103,104,106,107} | 0xbf                | 4   |
-| 1552EMS1.118               | 0xe8                | 4   |
-| 1592EMS1.111, E1592IMS.10C | 0xe8                | 4   |
-| 16V4EMS1.114               | MSI_EC_ADDR_UNKNOWN | 4   |
-| 158LEMS1.{103,105,106}     | 0xbf //todo         | 4   |
-| 1542EMS1.{102,104}         | 0xbf //todo         | 4   |
-| 17FKEMS1.{108,109,10A}     | 0xbf //todo         | 4   |
-| 14F1EMS1.115               | 0xe8                | 4   |
-| 14JKEMS1.104               | 0xbf                | 4   |
+| FW                         | address               | bit |
+|----------------------------|-----------------------|-----|
+| 14C1EMS1.{012,101,102}     | 0xbf                  | 4   |
+| 17F2EMS1.{103,104,106,107} | 0xbf                  | 4   |
+| 1552EMS1.118               | 0xe8                  | 4   |
+| 1592EMS1.111, E1592IMS.10C | 0xe8                  | 4   |
+| 16V4EMS1.114               | MSI_EC_ADDR_UNKNOWN   | 4   |
+| 158LEMS1.{103,105,106}     | 0xbf //todo           | 4   |
+| 1542EMS1.{102,104}         | 0xbf //todo           | 4   |
+| 17FKEMS1.{108,109,10A}     | 0xbf //todo           | 4   |
+| 14F1EMS1.115               | 0xe8                  | 4   |
+| 14JKEMS1.104               | 0xbf                  | 4   |
+| 1581EMS1.107 // untested   | 0xbf (bit 4 is unset) | 4   |
 
 ## cooler_boost
 
@@ -63,21 +66,23 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | 0x98    | 7   |
 | 14F1EMS1.115               | 0x98    | 7   |
 | 14JKEMS1.104               | 0x98    | 7   |
+| 1581EMS1.107 // untested   | 0x98    | 7   |
 
 ## shift_mode
 
-| FW                         | address | SM_ECO_NAME | SM_COMFORT_NAME | SM_SPORT_NAME | SM_TURBO_NAME |
-|----------------------------|---------|-------------|-----------------|---------------|---------------|
-| 14C1EMS1.{012,101,102}     | 0xf2    | 0xc2        | 0xc1            | 0xc0          |               |
-| 17F2EMS1.{103,104,106,107} | 0xf2    | 0xc2        | 0xc1            | 0xc0          | 0xc4          |
-| 1552EMS1.118               | 0xf2    | 0xc2        | 0xc1            | 0xc0          |               |
-| 1592EMS1.111, E1592IMS.10C | 0xd2    | 0xc2        | 0xc1            | 0xc0          |               |
-| 16V4EMS1.114               | 0xd2    | 0xc2        | 0xc1            | 0xc0          |               |
-| 158LEMS1.{103,105,106}     | 0xf2    | 0xc2        | 0xc1            |               | 0xc4          |
-| 1542EMS1.{102,104}         | 0xf2    | 0xc2        | 0xc1            | 0xc0          | 0xc4          |
-| 17FKEMS1.{108,109,10A}     | 0xf2    | 0xc2        | 0xc1            | 0xc0          | 0xc4          |
-| 14F1EMS1.115               | 0xd2    | 0xc2        | 0xc1            | 0xc0          |               |
-| 14JKEMS1.104               | 0xf2    | 0xc2        | 0xc1            | 0xc0          |               |
+| FW                           | address | SM_ECO_NAME | SM_COMFORT_NAME | SM_SPORT_NAME | SM_TURBO_NAME |
+|------------------------------|---------|-------------|-----------------|---------------|---------------|
+| 14C1EMS1.{012,101,102}       | 0xf2    | 0xc2        | 0xc1            | 0xc0          |               |
+| 17F2EMS1.{103,104,106,107}   | 0xf2    | 0xc2        | 0xc1            | 0xc0          | 0xc4          |
+| 1552EMS1.118                 | 0xf2    | 0xc2        | 0xc1            | 0xc0          |               |
+| 1592EMS1.111, E1592IMS.10C   | 0xd2    | 0xc2        | 0xc1            | 0xc0          |               |
+| 16V4EMS1.114                 | 0xd2    | 0xc2        | 0xc1            | 0xc0          |               |
+| 158LEMS1.{103,105,106}       | 0xf2    | 0xc2        | 0xc1            |               | 0xc4          |
+| 1542EMS1.{102,104}           | 0xf2    | 0xc2        | 0xc1            | 0xc0          | 0xc4          |
+| 17FKEMS1.{108,109,10A}       | 0xf2    | 0xc2        | 0xc1            | 0xc0          | 0xc4          |
+| 14F1EMS1.115                 | 0xd2    | 0xc2        | 0xc1            | 0xc0          |               |
+| 14JKEMS1.104                 | 0xf2    | 0xc2        | 0xc1            | 0xc0          |               |
+| 1581EMS1.107 // mode unknown | 0xd2    | 0xc2 ?      | 0xc1            | 0xc0 ?        | 0xc4 ?        |
 
 ## super_battery
 
@@ -93,6 +98,7 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | MSI_EC_ADDR_UNKNOWN | 0x0f | 0xd5 but has its own wet of modes        |
 | 14F1EMS1.115               | 0xeb                | 0x0f |                                          |
 | 14JKEMS1.104               | MSI_EC_ADDR_UNSUPP  |      | unsupported or enabled by ECO shift      |
+| 1581EMS1.107               | MSI_EC_ADDR_UNKNOWN |      | d5=00 eb=00, may be unsupported          |
 
 ## fan_mode
 
@@ -100,18 +106,19 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 
 > note from 14JKEMS1: changing low nibble does nothing, bit 5 unused, bit 6 zeroed by MSI app if set
 
-| FW                         | address | FM_AUTO_NAME | FM_SILENT_NAME | FM_BASIC_NAME | FM_ADVANCED_NAME |
-|----------------------------|---------|--------------|----------------|---------------|------------------|
-| 14C1EMS1.{012,101,102}     | 0xf4    | 0x0d         | 0x1d           | 0x4d          | 0x8d             |
-| 17F2EMS1.{103,104,106,107} | 0xf4    | 0x0d         |                | 0x4d          | 0x8d             |
-| 1552EMS1.118               | 0xd4    | 0x0d         | 0x1d           | 0x4d          | 0x8d             |
-| 1592EMS1.111, E1592IMS.10C | 0xd4    | 0x0d         | 0x1d           | 0x4d          | 0x8d             |
-| 16V4EMS1.114               | 0xd4    | 0x0d         | 0x1d           |               | 0x8d             |
-| 158LEMS1.{103,105,106}     | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
-| 1542EMS1.{102,104}         | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
-| 17FKEMS1.{108,109,10A}     | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
-| 14F1EMS1.115               | 0xd4    | 0x0d         | 0x1d           | 0x4d          |                  |
-| 14JKEMS1.104               | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
+| FW                           | address | FM_AUTO_NAME | FM_SILENT_NAME | FM_BASIC_NAME | FM_ADVANCED_NAME |
+|------------------------------|---------|--------------|----------------|---------------|------------------|
+| 14C1EMS1.{012,101,102}       | 0xf4    | 0x0d         | 0x1d           | 0x4d          | 0x8d             |
+| 17F2EMS1.{103,104,106,107}   | 0xf4    | 0x0d         |                | 0x4d          | 0x8d             |
+| 1552EMS1.118                 | 0xd4    | 0x0d         | 0x1d           | 0x4d          | 0x8d             |
+| 1592EMS1.111, E1592IMS.10C   | 0xd4    | 0x0d         | 0x1d           | 0x4d          | 0x8d             |
+| 16V4EMS1.114                 | 0xd4    | 0x0d         | 0x1d           |               | 0x8d             |
+| 158LEMS1.{103,105,106}       | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
+| 1542EMS1.{102,104}           | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
+| 17FKEMS1.{108,109,10A}       | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
+| 14F1EMS1.115                 | 0xd4    | 0x0d         | 0x1d           | 0x4d          |                  |
+| 14JKEMS1.104                 | 0xf4    | 0x0d         | 0x1d           |               | 0x8d             |
+| 1581EMS1.107 // mode unknown | 0xd4    | 0x0d         | 0x1d ?         | 0x4d ?        | 0x8d ?           |
 
 ## cpu
 
@@ -127,6 +134,7 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | 0x68                  | 0xc9 // needs testing | 0x19                  | 0x37                       | MSI_EC_ADDR_UNSUPP   | 0x00                  | 0x0f                  |
 | 14F1EMS1.115               | 0x68                  | 0x71                  | 0x19                  | 0x37                       | MSI_EC_ADDR_UNSUPP   | 0x00                  | 0x0f                  |
 | 14JKEMS1.104               | 0x68                  | 0x71                  | 0x19 // may be 0      | 0x37 // may be decimal 150 | MSI_EC_ADDR_UNSUPP   | 0x00                  | 0x0f                  |
+| 1581EMS1.107 // untested   | 0x68 // default?      | 0x71 // default?      | 0x19                  | 0x37                       | unknown (0x89=2b) ?  | 0x00                  | 0x0f                  |
 
 ## gpu
 
@@ -142,6 +150,7 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | MSI_EC_ADDR_UNKNOWN | MSI_EC_ADDR_UNKNOWN  |
 | 14F1EMS1.115               | MSI_EC_ADDR_UNKNOWN | MSI_EC_ADDR_UNKNOWN  |
 | 14JKEMS1.104               | MSI_EC_ADDR_UNSUPP  | MSI_EC_ADDR_UNSUPP   |
+| 1581EMS1.107 // untested   | 0x80 // default?    | 0x89 // default?     |
 
 ## leds
 
@@ -157,6 +166,7 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | MSI_EC_ADDR_UNSUPP  | 0x2c                | 2   |
 | 14F1EMS1.115               | MSI_EC_ADDR_UNSUPP  | 0x2d                | 1   |
 | 14JKEMS1.104               | 0x2b                | 0x2c                | 2   |
+| 1581EMS1.107 // 2b,2c=00   | MSI_EC_ADDR_UNKNOWN | MSI_EC_ADDR_UNKNOWN |     |
 
 ## kbd_bl
 
@@ -175,6 +185,7 @@ All presented data is copy-paste from [msi-ec.c](./msi-ec.c) with minor changes 
 | 17FKEMS1.{108,109,10A}     | MSI_EC_ADDR_UNKNOWN | { 0x00, 0x08 } | 1        | 0xf3                                       | 0x80             | 3         |
 | 14F1EMS1.115               | MSI_EC_ADDR_UNKNOWN | { 0x00, 0x08 } | 1        | MSI_EC_ADDR_UNSUPP // not functional       | 0x80             | 3         |
 | 14JKEMS1.104               | MSI_EC_ADDR_UNSUPP  | { 0x00, 0x08 } | 1        | 0xf3                                       | 0x80             | 3         |
+| 1581EMS1.107 // untested   | MSI_EC_ADDR_UNKNOWN | { 0x00, 0x08 } | 1        | 0xd3                                       | 0x80             | 3         |
 
 ## extras
 
