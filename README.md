@@ -183,3 +183,5 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
 ## List of tested laptops:
 
 - MSI GF75 Thin 9SC (17F2EMS1.106)
+- MSI Prestige 15 A11SCX (16S6EMS1.111)
+- MSI Modern 15 A11M (1552EMS1.115)
