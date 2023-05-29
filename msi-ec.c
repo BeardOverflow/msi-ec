@@ -1657,8 +1657,8 @@ static ssize_t ec_get_store(struct device *dev, struct device_attribute *attr,
 		return -EINVAL;
 
 	int result;
-
 	char addr_s[3];
+
 	result = sscanf(buf, "%2s", addr_s);
 	if (result != 1)
 		return -EINVAL;
@@ -1677,7 +1677,9 @@ static ssize_t ec_get_show(struct device *device,
 			   char *buf)
 {
 	u8 rdata;
-	int result = ec_read(ec_get_addr, &rdata);
+	int result;
+	
+	result = ec_read(ec_get_addr, &rdata);
 	if (result < 0)
 		return result;
 
