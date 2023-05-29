@@ -1233,12 +1233,14 @@ static struct attribute *msi_battery_attrs[] = {
 
 ATTRIBUTE_GROUPS(msi_battery);
 
-static int msi_battery_add(struct power_supply *battery)
+static int msi_battery_add(struct power_supply *battery,
+			   struct acpi_battery_hook *hook)
 {
 	return device_add_groups(&battery->dev, msi_battery_groups);
 }
 
-static int msi_battery_remove(struct power_supply *battery)
+static int msi_battery_remove(struct power_supply *battery,
+			      struct acpi_battery_hook *hook)
 {
 	device_remove_groups(&battery->dev, msi_battery_groups);
 	return 0;
