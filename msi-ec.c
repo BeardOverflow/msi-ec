@@ -296,6 +296,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 static const char *ALLOWED_FW_3[] __initconst = {
 	"1592EMS1.111",
 	"E1592IMS.10C",
+	"E1592IMS.10D",
 	NULL
 };
 
