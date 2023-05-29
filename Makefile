@@ -8,8 +8,8 @@ obj-m += msi-ec.o
 
 all: modules
 
-patch-pre-6.2:
-	git apply pre-6.2.patch
+older-kernel-patch:
+	git apply older-kernel.patch
 
 modules:
 	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
