@@ -1647,11 +1647,12 @@ static ssize_t ec_set_store(struct device *dev, struct device_attribute *attr,
 }
 
 // ec_get. stores the specified EC memory address. MAY BE UNSAFE!!!
-static u8 ec_get_addr = 0;
+static u8 ec_get_addr;
 
 // ec_get. reads and stores the specified EC memory address. Format: "xx", xx - hex u8
 static ssize_t ec_get_store(struct device *dev, struct device_attribute *attr,
-			    const char *buf, size_t count){
+			    const char *buf, size_t count)
+{
 	if (count > 3) // "xx\n" - 3 chars
 		return -EINVAL;
 
@@ -1673,7 +1674,8 @@ static ssize_t ec_get_store(struct device *dev, struct device_attribute *attr,
 // ec_get. prints value of previously stored EC memory address
 static ssize_t ec_get_show(struct device *device,
 			   struct device_attribute *attr,
-			   char *buf){
+			   char *buf)
+{
 	u8 rdata;
 	int result = ec_read(ec_get_addr, &rdata);
 	if (result < 0)
