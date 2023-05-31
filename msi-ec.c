@@ -1007,7 +1007,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF8,
 	&CONF9,
 	&CONF10,
-    &CONF11,
+	&CONF11,
 	NULL
 };
 
@@ -1025,7 +1025,7 @@ MODULE_PARM_DESC(firmware, "Load a configuration for a specified firmware versio
 
 static bool debug = false;
 module_param(debug, bool, 0);
-MODULE_PARM_DESC(debug, "Load driver in debug mode, only export debug attributes");
+MODULE_PARM_DESC(debug, "Load the driver in the debug mode, exporting the debug attributes");
 
 // ============================================================ //
 // Helper functions
