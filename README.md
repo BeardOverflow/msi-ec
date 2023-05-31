@@ -14,7 +14,7 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
    - For Ubuntu: `build-essential linux-headers-generic`
    - For Fedora: `kernel-devel`
 2. Clone this repository and cd to it
-3. (Linux < 6.2 only) Run `make patch-pre-6.2`
+3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
 5. Run `make install`
 6. (Optional) To uninstall, run `make uninstall`
