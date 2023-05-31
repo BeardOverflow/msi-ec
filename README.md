@@ -184,7 +184,7 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
 You can use module *parameters* to get direct read-write access to the EC or force-load a configuration
 for a specific firmware.
 
-**Be very careful, since writing into the unknown addresses of the EC memory may be dangerous!**.
+**Be very careful, since writing into the unknown addresses of the EC memory may be dangerous!**
 If you did something wrong, please, reset the EC using the reset button on the bottom of your laptop.
 
 #### `debug`, bool
@@ -199,7 +199,7 @@ You can use `make load-debug` command to load the module in the debug mode after
 |------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | fw_version | RO          | returns your EC firmware version                                                                                                                                               |
 | ec_dump    | RO          | returns an EC memory dump in the form of a table                                                                                                                               |
-| ec_get     | RW          | receives an EC memory address in the hexadecimal format or write; returns a value stored in the EC memory at this address on read                                              |
+| ec_get     | RW          | receives an EC memory address in the hexadecimal format on write; returns a value stored in the EC memory at this address on read                                              |
 | ec_set     | WO          | receives an address-value pair in the following format: `aa=vv`, where `aa` and `vv` are address and value in the hexadecimal format; then writes the value into the EC memory |
 
 #### `firmware`, string
