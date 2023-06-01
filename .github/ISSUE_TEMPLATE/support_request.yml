@@ -25,7 +25,7 @@ body:
     id: ec-firmware
     attributes:
       label: EC firmware version
-      description: `cat /sys/devices/platform/msi-ec/debug/fw_version`
+      description: cat /sys/devices/platform/msi-ec/debug/fw_version
     validations:
       required: false
 
@@ -33,7 +33,7 @@ body:
     id: ec-dump
     attributes:
       label: EC memory dump
-      description: `cat /sys/devices/platform/msi-ec/debug/ec_dump`
+      description: cat /sys/devices/platform/msi-ec/debug/ec_dump
     validations:
       required: false
 
@@ -59,7 +59,7 @@ body:
         - Yes (multi color RGB)
         - No backlight
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: additional-context
