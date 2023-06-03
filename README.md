@@ -23,6 +23,10 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
 2. Run `yay -S msi-ec-git`
 
+## Supported devices and contribution
+
+[List of supported devices](docs/TOH.md)
+
 ## Usage
 
 This driver exports a few files in its own platform device, msi-ec, and is available to userspace under:
@@ -178,10 +182,3 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
     - 1: On
     - 2: Half
     - 3: Full
-
-
-## List of tested laptops:
-
-- MSI GF75 Thin 9SC (17F2EMS1.106)
-- MSI Prestige 15 A11SCX (16S6EMS1.111)
-- MSI Modern 15 A11M (1552EMS1.115)
