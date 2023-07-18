@@ -298,6 +298,7 @@ static const char *ALLOWED_FW_3[] __initconst = {
 	"1592EMS1.111",
 	"E1592IMS.10C",
 	"E1592IMS.10D",
+	"E1592IMS.10F",
 	NULL
 };
 
