@@ -1,0 +1,28 @@
+name: Bug Report
+description: Request a new EC configuration to be added
+labels: ["bug"]
+
+body:
+  - type: input
+    id: model
+    attributes:
+      label: Laptop model
+      description: Your laptop model
+    validations:
+      required: false
+
+  - type: input
+    id: ec-firmware
+    attributes:
+      label: EC firmware version
+      description: cat /sys/devices/platform/msi-ec/fw_version
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the issue
+    validations:
+      required: false
