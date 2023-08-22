@@ -45,7 +45,8 @@ body:
       options:
         - Nvidia
         - AMD
-        - Intel only
+        - iGPU only (Intel)
+        - iGPU only (AMD)
     validations:
       required: true
 
