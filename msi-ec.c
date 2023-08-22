@@ -1012,7 +1012,7 @@ static struct msi_ec_conf CONF12 __initdata = {
 	},
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = 0x2f,
+		.block_address = MSI_EC_ADDR_UNSUPP, // also 0x2e, bit 6
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -1056,8 +1056,8 @@ static struct msi_ec_conf CONF12 __initdata = {
 		.bs_fan_speed_base_max = 0x0f,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
 		.micmute_led_address = 0x2b,
