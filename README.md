@@ -14,7 +14,7 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
    - For Ubuntu: `build-essential linux-headers-generic`
    - For Fedora: `kernel-devel`
 2. Clone this repository and cd to it
-3. (Linux < 6.2 only) Run `make patch-pre-6.2`
+3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
 5. Run `make install`
 6. (Optional) To uninstall, run `make uninstall`
@@ -179,6 +179,33 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
     - 2: Half
     - 3: Full
 
+### Debug mode
+
+You can use module *parameters* to get direct read-write access to the EC or force-load a configuration
+for a specific firmware.
+
+**Be very careful, since writing into the unknown addresses of the EC memory may be dangerous!**
+If you did something wrong, please, reset the EC using the reset button on the bottom of your laptop.
+
+#### `debug`, bool
+
+Set this parameter to `true` to enable debug attributes, located at `/sys/devices/platform/msi-ec/debug/`,
+even if your EC is not supported yet.
+Normal attributes will still be accessible if your firmware is supported.
+
+You can use `make load-debug` command to load the module in the debug mode after building it from source.
+
+| name       | permissions | description                                                                                                                                                                    |
+|------------|-------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| fw_version | RO          | returns your EC firmware version                                                                                                                                               |
+| ec_dump    | RO          | returns an EC memory dump in the form of a table                                                                                                                               |
+| ec_get     | RW          | receives an EC memory address in the hexadecimal format on write; returns a value stored in the EC memory at this address on read                                              |
+| ec_set     | WO          | receives an address-value pair in the following format: `aa=vv`, where `aa` and `vv` are address and value in the hexadecimal format; then writes the value into the EC memory |
+
+#### `firmware`, string
+
+Set this parameter to a supported EC firmware version to use its configuration and test if it is compatible with your EC.
+**Please verify that the attributes return the correct data before attempting to write into them!**
 
 ## List of tested laptops:
 

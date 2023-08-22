@@ -40,6 +40,7 @@
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
 #include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
@@ -1091,12 +1092,25 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	NULL
 };
 
+static bool conf_loaded = false;
 static struct msi_ec_conf conf; // current configuration
 
 struct attribute_support {
 	struct attribute *attribute;
 	bool supported;
 };
+
+static char *firmware = NULL;
+module_param(firmware, charp, 0);
+MODULE_PARM_DESC(firmware, "Load a configuration for a specified firmware version");
+
+static bool debug = false;
+module_param(debug, bool, 0);
+MODULE_PARM_DESC(debug, "Load the driver in the debug mode, exporting the debug attributes");
+
+// ============================================================ //
+// Helper functions
+// ============================================================ //
 
 #define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
 
@@ -1955,6 +1969,139 @@ static const struct attribute_group msi_gpu_group = {
 	.attrs = msi_gpu_attrs,
 };
 
+// ============================================================ //
+// Sysfs platform device attributes (debug)
+// ============================================================ //
+
+// Prints an EC memory dump in form of a table
+static ssize_t ec_dump_show(struct device *device,
+			    struct device_attribute *attr,
+			    char *buf)
+{
+	int count = 0;
+
+	// print header
+	count += sysfs_emit(
+		buf,
+		"     | _0 _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f\n"
+		"-----+------------------------------------------------\n");
+
+	// print dump
+	for (u8 i = 0x0; i <= 0xf; i++) {
+		u8 addr_base = i * 16;
+
+		count += sysfs_emit_at(buf, count, "%#x_ |", i);
+		for (u8 j = 0x0; j <= 0xf; j++) {
+			u8 rdata;
+			int result = ec_read(addr_base + j, &rdata);
+			if (result < 0)
+				return result;
+
+			count += sysfs_emit_at(buf, count, " %02x", rdata);
+		}
+
+		count += sysfs_emit_at(buf, count, "\n");
+	}
+
+	return count;
+}
+
+// stores a value in the specified EC memory address. Format: "xx=xx", xx - hex u8
+static ssize_t ec_set_store(struct device *dev, struct device_attribute *attr,
+			    const char *buf, size_t count)
+{
+	if (count > 6) // "xx=xx\n" - 6 chars
+		return -EINVAL;
+
+	int result;
+
+	char addr_s[3], val_s[3];
+	result = sscanf(buf, "%2s=%2s", addr_s, val_s);
+	if (result != 2)
+		return -EINVAL;
+
+	u8 addr, val;
+
+	// convert addr
+	result = kstrtou8(addr_s, 16, &addr);
+	if (result < 0)
+		return result;
+
+	// convert val
+	result = kstrtou8(val_s, 16, &val);
+	if (result < 0)
+		return result;
+
+	// write val to EC[addr]
+	result = ec_write(addr, val);
+	if (result < 0)
+		return result;
+
+	return count;
+}
+
+// ec_get. stores the specified EC memory address. MAY BE UNSAFE!!!
+static u8 ec_get_addr;
+
+// ec_get. reads and stores the specified EC memory address. Format: "xx", xx - hex u8
+static ssize_t ec_get_store(struct device *dev, struct device_attribute *attr,
+			    const char *buf, size_t count)
+{
+	if (count > 3) // "xx\n" - 3 chars
+		return -EINVAL;
+
+	int result;
+	char addr_s[3];
+
+	result = sscanf(buf, "%2s", addr_s);
+	if (result != 1)
+		return -EINVAL;
+
+	// convert addr
+	result = kstrtou8(addr_s, 16, &ec_get_addr);
+	if (result < 0)
+		return result;
+
+	return count;
+};
+
+// ec_get. prints value of previously stored EC memory address
+static ssize_t ec_get_show(struct device *device,
+			   struct device_attribute *attr,
+			   char *buf)
+{
+	u8 rdata;
+	int result;
+	
+	result = ec_read(ec_get_addr, &rdata);
+	if (result < 0)
+		return result;
+
+	//	return sysfs_emit(buf, "%02x=%02x\n", ec_get_addr, rdata);
+	return sysfs_emit(buf, "%02x\n", rdata);
+};
+
+static DEVICE_ATTR_RO(ec_dump);
+static DEVICE_ATTR_WO(ec_set);
+static DEVICE_ATTR_RW(ec_get);
+
+static struct attribute *msi_debug_attrs[] = {
+	&dev_attr_fw_version.attr,
+	&dev_attr_ec_dump.attr,
+	&dev_attr_ec_set.attr,
+	&dev_attr_ec_get.attr,
+	NULL
+};
+
+static const struct attribute_group msi_debug_group = {
+	.name = "debug",
+	.attrs = msi_debug_attrs,
+};
+
+// ============================================================ //
+// Sysfs platform driver
+// ============================================================ //
+
 static struct attribute_group msi_root_group;
 
 static const struct attribute_group *msi_platform_groups[] = {
@@ -1966,6 +2113,16 @@ static const struct attribute_group *msi_platform_groups[] = {
 
 static int msi_platform_probe(struct platform_device *pdev)
 {
+	if (debug) {
+		int result = sysfs_create_group(&pdev->dev.kobj,
+						&msi_debug_group);
+		if (result < 0)
+			return result;
+
+		if (!conf_loaded) // debug mode on an unsupported device
+			return 0;
+	}
+
 	// ALL root attributes and their support flags
 	struct attribute_support msi_root_attrs_support[] = {
 		{
@@ -2045,8 +2202,14 @@ static int msi_platform_probe(struct platform_device *pdev)
 
 static int msi_platform_remove(struct platform_device *pdev)
 {
-	sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-	kfree(msi_root_group.attrs);
+	if (debug)
+		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
+
+	if (conf_loaded) {
+		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
+		kfree(msi_root_group.attrs);
+	}
+
 	return 0;
 }
 
@@ -2148,11 +2311,20 @@ static int __init load_configuration(void)
 {
 	int result;
 
-	// get firmware version
-	u8 ver[MSI_EC_FW_VERSION_LENGTH + 1];
-	result = ec_get_firmware_version(ver);
-	if (result < 0) {
-		return result;
+	char *ver;
+	char ver_by_ec[MSI_EC_FW_VERSION_LENGTH + 1]; // to store version read from EC
+
+	if (firmware) {
+		// use fw version passed as a parameter
+		ver = firmware;
+	} else {
+		// get fw version from EC
+		result = ec_get_firmware_version(ver_by_ec);
+		if (result < 0) {
+			return result;
+		}
+
+		ver = ver_by_ec;
 	}
 
 	// load the suitable configuration, if exists
@@ -2162,9 +2334,14 @@ static int __init load_configuration(void)
 			       CONFIGURATIONS[i],
 			       sizeof(struct msi_ec_conf));
 			conf.allowed_fw = NULL;
+			conf_loaded = true;
 			return 0;
 		}
 	}
+
+	// debug mode works regardless of whether the firmware is supported
+	if (debug)
+		return 0;
 
 	pr_err("Your firmware version is not supported!\n");
 	return -EOPNOTSUPP;
@@ -2195,17 +2372,22 @@ static int __init msi_ec_init(void)
 		return result;
 	}
 
-	battery_hook_register(&battery_hook);
+	if (conf_loaded) {
+		battery_hook_register(&battery_hook);
 
-	// register LED classdevs
-	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
-		led_classdev_register(&msi_platform_device->dev, &micmute_led_cdev);
+		// register LED classdevs
+		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_register(&msi_platform_device->dev,
+					      &micmute_led_cdev);
 
-	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
-		led_classdev_register(&msi_platform_device->dev, &mute_led_cdev);
+		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_register(&msi_platform_device->dev,
+					      &mute_led_cdev);
 
-	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
-		led_classdev_register(&msi_platform_device->dev, &msiacpi_led_kbdlight);
+		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_register(&msi_platform_device->dev,
+					      &msiacpi_led_kbdlight);
+	}
 
 	pr_info("module_init\n");
 	return 0;
@@ -2213,17 +2395,19 @@ static int __init msi_ec_init(void)
 
 static void __exit msi_ec_exit(void)
 {
-	// unregister LED classdevs
-	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
-		led_classdev_unregister(&micmute_led_cdev);
+	if (conf_loaded) {
+		// unregister LED classdevs
+		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_unregister(&micmute_led_cdev);
 
-	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
-		led_classdev_unregister(&mute_led_cdev);
+		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_unregister(&mute_led_cdev);
 
-	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
-		led_classdev_unregister(&msiacpi_led_kbdlight);
+		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_unregister(&msiacpi_led_kbdlight);
 
-	battery_hook_unregister(&battery_hook);
+		battery_hook_unregister(&battery_hook);
+	}
 
 	platform_driver_unregister(&msi_platform_driver);
 	platform_device_del(msi_platform_device);
