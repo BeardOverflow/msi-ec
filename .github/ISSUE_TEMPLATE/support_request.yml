@@ -1,6 +1,6 @@
 name: New firmware request
 description: Request a new EC configuration to be added
-labels: ["New hardware/firmware"]
+labels: ["New firmware"]
 
 body:
   - type: markdown
