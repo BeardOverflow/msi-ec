@@ -1032,15 +1032,16 @@ static struct msi_ec_conf CONF12 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // may be supported
-		.mask    = 0x0f,
+		.address = MSI_EC_ADDR_UNKNOWN, // 0xed
+		.mask    = 0x0f, // a5, a4, a2
 	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
-			{ FM_AUTO_NAME,     0x0c },
-			{ FM_BASIC_NAME,   0x4c },
-			{ FM_ADVANCED_NAME, 0x8c },
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
