@@ -1176,6 +1176,11 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	if (result < 0)
 		return result;
 
+	// thresholds are unknown
+	if (rdata == 0x80) {
+		return sysfs_emit(buf, "0\n");
+	}
+
 	return sysfs_emit(buf, "%i\n", rdata - offset);
 }
 
