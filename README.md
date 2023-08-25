@@ -2,22 +2,40 @@
 
 ## Disclaimer
 
-This driver might not work on other laptops produced by MSI. Use it at your own risk, I am not responsible for any damage suffered.
+This driver might not work on other laptops produced by MSI. Use it at your own risk, we are not responsible for any damage suffered.
 
-Also, and until future enhancements, no DMI data is used to identify your laptop model. Check the constants.h file before using.
+Also, and until future enhancements, no DMI data is used to identify your laptop model. In the meantime, check the msi-ec.c file before using.
+
+Check supported laptops bellow.
+
+## Current Support in the Kernel
+
+Features already merged in kernel 6.4 and up:
+- Battery threshols
+
+Still not merged:
+- Enable/Disable webcam
+- Switch Function key and Windows Key positions
+- Battery mode (min, medium, max)
+- Enable/Disable Cooler boost
+- Power shift modes (eco, confort, sport, turbo)
+- Enable/Disable Super battery
+- Fan modes (auto, silent, basic, advanced)
+- Cpu/Gpu Temperatures
+- Cpu/Gpu Fan speeds
 
 ## Installation
 
 ### From GitHub
-1. Install the following packages:
-   - For Debian: `build-essential linux-headers-amd64`
-   - For Ubuntu: `build-essential linux-headers-generic`
-   - For Fedora: `kernel-devel`
+1. Install the following packages using the terminal:
+   - For Debian: `sudo apt install build-essential linux-headers-amd64`
+   - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
+   - For Fedora: `sudo dnf install kernel-devel`
 2. Clone this repository and cd to it
 3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
-5. Run `make install`
-6. (Optional) To uninstall, run `make uninstall`
+5. Run `sudo make install`
+6. (Optional) To uninstall, run `sudo make uninstall`
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
@@ -209,6 +227,16 @@ Set this parameter to a supported EC firmware version to use its configuration a
 
 ## List of tested laptops:
 
-- MSI GF75 Thin 9SC (17F2EMS1.106)
-- MSI Prestige 15 A11SCX (16S6EMS1.111)
-- MSI Modern 15 A11M (1552EMS1.115)
+- Prestige 14 A10SC (14C1EMS1)
+- GF75 Thin 9SC (17F2EMS1)
+- Modern 15 A11M (1552EMS1)
+- Summit E16 Flip A12UCT / A12MT (E1592IMS, 1592EMS1)
+- GS66 Stealth 11UE (16V4EMS1)
+- Alpha 15 B5EE / B5EEK (158LEMS1)
+- GP66 Leopard 10UG / 10UE / 10UH (1542EMS1)
+- Bravo 17 A4DDR / A4DDK (17FKEMS1)
+- Summit E14 Evo A12M (14F1EMS1)
+- Modern 14 C5M (14JKEMS1)
+- Katana GF66 11UC / 11UD (1582EMS1)
+- Prestige 15 A11SCX (16S6EMS1)
+- Alpha 17 B5EEK (17LLEMS1)
