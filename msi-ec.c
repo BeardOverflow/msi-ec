@@ -1057,8 +1057,8 @@ static struct msi_ec_conf CONF12 __initdata = {
 		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNKNOWN,
-		.mute_led_address    = MSI_EC_ADDR_UNKNOWN,
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = 0x2d,
 		.bit                 = 1,
 	},
 	.kbd_bl = {
