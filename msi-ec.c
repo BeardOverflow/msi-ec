@@ -1091,25 +1091,24 @@ static struct msi_ec_conf CONF13 __initdata = {
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = 0xBF	, // need test
-		.bit     = 4,
+		.address = 0xe8,
+		.bit     = 4, // 0x00-0x10
 	},
 	.cooler_boost = {
-		.address = 0x98, // default
+		.address = 0x98,
 		.bit     = 7,
 	},
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // super battery??
-			{ SM_COMFORT_NAME, 0xc1 }, // balanced/silent
-			//{ SM_SPORT_NAME,   0xc0 }, // ?
+			{ SM_ECO_NAME,     0xc2 }, // super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
 			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			MSI_EC_MODE_NULL
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // obsolete??
+		.address = MSI_EC_ADDR_UNSUPP,
 		.mask    = 0x0f, // 00, 0f
 	},
 	.fan_mode = {
@@ -1117,21 +1116,21 @@ static struct msi_ec_conf CONF13 __initdata = {
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d }, // test
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, // seems default, need test
-		.rt_fan_speed_address  = 0x71,
-		.rt_fan_speed_base_min = 0x19,
-		.rt_fan_speed_base_max = 0x37,
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0x71, // 0x0-0x96
+		.rt_fan_speed_base_min = 0x00,
+		.rt_fan_speed_base_max = 0x96,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
 	.gpu = {
-		.rt_temp_address      = 0x80, // NVidia, default, need test
+		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
@@ -1140,7 +1139,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = 0x2C, // KB auto turn off
+		.bl_mode_address  = 0x2c, // KB auto turn off
 		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
