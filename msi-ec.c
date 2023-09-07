@@ -689,6 +689,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 
 static const char *ALLOWED_FW_8[] __initconst = {
 	"14F1EMS1.115",
+	"14F1EMS1.116",
 	NULL
 };
 
