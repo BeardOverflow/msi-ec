@@ -1815,18 +1815,6 @@ static struct device_attribute dev_attr_cpu_basic_fan_speed = {
 	.store = cpu_basic_fan_speed_store,
 };
 
-static struct attribute *msi_cpu_attrs[] = {
-	&dev_attr_cpu_realtime_temperature.attr,
-	&dev_attr_cpu_realtime_fan_speed.attr,
-	&dev_attr_cpu_basic_fan_speed.attr,
-	NULL
-};
-
-static const struct attribute_group msi_cpu_group = {
-	.name = "cpu",
-	.attrs = msi_cpu_attrs,
-};
-
 // ============================================================ //
 // Sysfs platform device attributes (gpu)
 // ============================================================ //
@@ -1873,17 +1861,6 @@ static struct device_attribute dev_attr_gpu_realtime_fan_speed = {
 		.mode = 0444,
 	},
 	.show = gpu_realtime_fan_speed_show,
-};
-
-static struct attribute *msi_gpu_attrs[] = {
-	&dev_attr_gpu_realtime_temperature.attr,
-	&dev_attr_gpu_realtime_fan_speed.attr,
-	NULL
-};
-
-static const struct attribute_group msi_gpu_group = {
-	.name = "gpu",
-	.attrs = msi_gpu_attrs,
 };
 
 // ============================================================ //
@@ -2020,6 +1997,12 @@ static const struct attribute_group msi_debug_group = {
 // ============================================================ //
 
 static struct attribute_group msi_root_group;
+static struct attribute_group msi_cpu_group = {
+	.name = "cpu",
+};
+static struct attribute_group msi_gpu_group = {
+	.name = "gpu",
+};
 
 static const struct attribute_group *msi_platform_groups[] = {
 	&msi_root_group,
@@ -2027,6 +2010,24 @@ static const struct attribute_group *msi_platform_groups[] = {
 	&msi_gpu_group,
 	NULL
 };
+
+// return value has to be freed manually
+static struct attribute **filter_attributes(struct attribute_support *attributes,
+					    size_t size)
+{
+	struct attribute **filtered =
+		kcalloc(size + 1, sizeof(struct attribute *), GFP_KERNEL);
+	if (!filtered)
+		return NULL;
+
+	// copy supported attributes only
+	for (int i = 0, j = 0; i < size; i++) {
+		if (attributes[i].supported)
+			filtered[j++] = attributes[i].attribute;
+	}
+
+	return filtered;
+}
 
 static int msi_platform_probe(struct platform_device *pdev)
 {
@@ -2040,8 +2041,10 @@ static int msi_platform_probe(struct platform_device *pdev)
 			return 0;
 	}
 
+	/* root group */
+
 	// ALL root attributes and their support flags
-	struct attribute_support msi_root_attrs_support[] = {
+	struct attribute_support root_attrs_support[] = {
 		{
 			&dev_attr_webcam.attr,
 			conf.webcam.address != MSI_EC_ADDR_UNSUPP,
@@ -2096,23 +2099,53 @@ static int msi_platform_probe(struct platform_device *pdev)
 		},
 	};
 
-	const int attributes_count =
-		sizeof(msi_root_attrs_support) / sizeof(msi_root_attrs_support[0]);
-
-	// supported root attributes
-	struct attribute **msi_root_attrs =
-		kcalloc(attributes_count, sizeof(struct attribute *), GFP_KERNEL);
-	if (!msi_root_attrs)
+	msi_root_group.attrs =
+		filter_attributes(root_attrs_support,
+				  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
+	if (!msi_root_group.attrs)
 		return -ENOMEM;
 
-	// copy supported attributes only
-	for (int i = 0, j = 0; i < attributes_count; i++) {
-		if (msi_root_attrs_support[i].supported)
-			msi_root_attrs[j++] = msi_root_attrs_support[i].attribute;
-	}
+	/* cpu group */
 
-	// save attributes in the group
-	msi_root_group.attrs = msi_root_attrs;
+	struct attribute_support cpu_attrs_support[] = {
+		{
+			&dev_attr_cpu_realtime_temperature.attr,
+			conf.cpu.rt_temp_address != MSI_EC_ADDR_UNSUPP,
+		},
+		{
+			&dev_attr_cpu_realtime_fan_speed.attr,
+			conf.cpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
+		},
+		{
+			&dev_attr_cpu_basic_fan_speed.attr,
+			conf.cpu.bs_fan_speed_address != MSI_EC_ADDR_UNSUPP,
+		},
+	};
+
+	msi_cpu_group.attrs =
+		filter_attributes(cpu_attrs_support,
+				  sizeof(cpu_attrs_support) / sizeof(cpu_attrs_support[0]));
+	if (!msi_cpu_group.attrs)
+		return -ENOMEM;
+
+	/* gpu group */
+
+	struct attribute_support gpu_attrs_support[] = {
+		{
+			&dev_attr_gpu_realtime_temperature.attr,
+			conf.gpu.rt_temp_address != MSI_EC_ADDR_UNSUPP,
+		},
+		{
+			&dev_attr_gpu_realtime_fan_speed.attr,
+			conf.gpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
+		},
+	};
+
+	msi_gpu_group.attrs =
+		filter_attributes(gpu_attrs_support,
+				  sizeof(gpu_attrs_support) / sizeof(gpu_attrs_support[0]));
+	if (!msi_gpu_group.attrs)
+		return -ENOMEM;
 
 	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
 }
@@ -2125,6 +2158,8 @@ static int msi_platform_remove(struct platform_device *pdev)
 	if (conf_loaded) {
 		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
 		kfree(msi_root_group.attrs);
+		kfree(msi_cpu_group.attrs);
+		kfree(msi_gpu_group.attrs);
 	}
 
 	return 0;
