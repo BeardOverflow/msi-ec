@@ -2011,7 +2011,10 @@ static const struct attribute_group *msi_platform_groups[] = {
 	NULL
 };
 
-// return value has to be freed manually
+/*
+ * Creates an array of supported attributes
+ * Return value has to be freed manually
+*/
 static struct attribute **filter_attributes(struct attribute_support *attributes,
 					    size_t size)
 {
@@ -2043,7 +2046,7 @@ static int msi_platform_probe(struct platform_device *pdev)
 
 	/* root group */
 
-	// ALL root attributes and their support flags
+	// ALL root attributes and their support info
 	struct attribute_support root_attrs_support[] = {
 		{
 			&dev_attr_webcam.attr,
