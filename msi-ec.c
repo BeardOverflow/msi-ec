@@ -995,8 +995,10 @@ static struct msi_ec_conf CONF11 __initdata = {
     },
 };
 
+/* MSI Modern 15 A5M */
 static const char *ALLOWED_FW_12[] __initconst = {
-	"155LEMS1.106", // MSI Modern 15 A5M
+	"155LEMS1.105",
+	"155LEMS1.106",
 	NULL
 };
 
