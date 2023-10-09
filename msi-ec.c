@@ -2174,24 +2174,16 @@ static const struct attribute_group *msi_platform_groups[] = {
 };
 
 /*
- * Creates an array of supported attributes
- * Return value has to be freed manually
-*/
-static struct attribute **filter_attributes(struct attribute_support *attributes,
-					    size_t size)
+ * Copies supported attributes from `attributes` to `filtered`
+ */
+static void filter_attributes(struct attribute_support *attributes,
+			      struct attribute **filtered,
+			      size_t size)
 {
-	struct attribute **filtered =
-		kcalloc(size + 1, sizeof(struct attribute *), GFP_KERNEL);
-	if (!filtered)
-		return NULL;
-
-	// copy supported attributes only
 	for (int i = 0, j = 0; i < size; i++) {
 		if (attributes[i].supported)
 			filtered[j++] = attributes[i].attribute;
 	}
-
-	return filtered;
 }
 
 static int msi_platform_probe(struct platform_device *pdev)
@@ -2263,12 +2255,13 @@ static int msi_platform_probe(struct platform_device *pdev)
 			true,
 		},
 	};
+	static struct attribute *root_attrs[
+		sizeof(root_attrs_support) / sizeof(root_attrs_support[0]) + 1] = {0};
 
-	msi_root_group.attrs =
-		filter_attributes(root_attrs_support,
-				  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
-	if (!msi_root_group.attrs)
-		return -ENOMEM;
+	filter_attributes(root_attrs_support,
+			  root_attrs,
+			  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
+	msi_root_group.attrs = root_attrs;
 
 	/* cpu group */
 
@@ -2286,12 +2279,13 @@ static int msi_platform_probe(struct platform_device *pdev)
 			conf.cpu.bs_fan_speed_address != MSI_EC_ADDR_UNSUPP,
 		},
 	};
+	static struct attribute *cpu_attrs[
+		sizeof(cpu_attrs_support) / sizeof(cpu_attrs_support[0]) + 1] = {0};
 
-	msi_cpu_group.attrs =
-		filter_attributes(cpu_attrs_support,
-				  sizeof(cpu_attrs_support) / sizeof(cpu_attrs_support[0]));
-	if (!msi_cpu_group.attrs)
-		return -ENOMEM;
+	filter_attributes(cpu_attrs_support,
+			  cpu_attrs,
+			  sizeof(cpu_attrs_support) / sizeof(cpu_attrs_support[0]));
+	msi_cpu_group.attrs = cpu_attrs;
 
 	/* gpu group */
 
@@ -2305,12 +2299,13 @@ static int msi_platform_probe(struct platform_device *pdev)
 			conf.gpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
 		},
 	};
+	static struct attribute *gpu_attrs[
+		sizeof(gpu_attrs_support) / sizeof(gpu_attrs_support[0]) + 1] = {0};
 
-	msi_gpu_group.attrs =
-		filter_attributes(gpu_attrs_support,
-				  sizeof(gpu_attrs_support) / sizeof(gpu_attrs_support[0]));
-	if (!msi_gpu_group.attrs)
-		return -ENOMEM;
+	filter_attributes(gpu_attrs_support,
+			  gpu_attrs,
+			  sizeof(gpu_attrs_support) / sizeof(gpu_attrs_support[0]));
+	msi_gpu_group.attrs = gpu_attrs;
 
 	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
 }
@@ -2322,9 +2317,6 @@ static int msi_platform_remove(struct platform_device *pdev)
 
 	if (conf_loaded) {
 		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-		kfree(msi_root_group.attrs);
-		kfree(msi_cpu_group.attrs);
-		kfree(msi_gpu_group.attrs);
 	}
 
 	return 0;
