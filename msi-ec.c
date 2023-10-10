@@ -2255,12 +2255,9 @@ static int msi_platform_probe(struct platform_device *pdev)
 			true,
 		},
 	};
-	static struct attribute *root_attrs[
-		sizeof(root_attrs_support) / sizeof(root_attrs_support[0]) + 1] = {0};
+	static struct attribute *root_attrs[ARRAY_SIZE(root_attrs_support) + 1] = {0};
 
-	filter_attributes(root_attrs_support,
-			  root_attrs,
-			  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
+	filter_attributes(root_attrs_support, root_attrs, ARRAY_SIZE(root_attrs_support));
 	msi_root_group.attrs = root_attrs;
 
 	/* cpu group */
