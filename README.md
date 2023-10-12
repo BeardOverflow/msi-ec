@@ -31,6 +31,7 @@ Still not merged:
    - For Debian: `sudo apt install build-essential linux-headers-amd64`
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
+   - For Manjaro:`sudo pacman -Syu linux65-headers`   for the linux65 kernel, respectively change for the actually installed one
 2. Clone this repository and cd to it
 3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
