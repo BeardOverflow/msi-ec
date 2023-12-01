@@ -1,0 +1,71 @@
+name: New firmware request
+description: Request a new EC configuration to be added
+labels: ["New firmware"]
+
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Please, get the latest version of the driver from github,
+        build it and load it in the debug mode, then fill out the fields below.
+
+        To build the driver from source, run `make`
+
+        To load the driver in the debug mode, run `sudo make load-debug`
+
+  - type: input
+    id: model
+    attributes:
+      label: Laptop model
+      description: Your laptop model
+    validations:
+      required: true
+
+  - type: input
+    id: ec-firmware
+    attributes:
+      label: EC firmware version
+      description: cat /sys/devices/platform/msi-ec/debug/fw_version
+    validations:
+      required: false
+
+  - type: textarea
+    id: ec-dump
+    attributes:
+      label: EC memory dump
+      description: cat /sys/devices/platform/msi-ec/debug/ec_dump
+    validations:
+      required: false
+
+  - type: dropdown
+    id: gpu
+    attributes:
+      label: GPU
+      description: Your GPU
+      options:
+        - Nvidia
+        - AMD
+        - iGPU only (Intel)
+        - iGPU only (AMD)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: rgb-keyboard
+    attributes:
+      label: Is your keyboard RGB?
+      description: Does your keyboard support multi color RGB backlight?
+      options:
+        - No (single color)
+        - Yes (multi color RGB)
+        - No backlight
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Any other info you want to provide
+    validations:
+      required: false
