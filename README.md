@@ -240,3 +240,4 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Katana GF66 11UC / 11UD (1582EMS1)
 - Prestige 15 A11SCX (16S6EMS1)
 - Alpha 17 B5EEK (17LLEMS1)
+- Katana 17 B11UCX (17L2EMS1)
