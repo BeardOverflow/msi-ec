@@ -34,7 +34,7 @@ Still not merged:
 2. Clone this repository and cd to it
 3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
-5. Run `sudo make install`
+5. Run `sudo make dkms-install`
 6. (Optional) To uninstall, run `sudo make uninstall`
 
 ### From AUR (Arch Linux)
