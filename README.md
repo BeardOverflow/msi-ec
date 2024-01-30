@@ -33,17 +33,16 @@ Still not merged:
    - For Fedora: `sudo dnf install kernel-devel`
 2. Clone this repository and cd to it
 
-For older kernels which do not utilize DKMS (verify that dkms is not available eg. with `which dkms`)
+##### Either: For older kernels which do not utilize DKMS (verify that dkms is not available eg. with `which dkms`)
 3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
-5  Run `sudo make install`
-6  (Optional) To uninstall, run `sudo make uninstall`
+5. Run `sudo make install`
+6. (Optional) To uninstall, run `sudo make uninstall`
 
-OR:
-For newer kernels which utilize DKMS (check if available eg. with `which dkms`)
-4.  Run `make`
-5.1 Run `sudo make dkms-install`
-6.1 (Optional) To uninstall, run `sudo make dkms-uninstall`
+##### OR: For newer kernels which utilize DKMS (verify that dkms is available eg. with `which dkms`)
+4. Run `make`
+5. Run `sudo make dkms-install`
+6. (Optional) To uninstall, run `sudo make dkms-uninstall`
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
