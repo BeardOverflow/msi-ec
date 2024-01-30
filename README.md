@@ -32,10 +32,18 @@ Still not merged:
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
 2. Clone this repository and cd to it
+
+For older kernels which do not utilize DKMS (verify that dkms is not available eg. with `which dkms`)
 3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
-5. Run `sudo make dkms-install`
-6. (Optional) To uninstall, run `sudo make uninstall`
+5  Run `sudo make install`
+6  (Optional) To uninstall, run `sudo make uninstall`
+
+OR:
+For newer kernels which utilize DKMS (check if available eg. with `which dkms`)
+4.  Run `make`
+5.1 Run `sudo make dkms-install`
+6.1 (Optional) To uninstall, run `sudo make dkms-uninstall`
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
@@ -241,4 +249,4 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Prestige 15 A11SCX (16S6EMS1)
 - Alpha 17 B5EEK (17LLEMS1)
 - Katana 17 B11UCX (17L2EMS1)
-- MSI Delta 15 (A5EFK)
+- Delta 15 A5EFK (15CKEMS1)
