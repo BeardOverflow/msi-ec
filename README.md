@@ -32,15 +32,15 @@ Still not merged:
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
 2. Clone this repository and cd to it
-
-##### Either: For older kernels which do not utilize DKMS (verify that dkms is not available eg. with `which dkms`)
 3. (Linux < 6.2 only) Run `make older-kernel-patch`
 4. Run `make`
+
+##### If your kernel does not utilize [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support)
 5. Run `sudo make install`
 6. (Optional) To uninstall, run `sudo make uninstall`
 
-##### OR: For newer kernels which utilize DKMS (verify that dkms is available eg. with `which dkms`)
-4. Run `make`
+
+##### OR: If your kernel utilizes DKMS (verify that dkms is available eg. with `which dkms`)
 5. Run `sudo make dkms-install`
 6. (Optional) To uninstall, run `sudo make dkms-uninstall`
 
