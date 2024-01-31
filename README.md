@@ -42,10 +42,8 @@ Still not merged:
 7. (Optional) To uninstall: `sudo make dkms-uninstall`
 
 ##### (OR) If your kernel does not utilize DKMS
-5. Check if the msi-ec kernel module is currently running on your system: `lsmod | grep msi_ec`
-   - If msi_ec is returned, remove current module version: `sudo modprobe -r msi-ec`
-6. Install the msi-ec kernel module: `sudo make install`
-7. (Optional) To uninstall: `sudo make uninstall`
+5. Install the msi-ec kernel module: `sudo make install`
+6. (Optional) To uninstall: `sudo make uninstall`
 
 
 
