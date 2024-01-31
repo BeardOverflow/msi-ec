@@ -1237,6 +1237,85 @@ static struct msi_ec_conf CONF14 __initdata = {
 	},
 };
 
+
+static const char *ALLOWED_FW_15[] __initconst = {
+	"15CKEMS1.108", // MSI Delta 15 A5EFK
+	NULL
+};
+
+static struct msi_ec_conf CONF15 __initdata = {
+	// For comments and contributions check Delta 15 issue on github repository BeardOverflow/msi-ec
+	.allowed_fw = ALLOWED_FW_15,
+	.charge_control = {
+		.address      = 0xef,
+		.offset_start = 0x8a, 
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = {
+		.address       = 0x2e, 
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xbf,
+		.bit     = 4,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xf2, 
+		.modes = {
+			{ SM_ECO_NAME,     0xa5 }, // super battery
+			{ SM_COMFORT_NAME, 0xa1 }, // balanced
+			{ SM_TURBO_NAME,   0xa0 }, // extreme
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNKNOWN,
+		.mask    = 0x0f
+	},
+	.fan_mode = {
+		.address = 0xf4, 
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68, 
+		.rt_fan_speed_address  = 0xc9, 
+		.rt_fan_speed_base_min = 0x00,
+		.rt_fan_speed_base_max = 0x96,
+		.bs_fan_speed_address  = 0xcd, 
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,  
+		.rt_fan_speed_address = 0xcb, 
+	},
+	.leds = {
+		.micmute_led_address = 0x2b,
+		.mute_led_address    = 0x2d,
+		.bit                 = 2,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x01 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNKNOWN,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -1253,6 +1332,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF12,
 	&CONF13,
 	&CONF14,
+	&CONF15,
 	NULL
 };
 

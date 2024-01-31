@@ -27,15 +27,31 @@ Still not merged:
 ## Installation
 
 ### From GitHub
+
+#### Prerequisities:
+
 1. Install the following packages using the terminal:
    - For Debian: `sudo apt install build-essential linux-headers-amd64`
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
-2. Clone this repository and cd to it
-3. (Linux < 6.2 only) Run `make older-kernel-patch`
-4. Run `make`
-5. Run `sudo make install`
-6. (Optional) To uninstall, run `sudo make uninstall`
+   - For Arch:   `sudo pacman -S --needed base-devel linux-headers`
+2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
+3. (Linux < 6.2 only, verify with `uname -r`): `make older-kernel-patch`
+4. Choose one of the following installation methods
+
+#### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
+
+1. Verify that dkms is available: `which dkms`
+2. Install the msi-ec kernel module: `sudo make dkms-install`
+3. (Optional) To uninstall: `sudo make dkms-uninstall`
+
+#### (OR) Classic installation (without DKMS):
+
+1. Build the driver: `make`
+2. Install the msi-ec kernel module: `sudo make install`
+3. (Optional) To uninstall: `sudo make uninstall`
+
+
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
@@ -242,4 +258,11 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Prestige 15 A11SCX (16S6EMS1)
 - Prestige 16 Studio A13VE (1594EMS1)
 - Summit E14 Evo A12M (14F1EMS1)
-- Summit E16 Flip A12UCT / A12MT (E1592IMS, 1592EMS1)
+- Summit E16 Flip A12UCT / A12MT (1592EMS1)
+- Delta 15 A5EFK (15CKEMS1)
+ 
+## Contribute
+Eager to support the project? Your help is always welcome to keep the project alive and going! 
+   - Checkout the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
+   - If you want to go deeper: [read into this discussion regarding ec firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
+
