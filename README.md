@@ -27,23 +27,29 @@ Still not merged:
 ## Installation
 
 ### From GitHub
+
+#### Prerequisities:
+
 1. Install the following packages using the terminal:
    - For Debian: `sudo apt install build-essential linux-headers-amd64`
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
-   - For Arch:   `sudo pacman -S base-devel linux-headers`
+   - For Arch:   `sudo pacman -S --needed base-devel linux-headers`
 2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
 3. (Linux < 6.2 only, verify with `uname -r`): `make older-kernel-patch`
-4. Prepare installation: `make`
+4. Choose one of the following installation methods
 
-   ##### (Recommended) If your kernel utilizes [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support) 
-5. Verify that dkms is available: `which dkms`
-6. Install the msi-ec kernel module: `sudo make dkms-install`
-7. (Optional) To uninstall: `sudo make dkms-uninstall`
+#### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
 
-##### (OR) If your kernel does not utilize DKMS
-5. Install the msi-ec kernel module: `sudo make install`
-6. (Optional) To uninstall: `sudo make uninstall`
+1. Verify that dkms is available: `which dkms`
+2. Install the msi-ec kernel module: `sudo make dkms-install`
+3. (Optional) To uninstall: `sudo make dkms-uninstall`
+
+#### (OR) Classic installation (without DKMS):
+
+1. Build the driver: `make`
+2. Install the msi-ec kernel module: `sudo make install`
+3. (Optional) To uninstall: `sudo make uninstall`
 
 
 
