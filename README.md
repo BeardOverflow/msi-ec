@@ -31,18 +31,23 @@ Still not merged:
    - For Debian: `sudo apt install build-essential linux-headers-amd64`
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
-2. Clone this repository and cd to it
-3. (Linux < 6.2 only) Run `make older-kernel-patch`
-4. Run `make`
+   - For Arch:   `sudo pacman -S base-devel linux-headers`
+2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
+3. (Linux < 6.2 only, verify with `uname -r`): `make older-kernel-patch`
+4. Prepare installation: `make`
 
-##### If your kernel does not utilize [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support)
-5. Run `sudo make install`
-6. (Optional) To uninstall, run `sudo make uninstall`
+   ##### (Recommended) If your kernel utilizes [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support) 
+5. Verify that dkms is available: `which dkms`
+6. Install the msi-ec kernel module: `sudo make dkms-install`
+7. (Optional) To uninstall: `sudo make dkms-uninstall`
+
+##### (OR) If your kernel does not utilize DKMS
+5. Check if the msi-ec kernel module is currently running on your system: `lsmod | grep msi_ec`
+   - If msi_ec is returned, remove current module version: `sudo modprobe -r msi-ec`
+6. Install the msi-ec kernel module: `sudo make install`
+7. (Optional) To uninstall: `sudo make uninstall`
 
 
-##### OR: If your kernel utilizes DKMS (verify that dkms is available eg. with `which dkms`)
-5. Run `sudo make dkms-install`
-6. (Optional) To uninstall, run `sudo make dkms-uninstall`
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
