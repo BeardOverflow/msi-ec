@@ -258,5 +258,5 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Prestige 15 A11SCX (16S6EMS1)
 - Prestige 16 Studio A13VE (1594EMS1)
 - Summit E14 Evo A12M (14F1EMS1)
-- Summit E16 Flip A12UCT / A12MT (E1592IMS, 1592EMS1)
+- Summit E16 Flip A12UCT / A12MT (1592EMS1)
 - Delta 15 A5EFK (15CKEMS1)
