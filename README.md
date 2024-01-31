@@ -260,3 +260,9 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Summit E14 Evo A12M (14F1EMS1)
 - Summit E16 Flip A12UCT / A12MT (1592EMS1)
 - Delta 15 A5EFK (15CKEMS1)
+ 
+## Contribute
+Eager to support the project? Your help is always welcome to keep the project alive and going! 
+   - Checkout the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
+   - If you want to go deeper: [read into this discussion regarding ec firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
+
