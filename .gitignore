@@ -7,3 +7,5 @@
 /Module.symvers
 /modules.order
 .vscode
+.cache
+compile_commands.json
