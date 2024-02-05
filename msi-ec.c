@@ -1017,7 +1017,7 @@ static struct msi_ec_conf CONF12 __initdata = {
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = MSI_EC_ADDR_UNKNOWN,
+		.address = 0xbf,
 		.bit     = 4,
 	},
 	.cooler_boost = {
