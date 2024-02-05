@@ -47,15 +47,15 @@
 #include <linux/string.h>
 #include <linux/slab.h>
 
-static const char *const SM_ECO_NAME       = "eco";
-static const char *const SM_COMFORT_NAME   = "comfort";
-static const char *const SM_SPORT_NAME     = "sport";
-static const char *const SM_TURBO_NAME     = "turbo";
+#define SM_ECO_NAME		"eco"
+#define SM_COMFORT_NAME		"comfort"
+#define SM_SPORT_NAME		"sport"
+#define SM_TURBO_NAME		"turbo"
 
-static const char *const FM_AUTO_NAME     = "auto";
-static const char *const FM_SILENT_NAME   = "silent";
-static const char *const FM_BASIC_NAME    = "basic";
-static const char *const FM_ADVANCED_NAME = "advanced";
+#define FM_AUTO_NAME		"auto"
+#define FM_SILENT_NAME		"silent"
+#define FM_BASIC_NAME		"basic"
+#define FM_ADVANCED_NAME	"advanced"
 
 static const char *ALLOWED_FW_0[] __initconst = {
 	"14C1EMS1.012",
@@ -296,15 +296,13 @@ static struct msi_ec_conf CONF2 __initdata = {
 
 static const char *ALLOWED_FW_3[] __initconst = {
 	"1592EMS1.111",
-	"E1592IMS.10C",
-	"E1592IMS.10D",
 	NULL
 };
 
 static struct msi_ec_conf CONF3 __initdata = {
 	.allowed_fw = ALLOWED_FW_3,
 	.charge_control = {
-		.address      = 0xef,
+		.address      = 0xd7,
 		.offset_start = 0x8a,
 		.offset_end   = 0x80,
 		.range_min    = 0x8a,
@@ -995,15 +993,170 @@ static struct msi_ec_conf CONF11 __initdata = {
     },
 };
 
-/* MSI Modern 15 A5M */
 static const char *ALLOWED_FW_12[] __initconst = {
-	"155LEMS1.105",
-	"155LEMS1.106",
+	"16R6EMS1.104", // GF63 Thin 11UC
 	NULL
 };
 
 static struct msi_ec_conf CONF12 __initdata = {
 	.allowed_fw = ALLOWED_FW_12,
+	.charge_control = {
+		.address      = 0xd7,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = {
+		.address       = 0x2e,
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc4 },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNSUPP, // 0xeb
+		.mask    = 0x0f, // 00, 0f
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0x71,
+		.rt_fan_speed_base_min = 0x19,
+		.rt_fan_speed_base_max = 0x37,
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = 0x89,
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
+static const char *ALLOWED_FW_13[] __initconst = {
+	"1594EMS1.109", // MSI Prestige 16 Studio A13VE
+	NULL
+};
+
+static struct msi_ec_conf CONF13 __initdata = {
+	.allowed_fw = ALLOWED_FW_13,
+	.charge_control = {
+		.address      = 0xd7,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = {
+		.address       = 0x2e,
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4, // 0x00-0x10
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 }, // super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
+			{ SM_TURBO_NAME,   0xc4 }, // extreme
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.mask    = 0x0f, // 00, 0f
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0x71, // 0x0-0x96
+		.rt_fan_speed_base_min = 0x00,
+		.rt_fan_speed_base_max = 0x96,
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+	},
+	.leds = {
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = 0x2c, // KB auto turn off
+		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
+		.max_mode         = 1,
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
+/* MSI Modern 15 A5M */
+static const char *ALLOWED_FW_14[] __initconst = {
+	"155LEMS1.105",
+	"155LEMS1.106",
+	NULL
+};
+
+static struct msi_ec_conf CONF14 __initdata = {
+	.allowed_fw = ALLOWED_FW_14,
 	.charge_control = {
 		.address      = 0xef,
 		.offset_start = 0x8a,
@@ -1088,6 +1241,8 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF10,
 	&CONF11,
 	&CONF12,
+	&CONF13,
+	&CONF14,
 	NULL
 };
 
@@ -1257,6 +1412,11 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	result = ec_read(conf.charge_control.address, &rdata);
 	if (result < 0)
 		return result;
+
+	// thresholds are unknown
+	if (rdata == 0x80) {
+		return sysfs_emit(buf, "0\n");
+	}
 
 	return sysfs_emit(buf, "%i\n", rdata - offset);
 }
@@ -1897,18 +2057,6 @@ static struct device_attribute dev_attr_cpu_basic_fan_speed = {
 	.store = cpu_basic_fan_speed_store,
 };
 
-static struct attribute *msi_cpu_attrs[] = {
-	&dev_attr_cpu_realtime_temperature.attr,
-	&dev_attr_cpu_realtime_fan_speed.attr,
-	&dev_attr_cpu_basic_fan_speed.attr,
-	NULL
-};
-
-static const struct attribute_group msi_cpu_group = {
-	.name = "cpu",
-	.attrs = msi_cpu_attrs,
-};
-
 // ============================================================ //
 // Sysfs platform device attributes (gpu)
 // ============================================================ //
@@ -1955,17 +2103,6 @@ static struct device_attribute dev_attr_gpu_realtime_fan_speed = {
 		.mode = 0444,
 	},
 	.show = gpu_realtime_fan_speed_show,
-};
-
-static struct attribute *msi_gpu_attrs[] = {
-	&dev_attr_gpu_realtime_temperature.attr,
-	&dev_attr_gpu_realtime_fan_speed.attr,
-	NULL
-};
-
-static const struct attribute_group msi_gpu_group = {
-	.name = "gpu",
-	.attrs = msi_gpu_attrs,
 };
 
 // ============================================================ //
@@ -2102,6 +2239,12 @@ static const struct attribute_group msi_debug_group = {
 // ============================================================ //
 
 static struct attribute_group msi_root_group;
+static struct attribute_group msi_cpu_group = {
+	.name = "cpu",
+};
+static struct attribute_group msi_gpu_group = {
+	.name = "gpu",
+};
 
 static const struct attribute_group *msi_platform_groups[] = {
 	&msi_root_group,
@@ -2109,6 +2252,27 @@ static const struct attribute_group *msi_platform_groups[] = {
 	&msi_gpu_group,
 	NULL
 };
+
+/*
+ * Creates an array of supported attributes
+ * Return value has to be freed manually
+*/
+static struct attribute **filter_attributes(struct attribute_support *attributes,
+					    size_t size)
+{
+	struct attribute **filtered =
+		kcalloc(size + 1, sizeof(struct attribute *), GFP_KERNEL);
+	if (!filtered)
+		return NULL;
+
+	// copy supported attributes only
+	for (int i = 0, j = 0; i < size; i++) {
+		if (attributes[i].supported)
+			filtered[j++] = attributes[i].attribute;
+	}
+
+	return filtered;
+}
 
 static int msi_platform_probe(struct platform_device *pdev)
 {
@@ -2122,8 +2286,10 @@ static int msi_platform_probe(struct platform_device *pdev)
 			return 0;
 	}
 
-	// ALL root attributes and their support flags
-	struct attribute_support msi_root_attrs_support[] = {
+	/* root group */
+
+	// ALL root attributes and their support info
+	struct attribute_support root_attrs_support[] = {
 		{
 			&dev_attr_webcam.attr,
 			conf.webcam.address != MSI_EC_ADDR_UNSUPP,
@@ -2178,23 +2344,53 @@ static int msi_platform_probe(struct platform_device *pdev)
 		},
 	};
 
-	const int attributes_count =
-		sizeof(msi_root_attrs_support) / sizeof(msi_root_attrs_support[0]);
-
-	// supported root attributes
-	struct attribute **msi_root_attrs =
-		kcalloc(attributes_count, sizeof(struct attribute *), GFP_KERNEL);
-	if (!msi_root_attrs)
+	msi_root_group.attrs =
+		filter_attributes(root_attrs_support,
+				  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
+	if (!msi_root_group.attrs)
 		return -ENOMEM;
 
-	// copy supported attributes only
-	for (int i = 0, j = 0; i < attributes_count; i++) {
-		if (msi_root_attrs_support[i].supported)
-			msi_root_attrs[j++] = msi_root_attrs_support[i].attribute;
-	}
+	/* cpu group */
 
-	// save attributes in the group
-	msi_root_group.attrs = msi_root_attrs;
+	struct attribute_support cpu_attrs_support[] = {
+		{
+			&dev_attr_cpu_realtime_temperature.attr,
+			conf.cpu.rt_temp_address != MSI_EC_ADDR_UNSUPP,
+		},
+		{
+			&dev_attr_cpu_realtime_fan_speed.attr,
+			conf.cpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
+		},
+		{
+			&dev_attr_cpu_basic_fan_speed.attr,
+			conf.cpu.bs_fan_speed_address != MSI_EC_ADDR_UNSUPP,
+		},
+	};
+
+	msi_cpu_group.attrs =
+		filter_attributes(cpu_attrs_support,
+				  sizeof(cpu_attrs_support) / sizeof(cpu_attrs_support[0]));
+	if (!msi_cpu_group.attrs)
+		return -ENOMEM;
+
+	/* gpu group */
+
+	struct attribute_support gpu_attrs_support[] = {
+		{
+			&dev_attr_gpu_realtime_temperature.attr,
+			conf.gpu.rt_temp_address != MSI_EC_ADDR_UNSUPP,
+		},
+		{
+			&dev_attr_gpu_realtime_fan_speed.attr,
+			conf.gpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
+		},
+	};
+
+	msi_gpu_group.attrs =
+		filter_attributes(gpu_attrs_support,
+				  sizeof(gpu_attrs_support) / sizeof(gpu_attrs_support[0]));
+	if (!msi_gpu_group.attrs)
+		return -ENOMEM;
 
 	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
 }
@@ -2207,6 +2403,8 @@ static int msi_platform_remove(struct platform_device *pdev)
 	if (conf_loaded) {
 		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
 		kfree(msi_root_group.attrs);
+		kfree(msi_cpu_group.attrs);
+		kfree(msi_gpu_group.attrs);
 	}
 
 	return 0;
