@@ -1042,7 +1042,6 @@ static struct msi_ec_conf CONF12 __initdata = {
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
-			{ FM_BASIC_NAME,    0x4d },
 			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
