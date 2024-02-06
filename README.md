@@ -246,6 +246,7 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Alpha 15 B5EE / B5EEK (158LEMS1)
 - Alpha 17 B5EEK (17LLEMS1)
 - Bravo 17 A4DDR / A4DDK (17FKEMS1)
+- Cyborg 15 A12VF (15K1IMS1)
 - GP66 Leopard 10UG / 10UE / 10UH (1542EMS1)
 - GS66 Stealth 11UE (16V4EMS1)
 - GF63 Thin 11UC (16R6EMS1)
@@ -265,4 +266,3 @@ Set this parameter to a supported EC firmware version to use its configuration a
 Eager to support the project? Your help is always welcome to keep the project alive and going! 
    - Checkout the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
    - If you want to go deeper: [read into this discussion regarding ec firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
-
