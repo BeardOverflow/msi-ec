@@ -688,7 +688,11 @@ static struct msi_ec_conf CONF7 __initdata = {
 };
 
 static const char *ALLOWED_FW_8[] __initconst = {
+	"14F1EMS1.114", // summit e14 evo a12m
 	"14F1EMS1.115",
+	"14F1EMS1.116",
+	"14F1EMS1.117",
+	"14F1EMS1.118",
 	NULL
 };
 
@@ -703,7 +707,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 	},
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -732,7 +736,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
-			{ FM_BASIC_NAME,    0x4d },
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -747,7 +751,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
@@ -755,10 +759,10 @@ static struct msi_ec_conf CONF8 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // not functional
+		.bl_mode_address  = 0x2c,
+		.bl_modes         = { 0x00, 0x80 }, // 00 - on, 80 - 10 sec auto off
+		.max_mode         = 1,
+		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
