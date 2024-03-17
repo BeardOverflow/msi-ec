@@ -34,6 +34,7 @@ body:
     attributes:
       label: EC memory dump
       description: cat /sys/devices/platform/msi-ec/debug/ec_dump
+      render: text
     validations:
       required: false
 
