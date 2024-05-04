@@ -256,6 +256,7 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - Prestige 14 A10SC (14C1EMS1)
 - Modern 14 C5M (14JKEMS1)
 - Modern 15 A11M (1552EMS1)
+- Modern 15 B7M (15HKEMS1)
 - Prestige 15 A11SCX (16S6EMS1)
 - Prestige 16 Studio A13VE (1594EMS1)
 - Summit E14 Evo A12M (14F1EMS1)
