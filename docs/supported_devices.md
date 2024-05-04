@@ -7,7 +7,7 @@
 
 | Model                                  | EC version | Issues & PRs | ID | Functions |
 |----------------------------------------|------------|--------------|----|-----------|
-| Alpha 15 B5EE / B5EEK                  | 158LEMS1   |              |  5 | ✔️ Battery thresholds <br> ✔️ Webcam toggle <br> ✔️ Webcam block <br> ✔️ Fn <-> Win <br> ✔️ Cooler boost <br> ✔️ Shift mode <br> ✔️ Fan mode <br> ✔️ Mic mute LED <br> ✔️ Sound mute LED <br> ❌ Keyboard backlight intensity |
+| Alpha 15 B5EE / B5EEK                  | 158LEMS1   | #16; #22     |  5 | ✔️ Battery thresholds <br> ✔️ Webcam toggle <br> ✔️ Webcam block <br> ⭕ Fn <-> Win <br> ✔️ Cooler boost <br> ✔️ Shift mode <br> ✔️ Fan mode <br> ✔️ Mic mute LED <br> ✔️ Sound mute LED <br> ❌ Keyboard backlight intensity |
 | Bravo 17 A4DDR / A4DDK                 | 17FKEMS1   |              |  7 | ✔️ Battery thresholds <br> ✔️ Webcam toggle <br> ❌ Webcam block <br> ✔️ Fn <-> Win <br> ✔️ Cooler boost <br> ✔️ Shift mode <br> ✔️ Fan mode <br> ❌ Mic mute LED <br> ✔️ Sound mute LED <br> ✔️ Keyboard backlight intensity |
 | Delta 15 A5EFK                         | 15CKEMS1   |              | 15 | ✔️ Battery thresholds <br> ✔️ Webcam toggle <br> ✔️ Webcam block <br> ✔️ Fn <-> Win <br> ✔️ Cooler boost <br> ✔️ Shift mode <br> ✔️ Fan mode <br> ✔️ Mic mute LED <br> ✔️ Sound mute LED <br> ❓ Keyboard backlight intensity |
 | Cyborg 15 A12VF                        | 15K1IMS1   |              | 17 | ✔️ Battery thresholds <br> ✔️ Webcam toggle <br> ✔️ Webcam block <br> ✔️ Fn <-> Win <br> ✔️ Cooler boost <br> ✔️ Shift mode <br> ✔️ Fan mode <br> ✔️ Mic mute LED <br> ✔️ Sound mute LED <br> ✔️ Keyboard backlight intensity |

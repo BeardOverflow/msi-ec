@@ -487,7 +487,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = { // unsupported?
+	.super_battery = {
 		.address = MSI_EC_ADDR_UNKNOWN,
 		.mask    = 0x0f,
 	},
@@ -501,8 +501,8 @@ static struct msi_ec_conf CONF5 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, // needs testing
-		.rt_fan_speed_address  = 0x71, // needs testing
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0x71,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
@@ -519,10 +519,10 @@ static struct msi_ec_conf CONF5 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional (RGB)
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
