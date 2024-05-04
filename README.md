@@ -251,6 +251,7 @@ Set this parameter to a supported EC firmware version to use its configuration a
 - GS66 Stealth 11UE (16V4EMS1)
 - GF63 Thin 11UC (16R6EMS1)
 - GF75 Thin 9SC (17F2EMS1)
+- GP66 Leopard 11UG (1543EMS1)
 - Katana GF66 11UC / 11UD (1582EMS1)
 - Katana 17 B11UCX (17L2EMS1)
 - Prestige 14 A10SC (14C1EMS1)
