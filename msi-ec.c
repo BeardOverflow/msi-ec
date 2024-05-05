@@ -629,7 +629,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = 0xbf, // needs testing
+		.address = 0xbf,
 		.bit     = 4,
 	},
 	.cooler_boost = {
@@ -647,7 +647,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 but has its own wet of modes
+		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 but has its own set of modes
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -661,7 +661,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0xc9, // needs testing
+		.rt_fan_speed_address  = 0xc9,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
@@ -678,9 +678,9 @@ static struct msi_ec_conf CONF7 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -1247,7 +1247,6 @@ static const char *ALLOWED_FW_15[] __initconst = {
 };
 
 static struct msi_ec_conf CONF15 __initdata = {
-	// For comments and contributions check Delta 15 issue on github repository BeardOverflow/msi-ec
 	.allowed_fw = ALLOWED_FW_15,
 	.charge_control = {
 		.address      = 0xef,
@@ -1310,10 +1309,10 @@ static struct msi_ec_conf CONF15 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x01 },
 		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNKNOWN,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
