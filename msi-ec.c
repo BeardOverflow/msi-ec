@@ -1708,8 +1708,8 @@ static struct msi_ec_conf CONF20 __initdata = {
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
 		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1, // ?
-		.bl_state_address = 0xf3,
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
