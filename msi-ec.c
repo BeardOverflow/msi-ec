@@ -1480,6 +1480,7 @@ static const char *ALLOWED_FW_18[] __initconst = {
 	"1822EMS1.105", // Titan 18 HX A14V
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
+	"1822EMS1.112",
 	NULL
 };
 
