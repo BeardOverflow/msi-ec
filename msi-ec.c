@@ -58,7 +58,7 @@
 #define FM_ADVANCED_NAME	"advanced"
 
 static const char *ALLOWED_FW_0[] __initconst = {
-	"14C1EMS1.012",
+	"14C1EMS1.012", // Prestige 14 A10SC
 	"14C1EMS1.101",
 	"14C1EMS1.102",
 	NULL
@@ -127,9 +127,9 @@ static struct msi_ec_conf CONF0 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = 0x2c, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
+		.bl_mode_address  = 0x2c,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -137,7 +137,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 };
 
 static const char *ALLOWED_FW_1[] __initconst = {
-	"17F2EMS1.103",
+	"17F2EMS1.103", // GF75 Thin 11UC
 	"17F2EMS1.104",
 	"17F2EMS1.106",
 	"17F2EMS1.107",
@@ -207,9 +207,9 @@ static struct msi_ec_conf CONF1 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = 0x2c, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
+		.bl_mode_address  = 0x2c,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -349,7 +349,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.rt_fan_speed_address  = 0xc9,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
-		.bs_fan_speed_address  = 0x89, // ?
+		.bs_fan_speed_address  = 0x89,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
@@ -363,9 +363,9 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = 0x2c, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
+		.bl_mode_address  = 0x2c,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -487,7 +487,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = { // unsupported?
+	.super_battery = {
 		.address = MSI_EC_ADDR_UNKNOWN,
 		.mask    = 0x0f,
 	},
@@ -501,8 +501,8 @@ static struct msi_ec_conf CONF5 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, // needs testing
-		.rt_fan_speed_address  = 0x71, // needs testing
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0x71,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
@@ -519,17 +519,17 @@ static struct msi_ec_conf CONF5 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional (RGB)
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
 };
 
 static const char *ALLOWED_FW_6[] __initconst = {
-	"1542EMS1.102",
+	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
 	"1542EMS1.104",
 	NULL
 };
@@ -598,10 +598,10 @@ static struct msi_ec_conf CONF6 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3, not functional
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // not functional (RGB)
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -629,7 +629,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = 0xbf, // needs testing
+		.address = 0xbf,
 		.bit     = 4,
 	},
 	.cooler_boost = {
@@ -647,7 +647,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 but has its own wet of modes
+		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 but has its own set of modes
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -661,7 +661,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0xc9, // needs testing
+		.rt_fan_speed_address  = 0xc9,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
@@ -678,9 +678,9 @@ static struct msi_ec_conf CONF7 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
+		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -769,7 +769,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 };
 
 static const char *ALLOWED_FW_9[] __initconst = {
-	"14JKEMS1.104",
+	"14JKEMS1.104", // Modern 14 C5M
 	NULL
 };
 
@@ -897,10 +897,10 @@ static struct msi_ec_conf CONF10 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71, // ?
+		.rt_fan_speed_address  = 0x71,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x37,
-		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN, // ?
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
@@ -989,8 +989,8 @@ static struct msi_ec_conf CONF11 __initdata = {
     },
     .kbd_bl = {
         .bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-        .bl_modes         = {}, // ?
-        .max_mode         = 1, // ?
+        .bl_modes         = {},
+        .max_mode         = 1,
         .bl_state_address = 0xd3,
         .state_base_value = 0x80,
         .max_state        = 3,
@@ -1177,7 +1177,7 @@ static struct msi_ec_conf CONF14 __initdata = {
 		.block_address = 0x2f,
 		.bit           = 1,
 	},
-	.fn_win_swap = {
+	.fn_win_swap = { // reverse
 		.address = 0xe8, // states: 0x40 || 0x50
 		.bit     = 4,
 	},
@@ -1249,7 +1249,6 @@ static const char *ALLOWED_FW_15[] __initconst = {
 };
 
 static struct msi_ec_conf CONF15 __initdata = {
-	// For comments and contributions check Delta 15 issue on github repository BeardOverflow/msi-ec
 	.allowed_fw = ALLOWED_FW_15,
 	.charge_control = {
 		.address      = 0xef,
@@ -1312,10 +1311,10 @@ static struct msi_ec_conf CONF15 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x01 },
 		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNKNOWN,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -1401,7 +1400,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 };
 
 static const char *ALLOWED_FW_17[] __initconst = {
-	"15K1IMS1.110", // MSI CYBORG 12 A12VF
+	"15K1IMS1.110", // MSI CYBORG 15 A12VF
 	NULL
 };
 
@@ -1560,7 +1559,7 @@ static struct msi_ec_conf CONF18 __initdata = {
 };
 
 static const char *ALLOWED_FW_19[] __initconst = { 
-	"1543EMS1.113", // gp66-11ug (needs testing: gp66-11u*, gp76-11u*)
+	"1543EMS1.113", // gp66-11ug
 	NULL 
 };
 
@@ -1611,10 +1610,10 @@ static struct msi_ec_conf CONF19 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0xc9, // ?
+		.rt_fan_speed_address  = 0xc9,
 		.rt_fan_speed_base_min = 0x19,
 		.rt_fan_speed_base_max = 0x96,
-		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN, // ?
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
@@ -1629,8 +1628,8 @@ static struct msi_ec_conf CONF19 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-		.bl_modes         = {}, // ?
-		.max_mode         = 1, // ?
+		.bl_modes         = {},
+		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
