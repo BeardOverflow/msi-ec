@@ -1498,8 +1498,8 @@ static struct msi_ec_conf CONF18 __initdata = {
 	// 	.bit          = 5,
 	// }, // Like Katana 17 B11UCX
 	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
+		.address       = MSI_EC_ADDR_UNSUPP,
+		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
