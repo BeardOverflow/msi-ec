@@ -1637,7 +1637,7 @@ static struct msi_ec_conf CONF19 __initdata = {
 };
 
 static const char *ALLOWED_FW_20[] __initconst = {
-	"1581EMS1.107", // GF66 11UE
+	"1581EMS1.107", // GF66 11UE & GF66 11UG
 	NULL
 };
 
