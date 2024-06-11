@@ -2040,18 +2040,12 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 {
 	int result;
 
-	if (conf.fn_win_swap.invert) {
-		if (streq(buf, "right")) {
-			result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		} else if (streq(buf, "left")) {
-			result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		}
-	} else {
-		if (streq(buf, "right")) {
-			result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		} else if (streq(buf, "left")) {
-			result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		}
+	if (streq(buf, "right")) {
+		result = (conf.fn_win_swap.invert) ? ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
+			: ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+	} else if (streq(buf, "left")) {
+		result = (conf.fn_win_swap.invert) ? ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
+			: ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
 	}
 
 	if (result < 0)
@@ -2080,18 +2074,12 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 {
 	int result;
 
-	if (conf.fn_win_swap.invert) {
-		if (streq(buf, "right")) {
-			result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		} else if (streq(buf, "left")) {
-			result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		}
-	} else {
-		if (streq(buf, "right")) {
-			result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		} else if (streq(buf, "left")) {
-			result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
-		}
+	if (streq(buf, "right")) {
+		result = (conf.fn_win_swap.invert) ? ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
+			: ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+	} else if (streq(buf, "left")) {
+		result = (conf.fn_win_swap.invert) ? ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
+			: ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
 	}
 
 	if (result < 0)
