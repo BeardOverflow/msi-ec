@@ -33,6 +33,7 @@ struct msi_ec_webcam_conf {
 struct msi_ec_fn_win_swap_conf {
 	int address;
 	int bit;
+	bool invert;
 };
 
 struct msi_ec_cooler_boost_conf {
