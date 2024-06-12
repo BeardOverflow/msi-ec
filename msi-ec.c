@@ -81,7 +81,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -162,7 +162,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -240,7 +240,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -319,7 +319,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -398,7 +398,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 	.fn_win_swap = {
 		.address = MSI_EC_ADDR_UNKNOWN, // supported, but unknown
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -478,7 +478,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = true,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -557,7 +557,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = true,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -638,7 +638,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -721,7 +721,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -799,7 +799,7 @@ static struct msi_ec_conf CONF9 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -877,7 +877,7 @@ static struct msi_ec_conf CONF10 __initdata = {
 	.fn_win_swap = {
 		.address = MSI_EC_ADDR_UNSUPP,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -957,7 +957,7 @@ static struct msi_ec_conf CONF11 __initdata = {
     .fn_win_swap = {
         .address = 0xe8,
         .bit     = 4,
-		.invert	 = false,
+		.invert  = false,
     },
     .cooler_boost = {
         .address = 0x98,
@@ -1033,7 +1033,7 @@ static struct msi_ec_conf CONF12 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1112,7 +1112,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4, // 0x00-0x10
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1194,7 +1194,7 @@ static struct msi_ec_conf CONF14 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8, // states: 0x40 || 0x50
 		.bit     = 4,
-		.invert	 = true,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98, // states: 0x02 || 0x82
@@ -1280,7 +1280,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1360,7 +1360,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1442,7 +1442,7 @@ static struct msi_ec_conf CONF17 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4, // 0x01-0x11
-		.invert	 = true,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1521,7 +1521,7 @@ static struct msi_ec_conf CONF18 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1599,7 +1599,7 @@ static struct msi_ec_conf CONF19 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert	 = false,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
