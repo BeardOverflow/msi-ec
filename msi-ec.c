@@ -1786,11 +1786,10 @@ static int ec_set_bit(u8 addr, u8 bit, bool value)
 	if (result < 0)
 		return result;
 
-	if (value) {
+	if (value)
 		set_bit(stored, bit);
-	} else {
+	else
 		unset_bit(stored, bit);
-	}
 
 	return ec_write(addr, stored);
 }
@@ -2032,12 +2031,12 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 
 	if (streq(buf, "right")) {
 		result = ec_set_bit(conf.fn_win_swap.address,
-					conf.fn_win_swap.bit,
-					true ^ conf.fn_win_swap.invert);
+				    conf.fn_win_swap.bit,
+				    true ^ conf.fn_win_swap.invert);
 	} else if (streq(buf, "left")) {
 		result = ec_set_bit(conf.fn_win_swap.address,
-					conf.fn_win_swap.bit,
-					false ^ conf.fn_win_swap.invert);
+				    conf.fn_win_swap.bit,
+				    false ^ conf.fn_win_swap.invert);
 	}
 
 	if (result < 0)
@@ -2068,12 +2067,12 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 
 	if (streq(buf, "right")) {
 		result = ec_set_bit(conf.fn_win_swap.address,
-					conf.fn_win_swap.bit,
-					false ^ conf.fn_win_swap.invert);
+				    conf.fn_win_swap.bit,
+				    false ^ conf.fn_win_swap.invert);
 	} else if (streq(buf, "left")) {
 		result = ec_set_bit(conf.fn_win_swap.address,
-					conf.fn_win_swap.bit, 
-					true ^ conf.fn_win_swap.invert);
+				    conf.fn_win_swap.bit, 
+				    true ^ conf.fn_win_swap.invert);
 	}
 
 	if (result < 0)
@@ -2151,12 +2150,12 @@ static ssize_t cooler_boost_store(struct device *dev,
 	if (streq(buf, "on"))
 		result = ec_set_bit(conf.cooler_boost.address,
 				    conf.cooler_boost.bit,
-					true);
+				    true);
 
 	else if (streq(buf, "off"))
 		result = ec_set_bit(conf.cooler_boost.address,
 				    conf.cooler_boost.bit,
-					false);
+				    false);
 
 	if (result < 0)
 		return result;
