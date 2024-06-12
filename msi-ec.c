@@ -1777,7 +1777,7 @@ static int ec_check_by_mask(u8 addr, u8 mask, bool *output)
 	return 0;
 }
 
-static int ec_set_bit(u8 addr, u8 bit)
+static int ec_set_bit(u8 addr, u8 bit, bool value)
 {
 	int result;
 	u8 stored;
@@ -1786,21 +1786,11 @@ static int ec_set_bit(u8 addr, u8 bit)
 	if (result < 0)
 		return result;
 
-	set_bit(stored, bit);
-
-	return ec_write(addr, stored);
-}
-
-static int ec_unset_bit(u8 addr, u8 bit)
-{
-	int result;
-	u8 stored;
-
-	result = ec_read(addr, &stored);
-	if (result < 0)
-		return result;
-
-	unset_bit(stored, bit);
+	if (value) {
+		set_bit(stored, bit);
+	} else {
+		unset_bit(stored, bit);
+	}
 
 	return ec_write(addr, stored);
 }
@@ -1973,10 +1963,10 @@ static ssize_t webcam_common_store(u8 address,
 	int result = -EINVAL;
 
 	if (strcmp_trim_newline2(str_for_1, buf) == 0)
-		result = ec_set_bit(address, conf.webcam.bit);
+		result = ec_set_bit(address, conf.webcam.bit, true);
 
 	if (strcmp_trim_newline2(str_for_0, buf) == 0)
-		result = ec_unset_bit(address, conf.webcam.bit);
+		result = ec_set_bit(address, conf.webcam.bit, false);
 
 	if (result < 0)
 		return result;
@@ -2041,11 +2031,13 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 	int result;
 
 	if (streq(buf, "right")) {
-		result = (conf.fn_win_swap.invert) ? ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
-			: ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+					conf.fn_win_swap.bit,
+					true ^ conf.fn_win_swap.invert);
 	} else if (streq(buf, "left")) {
-		result = (conf.fn_win_swap.invert) ? ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
-			: ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+					conf.fn_win_swap.bit,
+					false ^ conf.fn_win_swap.invert);
 	}
 
 	if (result < 0)
@@ -2075,11 +2067,13 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 	int result;
 
 	if (streq(buf, "right")) {
-		result = (conf.fn_win_swap.invert) ? ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
-			: ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+					conf.fn_win_swap.bit,
+					false ^ conf.fn_win_swap.invert);
 	} else if (streq(buf, "left")) {
-		result = (conf.fn_win_swap.invert) ? ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit)
-			: ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+					conf.fn_win_swap.bit, 
+					true ^ conf.fn_win_swap.invert);
 	}
 
 	if (result < 0)
@@ -2156,11 +2150,13 @@ static ssize_t cooler_boost_store(struct device *dev,
 
 	if (streq(buf, "on"))
 		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit);
+				    conf.cooler_boost.bit,
+					true);
 
 	else if (streq(buf, "off"))
-		result = ec_unset_bit(conf.cooler_boost.address,
-				      conf.cooler_boost.bit);
+		result = ec_set_bit(conf.cooler_boost.address,
+				    conf.cooler_boost.bit,
+					false);
 
 	if (result < 0)
 		return result;
@@ -2867,11 +2863,7 @@ static int micmute_led_sysfs_set(struct led_classdev *led_cdev,
 {
 	int result;
 
-	if (brightness) {
-		result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit);
-	} else {
-		result = ec_unset_bit(conf.leds.micmute_led_address, conf.leds.bit);
-	}
+	result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit, brightness);
 
 	if (result < 0)
 		return result;
@@ -2884,11 +2876,7 @@ static int mute_led_sysfs_set(struct led_classdev *led_cdev,
 {
 	int result;
 
-	if (brightness) {
-		result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit);
-	} else {
-		result = ec_unset_bit(conf.leds.mute_led_address, conf.leds.bit);
-	}
+	result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit, brightness);
 
 	if (result < 0)
 		return result;
