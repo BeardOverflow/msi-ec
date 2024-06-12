@@ -1675,9 +1675,10 @@ static struct msi_ec_conf CONF20 __initdata = {
 		.block_address = 0x2f,
 		.bit           = 1,
 	},
-	.fn_win_swap = { // tested, but files states opposite
+	.fn_win_swap = { // tested
 		.address = 0xe8,
 		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = { // tested
 		.address = 0x98,
