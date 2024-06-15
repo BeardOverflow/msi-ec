@@ -1709,10 +1709,10 @@ static struct msi_ec_conf CONF20 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // Only mode is solid red
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
-		.bl_state_address = 0xd3,
+		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
