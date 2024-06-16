@@ -81,6 +81,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -161,6 +162,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -238,6 +240,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -316,6 +319,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -394,6 +398,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 	.fn_win_swap = {
 		.address = MSI_EC_ADDR_UNKNOWN, // supported, but unknown
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -470,9 +475,10 @@ static struct msi_ec_conf CONF5 __initdata = {
 		.block_address = 0x2f,
 		.bit           = 1,
 	},
-	.fn_win_swap = { // todo: reverse
+	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -549,8 +555,9 @@ static struct msi_ec_conf CONF6 __initdata = {
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = 0xbf, // todo: reverse
+		.address = 0xbf,
 		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -631,6 +638,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -713,6 +721,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -790,6 +799,7 @@ static struct msi_ec_conf CONF9 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -867,6 +877,7 @@ static struct msi_ec_conf CONF10 __initdata = {
 	.fn_win_swap = {
 		.address = MSI_EC_ADDR_UNSUPP,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -946,6 +957,7 @@ static struct msi_ec_conf CONF11 __initdata = {
     .fn_win_swap = {
         .address = 0xe8,
         .bit     = 4,
+		.invert  = false,
     },
     .cooler_boost = {
         .address = 0x98,
@@ -1021,6 +1033,7 @@ static struct msi_ec_conf CONF12 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1099,6 +1112,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4, // 0x00-0x10
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1177,9 +1191,10 @@ static struct msi_ec_conf CONF14 __initdata = {
 		.block_address = 0x2f,
 		.bit           = 1,
 	},
-	.fn_win_swap = { // reverse
+	.fn_win_swap = {
 		.address = 0xe8, // states: 0x40 || 0x50
 		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98, // states: 0x02 || 0x82
@@ -1265,6 +1280,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1344,6 +1360,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1425,6 +1442,7 @@ static struct msi_ec_conf CONF17 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4, // 0x01-0x11
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1503,6 +1521,7 @@ static struct msi_ec_conf CONF18 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1580,6 +1599,7 @@ static struct msi_ec_conf CONF19 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
+		.invert  = false,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1629,6 +1649,85 @@ static struct msi_ec_conf CONF19 __initdata = {
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
 		.bl_modes         = {},
+		.max_mode         = 1,
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
+static const char *ALLOWED_FW_20[] __initconst = {
+	"1581EMS1.107", // GF66 11UE & GF66 11UG
+	NULL
+};
+
+static struct msi_ec_conf CONF20 __initdata = {
+	.allowed_fw = ALLOWED_FW_20,
+	.charge_control = { // tested
+		.address      = 0xd7,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = { // tested
+		.address       = 0x2e,
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = { // tested
+		.address = 0xe8,
+		.bit     = 4,
+		.invert  = true,
+	},
+	.cooler_boost = { // tested
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = { // tested
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc4 },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = { // tested
+		.address = 0xeb,
+		.mask    = 0x0f,
+	},
+	.fan_mode = { // tested
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68, // tested
+		.rt_fan_speed_address  = 0xc9, // tested
+		.rt_fan_speed_base_min = 0x00, // ! observed on machine (0x35 when fans was at min), but not working !
+		.rt_fan_speed_base_max = 0x96, // ! ^ (0x56 with fans on cooler boost) !
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP, // reason: no such setting in the "MSI Center", checked in version 2.0.35
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80, // tested
+		.rt_fan_speed_address = 0xcb, // ! observed the file reporting over 100% fan speed, which should not be possible !
+	},
+	.leds = { // tested
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
+	},
+	.kbd_bl = { // tested
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // reason: no such setting in the "MSI Center", checked in version 2.0.35
+		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
@@ -1740,6 +1839,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF17,
 	&CONF18,
 	&CONF19,
+	&CONF20,
 	&CONF21,
 	NULL
 };
@@ -1841,7 +1941,7 @@ static int ec_check_by_mask(u8 addr, u8 mask, bool *output)
 	return 0;
 }
 
-static int ec_set_bit(u8 addr, u8 bit)
+static int ec_set_bit(u8 addr, u8 bit, bool value)
 {
 	int result;
 	u8 stored;
@@ -1850,21 +1950,10 @@ static int ec_set_bit(u8 addr, u8 bit)
 	if (result < 0)
 		return result;
 
-	set_bit(stored, bit);
-
-	return ec_write(addr, stored);
-}
-
-static int ec_unset_bit(u8 addr, u8 bit)
-{
-	int result;
-	u8 stored;
-
-	result = ec_read(addr, &stored);
-	if (result < 0)
-		return result;
-
-	unset_bit(stored, bit);
+	if (value)
+		set_bit(stored, bit);
+	else
+		unset_bit(stored, bit);
 
 	return ec_write(addr, stored);
 }
@@ -2037,10 +2126,10 @@ static ssize_t webcam_common_store(u8 address,
 	int result = -EINVAL;
 
 	if (strcmp_trim_newline2(str_for_1, buf) == 0)
-		result = ec_set_bit(address, conf.webcam.bit);
+		result = ec_set_bit(address, conf.webcam.bit, true);
 
 	if (strcmp_trim_newline2(str_for_0, buf) == 0)
-		result = ec_unset_bit(address, conf.webcam.bit);
+		result = ec_set_bit(address, conf.webcam.bit, false);
 
 	if (result < 0)
 		return result;
@@ -2092,7 +2181,7 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 
 	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
 
-	if (bit_value) {
+	if (bit_value ^ conf.fn_win_swap.invert) {
 		return sysfs_emit(buf, "%s\n", "right");
 	} else {
 		return sysfs_emit(buf, "%s\n", "left");
@@ -2105,9 +2194,13 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 	int result;
 
 	if (streq(buf, "right")) {
-		result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+				    conf.fn_win_swap.bit,
+				    true ^ conf.fn_win_swap.invert);
 	} else if (streq(buf, "left")) {
-		result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+				    conf.fn_win_swap.bit,
+				    false ^ conf.fn_win_swap.invert);
 	}
 
 	if (result < 0)
@@ -2124,7 +2217,7 @@ static ssize_t win_key_show(struct device *device,
 
 	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
 
-	if (bit_value) {
+	if (bit_value ^ conf.fn_win_swap.invert) {
 		return sysfs_emit(buf, "%s\n", "left");
 	} else {
 		return sysfs_emit(buf, "%s\n", "right");
@@ -2137,9 +2230,13 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 	int result;
 
 	if (streq(buf, "right")) {
-		result = ec_unset_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+				    conf.fn_win_swap.bit,
+				    false ^ conf.fn_win_swap.invert);
 	} else if (streq(buf, "left")) {
-		result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit);
+		result = ec_set_bit(conf.fn_win_swap.address,
+				    conf.fn_win_swap.bit, 
+				    true ^ conf.fn_win_swap.invert);
 	}
 
 	if (result < 0)
@@ -2216,11 +2313,13 @@ static ssize_t cooler_boost_store(struct device *dev,
 
 	if (streq(buf, "on"))
 		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit);
+				    conf.cooler_boost.bit,
+				    true);
 
 	else if (streq(buf, "off"))
-		result = ec_unset_bit(conf.cooler_boost.address,
-				      conf.cooler_boost.bit);
+		result = ec_set_bit(conf.cooler_boost.address,
+				    conf.cooler_boost.bit,
+				    false);
 
 	if (result < 0)
 		return result;
@@ -2927,11 +3026,7 @@ static int micmute_led_sysfs_set(struct led_classdev *led_cdev,
 {
 	int result;
 
-	if (brightness) {
-		result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit);
-	} else {
-		result = ec_unset_bit(conf.leds.micmute_led_address, conf.leds.bit);
-	}
+	result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit, brightness);
 
 	if (result < 0)
 		return result;
@@ -2944,11 +3039,7 @@ static int mute_led_sysfs_set(struct led_classdev *led_cdev,
 {
 	int result;
 
-	if (brightness) {
-		result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit);
-	} else {
-		result = ec_unset_bit(conf.leds.mute_led_address, conf.leds.bit);
-	}
+	result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit, brightness);
 
 	if (result < 0)
 		return result;
