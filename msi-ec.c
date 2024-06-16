@@ -1636,13 +1636,13 @@ static struct msi_ec_conf CONF19 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_20[] __initconst = { 
+static const char *ALLOWED_FW_21[] __initconst = { 
 	"16R3EMS1.104", // GF63 Thin 9SC-032FR (latest EC Firmware version)
 	NULL 
 };
 
-static struct msi_ec_conf CONF20 __initdata = {
-	.allowed_fw = ALLOWED_FW_20,
+static struct msi_ec_conf CONF21 __initdata = {
+	.allowed_fw = ALLOWED_FW_21,
 	.charge_control = {
 		.address      = 0xef,
 		.offset_start = 0x8a,
@@ -1658,6 +1658,7 @@ static struct msi_ec_conf CONF20 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1739,7 +1740,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF17,
 	&CONF18,
 	&CONF19,
-	&CONF20,
+	&CONF21,
 	NULL
 };
 
