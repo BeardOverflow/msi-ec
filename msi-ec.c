@@ -1656,12 +1656,12 @@ static struct msi_ec_conf CONF19 __initdata = {
 };
 
 static const char *ALLOWED_FW_20[] __initconst = {
-	"1581EMS1.107", // GF66 11UE & GF66 11UG
+	"1581EMS1.107", // Katana GF66 11UE / 11UG
 	NULL
 };
 
 static struct msi_ec_conf CONF20 __initdata = {
-	.allowed_fw = ALLOWED_FW_20,
+	.allowed_fw = ALLOWED_FW_20, // WMI2 based
 	.charge_control = { // tested
 		.address      = 0xd7,
 		.offset_start = 0x8a,
@@ -1735,12 +1735,12 @@ static struct msi_ec_conf CONF20 __initdata = {
 };
 
 static const char *ALLOWED_FW_21[] __initconst = {
-	"16R3EMS1.104", // GF63 Thin 9SC-032FR (latest EC Firmware version)
+	"16R3EMS1.104", // GF63 Thin 9SC
 	NULL
 };
 
 static struct msi_ec_conf CONF21 __initdata = {
-	.allowed_fw = ALLOWED_FW_21,
+	.allowed_fw = ALLOWED_FW_21, // WMI1 based
 	.charge_control = {
 		.address      = 0xef,
 		.offset_start = 0x8a,
@@ -1823,7 +1823,7 @@ static const char *ALLOWED_FW_22[] __initconst = {
 };
 
 static struct msi_ec_conf CONF22 __initdata = {
-	.allowed_fw = ALLOWED_FW_22,
+	.allowed_fw = ALLOWED_FW_22, // WMI1 based
 	.charge_control = {
 		.address      = 0xef,
 		.offset_start = 0x8a,
