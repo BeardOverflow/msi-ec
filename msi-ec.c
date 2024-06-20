@@ -219,7 +219,8 @@ static struct msi_ec_conf CONF1 __initdata = {
 };
 
 static const char *ALLOWED_FW_2[] __initconst = {
-	"1552EMS1.118", // Modern 15 A11M
+	"1552EMS1.115", // Modern 15 A11M
+	"1552EMS1.118",
 	NULL
 };
 
@@ -247,7 +248,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 		.bit     = 7,
 	},
 	.shift_mode = {
-		.address = 0xf2,
+		.address = 0xD2, // because WMI2 device
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
@@ -936,7 +937,6 @@ static struct msi_ec_conf CONF10 __initdata = {
 
 static const char *ALLOWED_FW_11[] __initconst = {
 	"16S6EMS1.111", // Prestige 15 A11SCX
-	"1552EMS1.115", // Modern 15 A11M TODO: fix conflict with 2
 	NULL 
 };
 
