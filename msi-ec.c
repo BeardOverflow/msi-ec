@@ -1735,13 +1735,13 @@ static struct msi_ec_conf CONF20 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_134[] __initconst = {
+static const char *ALLOWED_FW_16WK[] __initconst = {
 	"16WKEMS1.105", // MSI Bravo 15 A4DDR (issue #134)
 	NULL
 };
 
-static struct msi_ec_conf CONF134 __initdata = {
-	.allowed_fw = ALLOWED_FW_134,
+static struct msi_ec_conf CONF_16WK __initdata = {
+	.allowed_fw = ALLOWED_FW_16WK,
 	.charge_control = { // threshold
 		.address      = 0xef,
 		.offset_start = 0x8a,
@@ -1840,7 +1840,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF18,
 	&CONF19,
 	&CONF20,
-	&CONF134,
+	&CONF_16WK,
 	NULL
 };
 
