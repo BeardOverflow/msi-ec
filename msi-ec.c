@@ -1927,10 +1927,10 @@ static struct msi_ec_conf CONF23 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			// values can also be 0xc1... when booting on Windows
-			{ SM_COMFORT_NAME, 0x81 }, // Silent / Balanced / AI
-			{ SM_ECO_NAME,     0x82 }, // Super Battery
-			{ SM_TURBO_NAME,   0x84 }, // Performance
+			// values can also be 0x81... when booting on Linux
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
+			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
 	},
