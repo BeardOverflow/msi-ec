@@ -1896,6 +1896,89 @@ static struct msi_ec_conf CONF22 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_23[] __initconst = {
+	"16WKEMS1.105", // MSI Bravo 15 A4DDR (issue #134)
+	NULL
+};
+
+static struct msi_ec_conf CONF23 __initdata = {
+	.allowed_fw = ALLOWED_FW_23,
+	.charge_control = { // threshold
+		.address      = 0xef,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4, // 0xe4 = 100%, but 0x80 too?
+	},
+	.webcam = {
+		.address       = 0x2e,
+		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xbf,
+		.bit     = 4,
+		.invert  = true,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xf2,
+		.modes = {
+			// values can also be 0x81... when booting on Linux
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
+			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_TURBO_NAME,   0xc4 }, // Performance
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNSUPP, // enabled by "Super Battery" shift mode?
+	},
+	.fan_mode = {
+		.address = 0xf4,
+		.modes = {
+			// 'd' is not relevant, values can also be 0x00... or 0x03...
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68, // a second value/sensor is at 0x64
+		.rt_fan_speed_address  = 0x71, // target speed
+		.rt_fan_speed_base_min = 0x00,
+		.rt_fan_speed_base_max = 0x96, // at 150%
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+		// current RPM speed is 480000/x
+		// with x 2 bytes at 0xcc and 0xcd
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89, // target speed
+		// current RPM speed is 480000/x
+		// with x 2 bytes at 0xca and 0xcb
+	},
+	.leds = {
+		// No LED indicator
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not in MSI Center
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = 0xf3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -1920,6 +2003,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF20,
 	&CONF21,
 	&CONF22,
+	&CONF23,
 	NULL
 };
 
