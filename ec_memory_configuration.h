@@ -63,11 +63,18 @@ struct msi_ec_fan_mode_conf {
 	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
 };
 
+#define FAN_PARSE_STRATEGY_NORMAL 0
+// When fan speed specified in reverse order 
+// 0xff - minimal speed, 0x01 - maximum and 0x00 - stopped.
+#define FAN_PARSE_STRATEGY_REVERSE 1
 struct msi_ec_cpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime
 	int rt_fan_speed_base_min;
 	int rt_fan_speed_base_max;
+	// For special fan speed parsing cases
+	// Optional parameter. Defaults to FAN_PARSE_STRATEGY_NORMAL.
+	int rt_fan_parse_strategy; 
 	int bs_fan_speed_address; // basic
 	int bs_fan_speed_base_min;
 	int bs_fan_speed_base_max;

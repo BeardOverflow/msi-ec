@@ -1169,7 +1169,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
-	"17L2EMS1.108", // Katana 17 B11UCX
+	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76-11UC
 	NULL
 };
 
@@ -1228,8 +1228,9 @@ static struct msi_ec_conf CONF14 __initdata = {
 	.cpu = {
 		.rt_temp_address       = 0x68,
 		.rt_fan_speed_address  = 0xc9,
-		.rt_fan_speed_base_min = 0x00, // ?
-		.rt_fan_speed_base_max = 0x96, // ?
+		.rt_fan_speed_base_min = 0xff,
+		.rt_fan_speed_base_max = 0x4a,
+		.rt_fan_parse_strategy = FAN_PARSE_STRATEGY_REVERSE,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
 		.bs_fan_speed_base_min = 0x00, // ?
 		.bs_fan_speed_base_max = 0x0f, // ?
@@ -2736,14 +2737,26 @@ static ssize_t cpu_realtime_fan_speed_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	if ((rdata < conf.cpu.rt_fan_speed_base_min ||
-	    rdata > conf.cpu.rt_fan_speed_base_max))
+	if (rdata == 0) 
+		return sysfs_emit(buf, "%i\n", 0);
+
+	int fan_speed = rdata;
+	int fan_speed_max = conf.cpu.rt_fan_speed_base_max;
+	int fan_speed_min = conf.cpu.rt_fan_speed_base_min;
+	if (conf.cpu.rt_fan_parse_strategy == FAN_PARSE_STRATEGY_REVERSE) {
+		fan_speed *= -1;
+		fan_speed_max *= -1;
+		fan_speed_min *= -1;
+	}
+
+	if ((fan_speed < fan_speed_min ||
+	    fan_speed > fan_speed_max))
 		return -EINVAL;
 
 	return sysfs_emit(buf, "%i\n",
-		          100 * (rdata - conf.cpu.rt_fan_speed_base_min) /
-				  (conf.cpu.rt_fan_speed_base_max -
-				   conf.cpu.rt_fan_speed_base_min));
+			  100 * (fan_speed - fan_speed_min) /
+				  (fan_speed_max -
+				   fan_speed_min));
 }
 
 static ssize_t cpu_basic_fan_speed_show(struct device *device,
