@@ -2001,7 +2001,7 @@ static struct msi_ec_conf CONF24 __initdata = {
 	.fn_win_swap = {
 		.address = 0xBF,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
