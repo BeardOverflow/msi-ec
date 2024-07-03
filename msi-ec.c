@@ -3888,6 +3888,11 @@ static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
 static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
 			    enum led_brightness brightness)
 {
+	// By default, on an unregister event, 
+	// kernel triggers the setter with 0 brightness.
+	if (led_cdev->flags & LED_UNREGISTERING) 
+		return 0;
+
 	u8 wdata;
 	if (brightness < 0 || brightness > 3)
 		return -1;
