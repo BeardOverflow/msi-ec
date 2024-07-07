@@ -702,6 +702,8 @@ static const char *ALLOWED_FW_8[] __initconst = {
 	"14F1EMS1.116",
 	"14F1EMS1.117",
 	"14F1EMS1.118",
+	"14F1EMS1.119",
+	"14F1EMS1.120",
 	NULL
 };
 
