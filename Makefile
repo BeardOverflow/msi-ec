@@ -1,5 +1,6 @@
 VERSION         := 0.08
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
+TARGET ?= $(shell uname -r)
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
@@ -12,10 +13,10 @@ older-kernel-patch:
 	git apply older-kernel.patch
 
 modules:
-	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) modules
+	@$(MAKE) -C /lib/modules/$(TARGET)/build M=$(CURDIR) modules
 
 clean:
-	@$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(CURDIR) clean
+	@$(MAKE) -C /lib/modules/$(TARGET)/build M=$(CURDIR) clean
 
 load:
 	insmod msi-ec.ko
@@ -31,15 +32,15 @@ reload: unload load
 reload-debug: unload load-debug
 
 install:
-	mkdir -p /lib/modules/$(shell uname -r)/extra
-	cp msi-ec.ko /lib/modules/$(shell uname -r)/extra
+	mkdir -p /lib/modules/$(TARGET)/extra
+	cp msi-ec.ko /lib/modules/$(TARGET)/extra
 	depmod -a
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
 	modprobe -v msi-ec
 
 uninstall:
 	-modprobe -rv msi-ec
-	rm -f /lib/modules/$(shell uname -r)/extra/msi-ec.ko
+	rm -f /lib/modules/$(TARGET)/extra/msi-ec.ko
 	depmod -a
 	rm -f /etc/modules-load.d/msi-ec.conf
 
