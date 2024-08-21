@@ -1,11 +1,9 @@
 # Intro
-To get your MSI laptop supported, there are two main methods, one that
-requires windows to be installed, and the other works directly on linux.
+There are two main methods to get your MSI laptop supported: the recommended method requires Windows to be installed, and the other works directly on Linux.
 
-If you have any bios/firmware updates on the official MSI website, and
-you haven't updated yet then **DO NOT UPDATE!** follow the guide first:
+If there are any BIOS/firmware updates available for your laptop, follow this guide for your current firmware before installing any of them. Then repeat the process for each new firmware version you install from the official MSI website. This is required to obtain support for older firmware as the EC configuration may vary across the versions.
 
-## Windows method(recommended):
+## Windows method (recommended):
 
 1. Install Windows 10/11 normally, booting directly from a live usb or
 any other trick won't work, however windows activation is not
@@ -43,9 +41,9 @@ The values you see can be changed manually (by writing to them)\
 DO NOT DO THAT: writing the wrong the values to the wrong address might brick the laptop completely and EC/BIOS RESET CAN'T FIX THAT!<br/>
 ![not apply changes](pics/support_guide/not_apply_changes.png)
 
-10. Change the reading speed to 500-600ms,
-this makes it easier to see how the
-values react to the MSI app settings:
+10. Change the refresh rate to 500-600ms,
+this makes it easier to see how the values react to the changes in the MSI app settings:
+
 ![refresh rate button](pics/support_guide/refresh_menu.png)
 
 11. Reading addresses: lets say you are looking for a specific address
@@ -54,21 +52,19 @@ on the left side of the table and SecondNumber can be found on
 the top side of the table:
 ![hex editor how to](pics/support_guide/hex_editor_how_to.png)
 
-Each **Address** contains a **Value**, when you locate an **Address** inside the
-table you can write it like this 0x54 = 00 (**Address** = **Value**)
-This **Value** can change depending on what it is related to, if you find the
-**Address** for CPU temperature; the **Value** will change on its own, if you
-find the **Address** for battery charge limit, then the **Value** won't change
-until you change the settings in the MSI app.
+Each **Address** contains some **Value**. When you locate an **Address** inside the
+table you can take a note of its content: 0x54 = 00 (**Address** = **Value**)
+This **Value** will change depending on the parameters related to it.
 
-Example: To figure out which **Address** is used by user scenario (`shift
-mode`) go to the user scenario page in the MSI app and keep changing it
+Some parameters will be changing automatically without your intervention (e.g. the CPU temperature), others will change in response to different settings in the MSI app (e.g. battery charge limits)
+
+Example: To figure out which **Addresses** are used by user scenarios (or shift
+modes) go to the user scenario page in the MSI app and keep switching the scenarios
 while looking at the EC table.
 
-Eventually you'll notice a **Value** that changes each time you change the
-setting (or maybe two **Values** in two **Addresses** that change at the same
-time), once you find the **Address**, you can start writing down the **Value**
-for EACH user scenario, so you can report it.
+Eventually you'll notice one or more values that change each time you change the
+setting, once you find them, you can start writing down the addresses and values
+corresponding to *each* user scenario, so you can report them.
 
 ### Linux method
 
@@ -100,9 +96,3 @@ or you can put it in a .txt file in your home folder directly:
 * `cat /sys/kernel/debug/ec/ec0/io > ec.dump`
 
 then you can send us the output, and wish us luck.
-
-
-P.S: you should repeat the method you used after EACH BIOS/Firmware update, the reason you
-shouldn’t update before following the guide is that the values and addresses could change after
-updating, and it is important to support all versions of the BIOS/Firmware or the driver might
-not work after the update.
