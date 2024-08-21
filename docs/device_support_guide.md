@@ -35,10 +35,10 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 8. Navigate to the EC tab (page):
 ![open ec tab](pics/support_guide/open_ec_tab.png)
 
-9. Here you should see a table of all the values your Embedded Chip has in its memory.\
-The values you see can be changed manually (by writing to them)\
-\
-DO NOT DO THAT: writing the wrong the values to the wrong address might brick the laptop completely and EC/BIOS RESET CAN'T FIX THAT!<br/>
+9. Here you should see a table of all the values your Embedded Chip has in its memory.
+
+**Do not attempt to edit the memory manually. Writing the wrong the values to the wrong addresses will DAMAGE YOUR HARDWARE or even BRICK YOUR DEVICE! This can't be reversed by resetting the EC or BIOS.**
+
 ![not apply changes](pics/support_guide/not_apply_changes.png)
 
 10. Change the refresh rate to 500-600ms,
@@ -46,10 +46,12 @@ this makes it easier to see how the values react to the changes in the MSI app s
 
 ![refresh rate button](pics/support_guide/refresh_menu.png)
 
-11. Reading addresses: lets say you are looking for a specific address
-0x54 (0xFirstNumberSecondNumber) FirstNumber can be found
-on the left side of the table and SecondNumber can be found on
-the top side of the table:
+11. Reading the table:
+
+Each address is a hexadecimal number.
+Let's say you are looking for a specific address `0x54`.
+The first number `5` can be found on the left side of the table and second number `4` can be found on the top side of the table:
+
 ![hex editor how to](pics/support_guide/hex_editor_how_to.png)
 
 Each **Address** contains some **Value**. When you locate an **Address** inside the
@@ -70,9 +72,8 @@ corresponding to *each* user scenario, so you can report them.
 
 ***
 
-This method has limited results compared to the Windows method, because most
-MSI laptop features are tied to software toggles that can be only found in their apps
-installed on windows.
+This method is very limited compared to the Windows method, because most
+MSI laptop features are tied to software toggles that can only be found in the official Windows apps.
 
 If you are lucky, your laptop model will have similar addresses to another laptop
 that is already supported by the driver, but usually this only happens on some
