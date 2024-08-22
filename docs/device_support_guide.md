@@ -1,6 +1,7 @@
 # Intro
 There are two main methods to get your MSI laptop supported: the recommended method requires Windows to be installed, and the other works directly on Linux.
 
+> [!IMPORTANT]
 If there are any BIOS/firmware updates available for your laptop, follow this guide for your current firmware before installing any of them. Then repeat the process for each new firmware version you install from the official MSI website. This is required to obtain support for older firmware as the EC configuration may vary across the versions.
 
 ## Windows method (recommended):
@@ -37,6 +38,7 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 
 9. Here you should see a table of all the values your Embedded Chip has in its memory.
 
+> [!CAUTION]
 **Do not attempt to edit the memory manually. Writing the wrong the values to the wrong addresses will DAMAGE YOUR HARDWARE or even BRICK YOUR DEVICE! This can't be reversed by resetting the EC or BIOS.**
 
 ![not apply changes](pics/support_guide/not_apply_changes.png)
