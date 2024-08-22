@@ -51,7 +51,7 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 9. Here you should see a table of all the values your Embedded Chip has in its memory.
 
 > [!CAUTION]
-> **Do not attempt to edit the memory manually. Writing the wrong the values to the wrong addresses will DAMAGE YOUR HARDWARE or even BRICK YOUR DEVICE! This can't be reversed by resetting the EC or BIOS.**
+> **Do not attempt to edit the memory manually. Writing the wrong values to the wrong addresses will DAMAGE YOUR HARDWARE or even BRICK YOUR DEVICE! This can't be reversed by resetting the EC or BIOS.**
 
 ![not apply changes](pics/support_guide/not_apply_changes.png)
 
