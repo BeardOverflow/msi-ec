@@ -11,13 +11,13 @@ Also, and until future enhancements, no DMI data is used to identify your laptop
 
 Check if your device is supported before attempting to install and use the driver. The list of supported devices can be found [here](docs/supported_devices.md).
 
-Can't find your device in the list? Check contribution guides and open new issue.
+Can't find your device in the list? Check the contribution guides and open a new issue.
 
 ## Contribute
 Eager to support the project? Your help is always welcome to keep the project alive and going!
-- Read how to get necessary information about device on Windows and Linux in [this guide](docs/device_support_guide.md)
-- Checkout the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
-- If you want to go deeper: [read into this discussion regarding ec firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
+- Read how to get the necessary information about the device on Windows and Linux in [this guide](docs/device_support_guide.md)
+- Check out the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
+- If you want to go deeper: [read into this discussion regarding EC firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
 
 
 ## Installation
