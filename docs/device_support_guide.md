@@ -4,7 +4,7 @@ There are two main methods to get your MSI laptop supported: the recommended met
 > [!IMPORTANT]
 > If there are any BIOS/firmware updates available for your laptop, follow this guide for your current firmware before installing any of them. Then repeat the process for each new firmware version you install from the official MSI website. This is required to obtain support for older firmware as the EC configuration may vary across the versions.
 
-# Table of contents (rough)
+# Table of contents
 
 + FW naming and WMI versioning explanation
 + [Windows](#windows-method-recommended)
@@ -101,8 +101,9 @@ and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/ne
 
 ## `MSI-EC` debug mode
 
-Make sure that you are running the git version of the module.
-If not, follow the installation guide in the [Readme](../README.md#Installation) file.
+> [!NOTE]
+> Make sure that you are running the git version of the module. 
+> If not, follow the installation guide in the [Readme](../README.md#Installation) file.
 
 Unload module if it was previously loaded:
 
@@ -120,8 +121,9 @@ Or save it to file:
 
 + `cat /sys/devices/platform/msi-ec/debug/ec_dump > ec_dump.txt`
 
-If you got the next error, then your module is not loaded in debug mode or doesn't have it:
-
+> [!IMPORTANT]
+> If you got the next error, then your module is not loaded in debug mode or doesn't have it:
+> 
 > `cat: /sys/devices/platform/msi-ec/debug/ec_dump: No such file or directory`
 
 ## `EC-SYS` method
@@ -133,11 +135,6 @@ To start, You need to load a module called `ec_sys`:
 
 * `sudo modprobe ec_sys`
 
-[//]: # (If you need to write to a specific address &#40;but you really shouldn’t&#41; you can enable)
-[//]: # (Read/Write mode for this module:)
-[//]: # ()
-[//]: # (* `sudo modprobe ec_sys write_support=1`)
-
 After that you can extract the EC table and print it on the terminal in text form:
 
 * `hexdump -C /sys/kernel/debug/ec/ec0/io`
@@ -146,19 +143,18 @@ Or save it to file:
 
 + `hexdump -C /sys/kernel/debug/ec/ec0/io > ec_dump.txt`
 
-If you need dump in binary form:
-
-* `cat /sys/kernel/debug/ec/ec0/io > ec_dump.bin`
-
 ## Reading the EC RAM mapped to system memory
+
+> [!CAUTION]
+> NOT RECOMMENDED! Use only if other methods do not work! Newer write to system memory.
+> 
+> Reading random parts of the system memory can reveal your secrets, so check the dump before you post it to Github.
+
+> [!NOTE]
+> `/dev/mem` may not be supported on some distros. For details, read the `man mem`.
 
 Some devices have EC memory mapped to system memory address `0x0xFC000800`,
 so you can read it from the `/dev/mem` pseudo file with `dd`.
-
-`/dev/mem` may not be supported on some distros. For details, see `man mem`.
-
-> [!WARNING]
-> Reading random parts of the system memory can reveal your secrets, so check the dump before you post it to Github.
 
 To read EC memory in text form run:
 
@@ -167,7 +163,3 @@ To read EC memory in text form run:
 To save EC memory in text form run:
 
 + `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C > ec_dump.txt`
-
-To make binary dump run:
-
-+ `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 > ec_dump.bin`
