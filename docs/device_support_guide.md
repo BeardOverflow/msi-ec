@@ -148,7 +148,7 @@ Or save it to file:
 ## Reading the EC RAM mapped to system memory
 
 > [!CAUTION]
-> NOT RECOMMENDED! Use only if other methods do not work! Newer write to system memory.
+> NOT RECOMMENDED! Use only if other methods do not work! Never write to system memory.
 > 
 > Reading random parts of the system memory can reveal your secrets, so check the dump before you post it to Github.
 
