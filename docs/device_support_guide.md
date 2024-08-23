@@ -6,7 +6,6 @@ There are two main methods to get your MSI laptop supported: the recommended met
 
 # Table of contents
 
-+ FW naming and WMI versioning explanation
 + [Windows](#windows-method-recommended)
   + [RWE guide](#windows-method-recommended)
   + [MsiEcRamEditor](https://github.com/timschneeb/MsiEcRamEditor) (WMI2 only)
@@ -14,7 +13,10 @@ There are two main methods to get your MSI laptop supported: the recommended met
   + [`msi-ec`](#msi-ec-debug-mode)
   + [`ec-sys`](#ec-sys-method)
   + [dd from `/dev/mem`](#reading-the-ec-ram-mapped-to-system-memory)
-+ Known addresses
++ [Contribution](#contribution)
+  + [Firmware naming and generations](#firmware-naming)
+  + [Firmware generations](#firmware-generations)
+  + [Common addresses](#common-addresses)
 
 # Windows method (recommended):
 
@@ -163,3 +165,39 @@ To read EC memory in text form run:
 To save EC memory in text form run:
 
 + `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C > ec_dump.txt`
+
+# Contribution
+
+## Firmware naming
+
+|                                                      EC                                                       |                                             BIOS                                              |         Series          |
+|:-------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------:|:-----------------------:|
+| ${\color{red}xxxx}{\color{orange}b}{MS}{\color{yellow}n}{.}{\color{WildStrawberry}y}{\color{YellowOrange}zz}$ | ${E}{\color{red}xxxx}{\color{orange}b}{MS.}{\color{WildStrawberry}y}{\color{YellowOrange}zz}$ | Business/Creator/Gaming |
+| ${\color{red}xxxx}{\color{orange}b}{WS}{\color{yellow}n}{.}{\color{WildStrawberry}y}{\color{YellowOrange}zz}$ | ${E}{\color{red}xxxx}{\color{orange}b}{WS.}{\color{WildStrawberry}y}{\color{YellowOrange}zz}$ | Workstation/CreatorPRO  |
+
++ ${\color{red}xxxx}$ - model code
++ ${\color{orange}b}$ - CPU/EC vendor
+  + For BIOS:
+    + A - AMD CPU
+    + I - Intel CPU
+  + For EC:
+    + E - ENE
+    + I - ITE
++ ${\color{yellow}n}$ - EC / board(?) model
++ ${\color{WildStrawberry}y}{\color{YellowOrange}zz}$ - version
+  + ${\color{WildStrawberry}y}$ - board generation; firmware is incompatible if different
+  + ${\color{YellowOrange}zz}$ - firmware version
+
+## Firmware generations
+
+Now we know about 2 firmware generations, which we call `WMI1` and `WMI2`. `WMI` is Windows component,
+but MSI used `WMI2` name for the part that interacts with hardware via the Windows ACPI-WMI subsystem.
+
++ `WMI1`
+  + Intel CPU Gen 10 based and older
+  + All AMD based laptops, except Gaming series with 7 Gen CPU
++ `WMI2`
+  + Intel CPU Gen 11 based and newer
+  + Gaming series with AMD 7 Gen CPU and newer
+
+## Common addresses
