@@ -133,15 +133,15 @@ Or save it to a file:
 > [!NOTE]
 > The `ec-sys` module may not be included in some distros, such as Fedora.
 
-To start, You need to load a module called `ec_sys`:
+To start, you need to load a module called `ec_sys`:
 
 * `sudo modprobe ec_sys`
 
-After that you can extract the EC table and print it on the terminal in text form:
+After that you can extract the EC table and print it to the terminal in text form:
 
 * `hexdump -C /sys/kernel/debug/ec/ec0/io`
 
-Or save it to file:
+Or save it to a file:
 
 + `hexdump -C /sys/kernel/debug/ec/ec0/io > ec_dump.txt`
 
@@ -153,16 +153,16 @@ Or save it to file:
 > Reading random parts of the system memory can reveal your secrets, so check the dump before you post it to Github.
 
 > [!NOTE]
-> `/dev/mem` may not be supported on some distros. For details, read the `man mem`.
+> `/dev/mem` may not be supported on some distros. For details, read `man mem`.
 
-Some devices have EC memory mapped to system memory address `0x0xFC000800`,
+Some devices have the EC memory mapped to the system memory address `0x0xFC000800`,
 so you can read it from the `/dev/mem` pseudo file with `dd`.
 
-To read EC memory in text form run:
+To read the EC memory in text form run:
 
 + `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C`
 
-To save EC memory in text form run:
+Or save it to a file:
 
 + `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C > ec_dump.txt`
 
