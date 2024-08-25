@@ -107,24 +107,24 @@ and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/ne
 > Make sure that you are running the git version of the module. 
 > If not, follow the installation guide in the [Readme](../README.md#Installation) file.
 
-Unload module if it was previously loaded:
+Unload the module if it was previously loaded:
 
 + `sudo modprobe -r msi-ec`
 
-Load module with debug mode enabled:
+Load the module with the debug mode enabled:
 
 + `sudo modprobe msi-ec debug=true`
 
-Make a dump by reading the module pseudo file:
+Make a dump by reading the module's pseudo file:
 
 + `cat /sys/devices/platform/msi-ec/debug/ec_dump`
 
-Or save it to file:
+Or save it to a file:
 
 + `cat /sys/devices/platform/msi-ec/debug/ec_dump > ec_dump.txt`
 
 > [!IMPORTANT]
-> If you got the next error, then your module is not loaded in debug mode or doesn't have it:
+> If you see the following error, then your module is not loaded in the debug mode:
 > 
 > `cat: /sys/devices/platform/msi-ec/debug/ec_dump: No such file or directory`
 
