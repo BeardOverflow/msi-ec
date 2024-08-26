@@ -4,6 +4,8 @@ There are two main methods to get your MSI laptop supported: the recommended met
 > [!IMPORTANT]
 > If there are any BIOS/firmware updates available for your laptop, follow this guide for your current firmware before installing any of them. Then repeat the process for each new firmware version you install from the official MSI website. This is required to obtain support for older firmware as the EC configuration may vary across the versions.
 
+> [!TIP]
+> Before you proceed, you should get familiar with resetting the BIOS and the EC. If you don't already know how to do it, now it's the time to learn.
 # Table of contents
 
 + [Windows](#windows-method-recommended)
