@@ -105,9 +105,7 @@ and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/ne
 
 ## `MSI-EC` debug mode
 
-> [!NOTE]
-> Make sure that you are running the git version of the module. 
-> If not, follow the installation guide in the [Readme](../README.md#Installation) file.
+Install the latest version of the module: follow the installation guide in the [Readme](../README.md#Installation) file.
 
 Unload the module if it was previously loaded:
 
@@ -147,12 +145,12 @@ Or save it to a file:
 
 + `hexdump -C /sys/kernel/debug/ec/ec0/io > ec_dump.txt`
 
-## Reading the EC RAM mapped to system memory
+## Reading the EC RAM mapped to the system memory
 
 > [!CAUTION]
-> NOT RECOMMENDED! Use only if other methods do not work! Never write to system memory.
+> NOT RECOMMENDED! Use only if the other methods did not work! Never write directly to the system memory.
 > 
-> Reading random parts of the system memory can reveal your secrets, so check the dump before you post it to Github.
+> Reading random parts of the system memory can reveal sensitive data, so check the dump before you post it to Github.
 
 > [!NOTE]
 > `/dev/mem` may not be supported on some distros. For details, read `man mem`.
