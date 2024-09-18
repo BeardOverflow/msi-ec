@@ -9,3 +9,6 @@
 .vscode
 .cache
 compile_commands.json
+
+# NixOS outputs
+/result
