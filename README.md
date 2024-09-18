@@ -43,6 +43,37 @@ Check if your device is supported before attempting to install and use the drive
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
 2. Run `yay -S msi-ec-git`
 
+### From NixOS
+1. Add the package from the flake to your kernel packages
+```nix
+# In your flake
+{
+	# ...
+	inputs.msi-ec = {
+		url = "github:BeardOverflow/msi-ec";
+		// inputs.nixpkgs.follows = "nixpkgs";
+	};
+	# ...
+}
+
+# In your config
+
+{
+	# ...
+	boot.kernelPackages = pkgs.linuxPackages_latest // {
+		inherit (msi-ec.${system}.packages) msi-ec;
+	};
+
+	boot.kernelModules = [
+		# ...
+
+		"msi-ec"
+
+		# ...
+	];
+}
+```
+
 
 ## Current Support in the Kernel
 
