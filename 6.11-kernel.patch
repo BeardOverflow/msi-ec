@@ -1,0 +1,22 @@
+diff --git a/msi-ec.c b/msi-ec.c
+index 830cdf4..80ce756 100644
+--- a/msi-ec.c
++++ b/msi-ec.c
+@@ -3562,7 +3562,7 @@ static int msi_platform_probe(struct platform_device *pdev)
+ 	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
+ }
+ 
+-static int msi_platform_remove(struct platform_device *pdev)
++static void msi_platform_remove(struct platform_device *pdev)
+ {
+ 	if (debug)
+ 		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
+@@ -3573,8 +3573,6 @@ static int msi_platform_remove(struct platform_device *pdev)
+ 		kfree(msi_cpu_group.attrs);
+ 		kfree(msi_gpu_group.attrs);
+ 	}
+-
+-	return 0;
+ }
+ 
+ static struct platform_device *msi_platform_device;
