@@ -2424,7 +2424,7 @@ static struct msi_ec_conf CONF29 __initdata = {
 	.fan_mode = {
 		.address = 0x89,
 		.modes = {
-			{ FM_BASIC_NAME,    0x32 },
+			{ FM_BASIC_NAME,    0x3c },
 			{ FM_ADVANCED_NAME, 0x00 },
 			MSI_EC_MODE_NULL
 		},
@@ -2441,7 +2441,7 @@ static struct msi_ec_conf CONF29 __initdata = {
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
 	},
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
