@@ -2301,6 +2301,8 @@ static const char *ALLOWED_FW_28[] __initconst = {
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
 	"1822EMS1.112",
+	"1822IMS1.115",
+	"1822IMS1.116",
 	NULL
 };
 
