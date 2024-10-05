@@ -9,9 +9,6 @@ obj-m += msi-ec.o
 
 all: modules
 
-6.11-kernel-patch:
-	git apply 6.11-kernel.patch
-
 older-kernel-patch:
 	git apply older-kernel.patch
 

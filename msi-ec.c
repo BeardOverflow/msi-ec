@@ -46,6 +46,7 @@
 #include <linux/seq_file.h>
 #include <linux/string.h>
 #include <linux/slab.h>
+#include <linux/version.h>
 
 #define SM_ECO_NAME		"eco"
 #define SM_COMFORT_NAME		"comfort"
@@ -3562,7 +3563,11 @@ static int msi_platform_probe(struct platform_device *pdev)
 	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 11, 0))
+static void msi_platform_remove(struct platform_device *pdev)
+#else
 static int msi_platform_remove(struct platform_device *pdev)
+#endif
 {
 	if (debug)
 		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
@@ -3574,7 +3579,9 @@ static int msi_platform_remove(struct platform_device *pdev)
 		kfree(msi_gpu_group.attrs);
 	}
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0))
 	return 0;
+#endif
 }
 
 static struct platform_device *msi_platform_device;

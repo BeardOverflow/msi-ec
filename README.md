@@ -25,8 +25,7 @@ Check if your device is supported before attempting to install and use the drive
    - For Arch:   `sudo pacman -S --needed base-devel linux-headers`
 2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
 3. (Linux < 6.2 only, verify with `uname -r`): `make older-kernel-patch`
-4. (Linux >= 6.11) `make 6.11-kernel-patch`
-5. Choose one of the following installation methods
+4. Choose one of the following installation methods
 
 #### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
 
