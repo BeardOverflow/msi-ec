@@ -2422,10 +2422,11 @@ static struct msi_ec_conf CONF29 __initdata = {
 		.address = MSI_EC_ADDR_UNSUPP, // Function not shown in dragon center
 	},
 	.fan_mode = {
-		.address = 0x89,
+		.address = 0xf4,
 		.modes = {
-			{ FM_BASIC_NAME,    0x3c },
-			{ FM_ADVANCED_NAME, 0x00 },
+			{ FM_BASIC_NAME,    0x4c },
+			{ FM_AUTO_NAME,    0x0c },
+			{ FM_ADVANCED_NAME, 0x8c },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2452,7 +2453,7 @@ static struct msi_ec_conf CONF29 __initdata = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // KB auto turn off
 		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
 		.max_mode         = 1,
-		.bl_state_address = 0xd3,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x81,
 		.max_state        = 3,
 	},
