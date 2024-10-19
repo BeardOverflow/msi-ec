@@ -36,7 +36,7 @@ instead continue following the guide).
 MSI creator center / MSI center / MSI center pro (the correct app
 can be found on the support page for your laptop).
 
-4. If you fail at step 3, then you most likely need another app. usually
+4. If you fail at step 3, then you most likely need another app to be installed before attempting to install the MSI app. usually
 its AMD Adrenalin software / GeForce Experience (nvidia)/ or intel
 equivalent.
 
@@ -59,7 +59,7 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 
 ![not apply changes](pics/support_guide/not_apply_changes.png)
 
-10. Change the refresh rate to 500-600ms,
+10. Change the refresh rate to 500-600ms (don't go below 400ms to avoid EC lockup),
 this makes it easier to see how the values react to the changes in the MSI app settings:
 
 ![refresh rate button](pics/support_guide/refresh_menu.png)
