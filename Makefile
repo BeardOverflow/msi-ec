@@ -9,9 +9,6 @@ obj-m += msi-ec.o
 
 all: modules
 
-older-kernel-patch:
-	git apply older-kernel.patch
-
 modules:
 	@$(MAKE) -C /lib/modules/$(TARGET)/build M=$(CURDIR) modules
 

@@ -2646,14 +2646,22 @@ static struct attribute *msi_battery_attrs[] = {
 
 ATTRIBUTE_GROUPS(msi_battery);
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6,2,0))
 static int msi_battery_add(struct power_supply *battery,
 			   struct acpi_battery_hook *hook)
+#else
+static int msi_battery_add(struct power_supply *battery)
+#endif
 {
 	return device_add_groups(&battery->dev, msi_battery_groups);
 }
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(6,2,0))
 static int msi_battery_remove(struct power_supply *battery,
 			      struct acpi_battery_hook *hook)
+#else
+static int msi_battery_remove(struct power_supply *battery)
+#endif
 {
 	device_remove_groups(&battery->dev, msi_battery_groups);
 	return 0;
