@@ -166,7 +166,8 @@ Or save it to a file:
 
 + `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C > ec_dump.txt`
 
-# Contribution
+# Additional Info
+If you want to understand what the numbers and letters mean in BIOS/EC version names, here is what we know so far:
 
 ## Firmware naming
 
@@ -190,7 +191,7 @@ Or save it to a file:
 
 ## Firmware generations
 
-Now we know about 2 firmware generations, which we call `WMI1` and `WMI2`. `WMI` is Windows component,
+Currently, we know about 2 firmware generations, which we call `WMI1` and `WMI2`. `WMI` is Windows component,
 but MSI used `WMI2` name for the part that interacts with hardware via the Windows ACPI-WMI subsystem.
 
 + `WMI1`
@@ -199,5 +200,3 @@ but MSI used `WMI2` name for the part that interacts with hardware via the Windo
 + `WMI2`
   + Intel CPU Gen 11 based and newer
   + Gaming series with AMD 7 Gen CPU and newer
-
-## Common addresses
