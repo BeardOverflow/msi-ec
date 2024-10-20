@@ -76,7 +76,9 @@ while looking at the EC table.
 
 Eventually you'll notice one or more values that change each time you change the
 setting, once you find them, you can start writing down the addresses and values
-corresponding to *each* user scenario, so you can report them.
+corresponding to *each* user scenario so you can report them, also don't forget to do the same for other features.
+
+12. Once you have made a list of the addresses and their values, you can go ahead and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/new?assignees=&labels=New+firmware&projects=&template=support_request.yml) (a github account is required) so we can add support for your device.
 
 # Linux method
 
