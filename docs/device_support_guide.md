@@ -9,16 +9,8 @@ There are two main methods to get your MSI laptop supported: the recommended met
 # Table of contents
 
 + [Windows](#windows-method-recommended)
-  + [RWE guide](#windows-method-recommended)
-  + [MsiEcRamEditor](https://github.com/timschneeb/MsiEcRamEditor) (WMI2 only)
 + [Linux](#linux-method)
-  + [`msi-ec`](#msi-ec-debug-mode)
-  + [`ec-sys`](#ec-sys-method)
-  + [dd from `/dev/mem`](#reading-the-ec-ram-mapped-to-system-memory)
-+ [Contribution](#contribution)
-  + [Firmware naming and generations](#firmware-naming)
-  + [Firmware generations](#firmware-generations)
-  + [Common addresses](#common-addresses)
++ [Additional Info](#additional-info)
 
 # Windows method (recommended):
 
