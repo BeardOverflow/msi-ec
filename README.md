@@ -44,24 +44,16 @@ Check if your device is supported before attempting to install and use the drive
 2. Run `yay -S msi-ec-git`
 
 ### From NixOS
-1. Add the package from the flake to your kernel packages
+The driver is packaged on `nixos-unstable` under the name
+`linuxKernel.packages.<kernel>.msi-ec`.
 ```nix
-# In your flake
-{
-	# ...
-	inputs.msi-ec = {
-		url = "github:BeardOverflow/msi-ec";
-		// inputs.nixpkgs.follows = "nixpkgs";
-	};
-	# ...
-}
-
 # In your config
 
 {
 	# ...
 	boot.kernelPackages = pkgs.linuxPackages_latest // {
-		inherit (msi-ec.${system}.packages) msi-ec;
+		# Replace linux_6_6 by your actual kernel
+		msi-ec = linuxKernel.packages.linux_6_6.msi-ec;
 	};
 
 	boot.kernelModules = [
@@ -78,7 +70,7 @@ Check if your device is supported before attempting to install and use the drive
 ## Current Support in the Kernel
 
 Features already merged in kernel 6.4 and up:
-- Battery threshols
+- Battery thresholds
 
 Still not merged:
 - Enable/Disable webcam
