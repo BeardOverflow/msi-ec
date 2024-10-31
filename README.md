@@ -15,7 +15,7 @@ Can't find your device in the list? Check the contribution guides and open a new
 
 ## Contribute
 Eager to support the project? Your help is always welcome to keep the project alive and going!
-- Read how to get the necessary information about the device on Windows and Linux in [this guide](docs/device_support_guide.md)
+- Read how to add support for your device and get the necessary information on Windows and Linux in [this guide](docs/device_support_guide.md)
 - Check out the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
 - If you want to go deeper: [read into this discussion regarding EC firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
 
