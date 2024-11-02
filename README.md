@@ -42,11 +42,34 @@ Check if your device is supported before attempting to install and use the drive
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
 2. Run `yay -S msi-ec-git`
 
+### On NixOS
+The driver is packaged on `nixos-unstable` under the name
+`linuxKernel.packages.<kernel>.msi-ec`.
+```nix
+# In your config
+
+{
+	# ...
+	boot.kernelPackages = pkgs.linuxPackages_latest // {
+		# Replace linux_6_6 by your actual kernel
+		msi-ec = linuxKernel.packages.linux_6_6.msi-ec;
+	};
+
+	boot.kernelModules = [
+		# ...
+
+		"msi-ec"
+
+		# ...
+	];
+}
+```
+
 
 ## Current Support in the Kernel
 
 Features already merged in kernel 6.4 and up:
-- Battery threshols
+- Battery thresholds
 
 Still not merged:
 - Enable/Disable webcam
