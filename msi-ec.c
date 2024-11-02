@@ -2302,6 +2302,9 @@ static const char *ALLOWED_FW_28[] __initconst = {
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
 	"1822EMS1.112",
+// .116 reports as .114
+// DMIDECODE Version: E1822IMS.116 but /sys/devices/platform/msi-ec/debug/fw_version reads 1822EMS1.114
+	"1822EMS1.114", 
 	NULL
 };
 
