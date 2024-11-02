@@ -1172,7 +1172,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
-	"17L2EMS1.108", // Katana 17 B11UCX
+	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
 	NULL
 };
 
