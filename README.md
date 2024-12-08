@@ -20,6 +20,7 @@ Can't find your device in the list? Check the contribution guides and open a new
 ## Contribute
 Eager to support the project? Your help is always welcome to keep the project alive and going!
 - Read how to add support for your device and get the necessary information on Windows and Linux in [this guide](docs/device_support_guide.md).
+- Get solutions for common MSI laptop problems (ACPI errors, slow charger detection,...) and submit fixes if you have any in this [discussion](https://github.com/BeardOverflow/msi-ec/discussions/130#discussioncomment-9694621).
 - If you want to go deeper: [read into this discussion regarding EC firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
 
 
