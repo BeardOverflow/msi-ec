@@ -6,7 +6,9 @@ This driver might not work on other laptops produced by MSI. Use it at your own 
 
 Also, and until future enhancements, no DMI data is used to identify your laptop model. In the meantime, check the list of supported devices and the msi-ec.c file before using.
 
-There is a graphical interface that uses this driver: [MControlCenter](https://github.com/dmitry-s93/MControlCenter). however, current version doesn't use this driver; so you need to build the app from source to control the driver through it.
+The driver has no effect on ACPI, so if you have any ACPI errors, the driver can't fix them; consider extracting the ACPI tables and/or following the [Arch wiki](https://wiki.archlinux.org/title/DSDT)
+
+You might want to use a graphical interface instead of executing commands to use the driver: [MControlCenter](https://github.com/dmitry-s93/MControlCenter). 
 
 
 ## Supported devices
