@@ -193,11 +193,11 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
 
 - `/sys/devices/platform/msi-ec/cpu/realtime_fan_speed`
   - Description: This entry reports the current cpu fan speed.
-  - Access: Read
+  - Access: Read, Write
   - Valid values: 0 - 100 (percent)
 
-- `/sys/devices/platform/msi-ec/cpu/basic_fan_speed`
-  - Description: This entry allows changing the cpu fan speed.
+- `/sys/devices/platform/msi-ec/cpu/basic_fan_speed` **[Deprecated]**
+  - Description: **[Deprecated, use `{cpu/gpu}/realtime_fan_speed` instead]** This entry allows changing the cpu fan speed.
   - Access: Read, Write
   - Valid values: 0 - 100 (percent)
 
@@ -208,7 +208,7 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
 
 - `/sys/devices/platform/msi-ec/gpu/realtime_fan_speed`
   - Description: This entry reports the current gpu fan speed.
-  - Access: Read
+  - Access: Read, Write
   - Valid values: 0 - 100 (percent)
 
 In addition to these platform device attributes the driver registers itself in the Linux power_supply subsystem (Documentation/ABI/testing/sysfs-class-power) and is available to userspace under:
