@@ -1,17 +1,16 @@
 name: New firmware request
-description: Request a new EC configuration to be added
+description: Request to add support for a new device (new EC configuration)
 labels: ["New firmware"]
 
 body:
   - type: markdown
     attributes:
       value: >
-        Please, get the latest version of the driver from github,
-        build it and load it in the debug mode, then fill out the fields below.
-
-        To build the driver from source, run `make`
-
-        To load the driver in the debug mode, run `sudo make load-debug`
+        Before you open a new issue, please check the [supported devices list](https://github.com/BeardOverflow/msi-ec/blob/main/docs/supported_devices.md),
+        If it's not there, you should follow the guide mentioned on the main page,
+        and then make a list of the addresses for features and their values to submit it here.
+        
+        It's also possible to skip the issue and make a pull request directly.
 
   - type: input
     id: model
@@ -25,15 +24,15 @@ body:
     id: ec-firmware
     attributes:
       label: EC firmware version
-      description: cat /sys/devices/platform/msi-ec/debug/fw_version
+      description: Get your current EC firmware version from the msi app on windows or the info page in the bios
     validations:
       required: false
 
   - type: textarea
-    id: ec-dump
+    id: feature-list
     attributes:
-      label: EC memory dump
-      description: cat /sys/devices/platform/msi-ec/debug/ec_dump
+      label: List of addresses and their values
+      description: Make a list of address = value for each possible feature, you can submit an incomplete list and continue later
       render: text
     validations:
       required: false
