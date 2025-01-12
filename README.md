@@ -4,7 +4,11 @@
 
 This driver might not work on other laptops produced by MSI. Use it at your own risk, we are not responsible for any damage suffered.
 
-Also, and until future enhancements, no DMI data is used to identify your laptop model. In the meantime, check the msi-ec.c file before using.
+Also, and until future enhancements, no DMI data is used to identify your laptop model. In the meantime, check the list of supported devices and the msi-ec.c file before using.
+
+The driver has no effect on ACPI, so if you have any ACPI errors, the driver can't fix them; consider extracting the ACPI tables and/or following the [Arch wiki](https://wiki.archlinux.org/title/DSDT)
+
+You might want to use a graphical interface instead of executing commands to use the driver: [MControlCenter](https://github.com/dmitry-s93/MControlCenter). 
 
 
 ## Supported devices
@@ -15,8 +19,8 @@ Can't find your device in the list? Check the contribution guides and open a new
 
 ## Contribute
 Eager to support the project? Your help is always welcome to keep the project alive and going!
-- Read how to add support for your device and get the necessary information on Windows and Linux in [this guide](docs/device_support_guide.md)
-- Check out the relevant [wiki article](https://github.com/BeardOverflow/msi-ec/wiki/Contributing).
+- Read how to add support for your device and get the necessary information on Windows and Linux in [this guide](docs/device_support_guide.md).
+- Get solutions for common MSI laptop problems (ACPI errors, slow charger detection,...) and submit fixes if you have any in this [discussion](https://github.com/BeardOverflow/msi-ec/discussions/130#).
 - If you want to go deeper: [read into this discussion regarding EC firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
 
 
