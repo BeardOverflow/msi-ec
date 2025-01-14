@@ -2835,7 +2835,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68, // CPU temperature
-		.rt_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
+		.rt_fan_speed_address  = 0xc9,
 		.rt_fan_speed_base_min = 0x00,
 		.rt_fan_speed_base_max = 0x96,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
@@ -2844,7 +2844,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80, // GPU temperature
-		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
+		.rt_fan_speed_address = 0xcb,
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
