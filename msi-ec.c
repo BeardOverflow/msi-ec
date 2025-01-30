@@ -3181,8 +3181,7 @@ static struct msi_ec_conf CONF38 __initdata = {
 };
 
 static const char *ALLOWED_FW_39[] __initconst = {
-	"17E8IMS1.106", // GL75 Leopard 10SCXR/MS-17E8
-	"17E8EMS1.101",
+	"15M1IMS2.111", // MSI VECTOR 16 HX A14VHG
 	NULL
 };
 
