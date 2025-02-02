@@ -3186,28 +3186,28 @@ static const char *ALLOWED_FW_39[] __initconst = {
 
 static struct msi_ec_conf CONF39 __initdata = {
 	.allowed_fw = ALLOWED_FW_39, // WMI2 based
-	.charge_control = { // needs verification for the mask implimtation
+	.charge_control = {
 		.address      = 0xd7,
 		.offset_start = 0x8a,
 		.offset_end   = 0x80,
 		.range_min    = 0x8a,
 		.range_max    = 0xe4,
 	},
-	.webcam = { // tested
+	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
-	.fn_win_swap = { // tested
+	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
 		.invert  = false,
 	},
-	.cooler_boost = { // tested
+	.cooler_boost = {
 		.address = 0x98,
 		.bit     = 7,
 	},
-	.shift_mode = { // verified
+	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
 			{ SM_ECO_NAME,      0xc2},
@@ -3216,11 +3216,11 @@ static struct msi_ec_conf CONF39 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = { // verified
-        .address = 0xeb, // when the super_battery is on the value changes from 0x00 to 0x0F
+	.super_battery = {
+        .address = 0xeb,
 		.mask    = 0x0f,
 	},
-	.fan_mode = {  // verified
+	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
 			{ FM_AUTO_NAME,      0x0d},
@@ -3231,14 +3231,14 @@ static struct msi_ec_conf CONF39 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71, // when fan speed is this became zero and changes when the fan rpm changes
+		.rt_fan_speed_address  = 0x71,
 		.rt_fan_speed_base_min = 0x00,
 		.rt_fan_speed_base_max = 0x96,
 		.bs_fan_speed_address  = MSI_EC_ADDR_UNKNOWN,
 		.bs_fan_speed_base_min = 0x00,
 		.bs_fan_speed_base_max = 0x0f,
 	},
-	.gpu = { // verified
+	.gpu = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
 	},
@@ -3247,7 +3247,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
 	},
-	.kbd_bl = { // needs tesing and code verification 
+	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { },
 		.max_mode         = 1,
