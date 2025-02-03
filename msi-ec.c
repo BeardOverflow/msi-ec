@@ -3217,7 +3217,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 		},
 	},
 	.super_battery = {
-        .address = 0xeb,
+		.address = 0xeb,
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
