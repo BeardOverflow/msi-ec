@@ -3257,13 +3257,13 @@ static struct msi_ec_conf CONF39 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_39[] __initconst = {
+static const char *ALLOWED_FW_40[] __initconst = {
 	"17S1IMS1.105", // Raider GE78HX 13VI
 	NULL
 };
 
-static struct msi_ec_conf CONF39 __initdata = {
-	.allowed_fw = ALLOWED_FW_39, // WMI2 based
+static struct msi_ec_conf CONF40 __initdata = {
+	.allowed_fw = ALLOWED_FW_40, // WMI2 based
 	.charge_control = {
 		.address      = 0xd7,
 		.offset_start = 0x8a,
@@ -3382,6 +3382,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF37,
 	&CONF38,
 	&CONF39,
+	&CONF40,
 	NULL
 };
 
