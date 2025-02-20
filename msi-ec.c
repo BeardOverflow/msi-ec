@@ -4138,14 +4138,14 @@ static ssize_t fw_release_date_show(struct device *device,
 	int result;
 	int year, month, day, hour, minute, second;
 
-	memset(rdate, 0, MSI_EC_FW_DATE_LENGTH + 1);
+	memset(rdate, 0, sizeof(rdate));
 	result = ec_read_seq(MSI_EC_FW_DATE_ADDRESS, rdate,
 			     MSI_EC_FW_DATE_LENGTH);
 	if (result < 0)
 		return result;
 	sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
 
-	memset(rtime, 0, MSI_EC_FW_TIME_LENGTH + 1);
+	memset(rtime, 0, sizeof(rtime));
 	result = ec_read_seq(MSI_EC_FW_TIME_ADDRESS, rtime,
 			     MSI_EC_FW_TIME_LENGTH);
 	if (result < 0)
