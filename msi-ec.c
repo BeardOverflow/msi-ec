@@ -4170,6 +4170,67 @@ static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
 
+static struct attribute *msi_root_attrs[] = {
+	&dev_attr_webcam.attr,
+	&dev_attr_webcam_block.attr,
+	&dev_attr_fn_key.attr,
+	&dev_attr_win_key.attr,
+	&dev_attr_battery_mode.attr,
+	&dev_attr_cooler_boost.attr,
+	&dev_attr_available_shift_modes.attr,
+	&dev_attr_shift_mode.attr,
+	&dev_attr_super_battery.attr,
+	&dev_attr_available_fan_modes.attr,
+	&dev_attr_fan_mode.attr,
+	&dev_attr_fw_version.attr,
+	&dev_attr_fw_release_date.attr,
+	NULL
+};
+
+static umode_t msi_root_is_visible(struct kobject *kobj,
+				   struct attribute *attr,
+				   int idx)
+{
+	int address;
+
+	if (attr == &dev_attr_webcam.attr)
+		address = conf.webcam.address;
+
+	else if (attr == &dev_attr_webcam_block.attr)
+		address = conf.webcam.block_address;
+
+	else if (attr == &dev_attr_fn_key.attr ||
+		 attr == &dev_attr_win_key.attr)
+		address = conf.fn_win_swap.address;
+
+	else if (attr == &dev_attr_battery_mode.attr)
+		address = conf.charge_control.address;
+
+	else if (attr == &dev_attr_cooler_boost.attr)
+		address = conf.cooler_boost.address;
+
+	else if (attr == &dev_attr_available_shift_modes.attr ||
+		 attr == &dev_attr_shift_mode.attr)
+		address = conf.shift_mode.address;
+
+	else if (attr == &dev_attr_super_battery.attr)
+		address = conf.super_battery.address;
+
+	else if (attr == &dev_attr_available_fan_modes.attr ||
+		 attr == &dev_attr_fan_mode.attr)
+		address = conf.fan_mode.address;
+
+	else
+		return attr->mode;
+
+	return address == MSI_EC_ADDR_UNSUPP ? 0 : attr->mode;
+}
+
+static struct attribute_group msi_root_group = {
+	.is_visible = msi_root_is_visible,
+	.attrs = msi_root_attrs,
+};
+
 // ============================================================ //
 // Sysfs platform device attributes (cpu)
 // ============================================================ //
@@ -4278,6 +4339,13 @@ static struct device_attribute dev_attr_cpu_basic_fan_speed = {
 	},
 	.show = cpu_basic_fan_speed_show,
 	.store = cpu_basic_fan_speed_store,
+};
+
+static struct attribute *msi_cpu_attrs[] = {
+	&dev_attr_cpu_realtime_temperature.attr,
+	&dev_attr_cpu_realtime_fan_speed.attr,
+	&dev_attr_cpu_basic_fan_speed.attr,
+	NULL
 };
 
 // ============================================================ //
@@ -4461,7 +4529,6 @@ static const struct attribute_group msi_debug_group = {
 // Sysfs platform driver
 // ============================================================ //
 
-static struct attribute_group msi_root_group;
 static struct attribute_group msi_cpu_group = {
 	.name = "cpu",
 };
@@ -4508,70 +4575,6 @@ static int msi_platform_probe(struct platform_device *pdev)
 		if (!conf_loaded) // debug mode on an unsupported device
 			return 0;
 	}
-
-	/* root group */
-
-	// ALL root attributes and their support info
-	struct attribute_support root_attrs_support[] = {
-		{
-			&dev_attr_webcam.attr,
-			conf.webcam.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_webcam_block.attr,
-			conf.webcam.block_address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_fn_key.attr,
-			conf.fn_win_swap.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_win_key.attr,
-			conf.fn_win_swap.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_battery_mode.attr,
-			conf.charge_control.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_cooler_boost.attr,
-			conf.cooler_boost.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_available_shift_modes.attr,
-			conf.shift_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_shift_mode.attr,
-			conf.shift_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_super_battery.attr,
-			conf.super_battery.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_available_fan_modes.attr,
-			conf.fan_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_fan_mode.attr,
-			conf.fan_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_fw_version.attr,
-			true,
-		},
-		{
-			&dev_attr_fw_release_date.attr,
-			true,
-		},
-	};
-
-	msi_root_group.attrs =
-		filter_attributes(root_attrs_support,
-				  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
-	if (!msi_root_group.attrs)
-		return -ENOMEM;
 
 	/* cpu group */
 
