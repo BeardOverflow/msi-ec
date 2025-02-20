@@ -52,7 +52,7 @@ static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
 static DEFINE_MUTEX(ec_set_bit_mutex);
 
-#define SM_ECO_NAME			"eco"
+#define SM_ECO_NAME		"eco"
 #define SM_COMFORT_NAME		"comfort"
 #define SM_SPORT_NAME		"sport"
 #define SM_TURBO_NAME		"turbo"
@@ -3589,9 +3589,9 @@ static int ec_set_bit(u8 addr, u8 bit, bool value)
 
 	result = ec_write(addr, stored);
 
-	unlock:
-		mutex_unlock(&ec_set_bit_mutex);
-		return result;
+unlock:
+	mutex_unlock(&ec_set_bit_mutex);
+	return result;
 }
 
 static int ec_check_bit(u8 addr, u8 bit, bool *output)
