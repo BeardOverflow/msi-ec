@@ -4145,7 +4145,10 @@ static ssize_t fw_release_date_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	sscanf(rdate, "%02d%02d%04d", &time.tm_mon, &time.tm_mday, &time.tm_year);
+	result = sscanf(rdate, "%02d%02d%04d", &time.tm_mon, &time.tm_mday, &time.tm_year);
+	if (result != 3)
+		return -ENODATA;
+
 	/* the number of months since January and number of years since 1900 */
 	time.tm_mon -= 1;
 	time.tm_year -= 1900;
@@ -4156,7 +4159,9 @@ static ssize_t fw_release_date_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	sscanf(rtime, "%02d:%02d:%02d", &time.tm_hour, &time.tm_min, &time.tm_sec);
+	result = sscanf(rtime, "%02d:%02d:%02d", &time.tm_hour, &time.tm_min, &time.tm_sec);
+	if (result != 3)
+		return -ENODATA;
 
 	return sysfs_emit(buf, "%ptR\n", &time);
 }
