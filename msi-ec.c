@@ -47,6 +47,7 @@
 #include <linux/string.h>
 #include <linux/slab.h>
 #include <linux/version.h>
+#include <linux/rtc.h>
 
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
@@ -4136,24 +4137,28 @@ static ssize_t fw_release_date_show(struct device *device,
 	u8 rdate[MSI_EC_FW_DATE_LENGTH + 1];
 	u8 rtime[MSI_EC_FW_TIME_LENGTH + 1];
 	int result;
-	int year, month, day, hour, minute, second;
+	struct rtc_time time;
 
 	memset(rdate, 0, sizeof(rdate));
 	result = ec_read_seq(MSI_EC_FW_DATE_ADDRESS, rdate,
 			     MSI_EC_FW_DATE_LENGTH);
 	if (result < 0)
 		return result;
-	sscanf(rdate, "%02d%02d%04d", &month, &day, &year);
+
+	sscanf(rdate, "%02d%02d%04d", &time.tm_mon, &time.tm_mday, &time.tm_year);
+	/* the number of months since January and number of years since 1900 */
+	time.tm_mon -= 1;
+	time.tm_year -= 1900;
 
 	memset(rtime, 0, sizeof(rtime));
 	result = ec_read_seq(MSI_EC_FW_TIME_ADDRESS, rtime,
 			     MSI_EC_FW_TIME_LENGTH);
 	if (result < 0)
 		return result;
-	sscanf(rtime, "%02d:%02d:%02d", &hour, &minute, &second);
 
-	return sysfs_emit(buf, "%04d/%02d/%02d %02d:%02d:%02d\n", year, month, day,
-		          hour, minute, second);
+	sscanf(rtime, "%02d:%02d:%02d", &time.tm_hour, &time.tm_min, &time.tm_sec);
+
+	return sysfs_emit(buf, "%ptR\n", &time);
 }
 
 static DEVICE_ATTR_RW(webcam);
