@@ -48,6 +48,10 @@
 #include <linux/slab.h>
 #include <linux/version.h>
 
+static DEFINE_MUTEX(ec_set_by_mask_mutex);
+static DEFINE_MUTEX(ec_unset_by_mask_mutex);
+static DEFINE_MUTEX(ec_set_bit_mutex);
+
 #define SM_ECO_NAME		"eco"
 #define SM_COMFORT_NAME		"comfort"
 #define SM_SPORT_NAME		"sport"
@@ -3523,13 +3527,17 @@ static int ec_set_by_mask(u8 addr, u8 mask)
 	int result;
 	u8 stored;
 
+	mutex_lock(&ec_set_by_mask_mutex);
 	result = ec_read(addr, &stored);
 	if (result < 0)
-		return result;
+		goto unlock;
 
 	stored |= mask;
+	result = ec_write(addr, stored);
 
-	return ec_write(addr, stored);
+unlock:
+	mutex_unlock(&ec_set_by_mask_mutex);
+	return result;
 }
 
 static int ec_unset_by_mask(u8 addr, u8 mask)
@@ -3537,13 +3545,17 @@ static int ec_unset_by_mask(u8 addr, u8 mask)
 	int result;
 	u8 stored;
 
+	mutex_lock(&ec_unset_by_mask_mutex);
 	result = ec_read(addr, &stored);
 	if (result < 0)
-		return result;
+		goto unlock;
 
 	stored &= ~mask;
+	result = ec_write(addr, stored);
 
-	return ec_write(addr, stored);
+unlock:
+	mutex_unlock(&ec_unset_by_mask_mutex);
+	return result;
 }
 
 static int ec_check_by_mask(u8 addr, u8 mask, bool *output)
@@ -3565,16 +3577,21 @@ static int ec_set_bit(u8 addr, u8 bit, bool value)
 	int result;
 	u8 stored;
 
+	mutex_lock(&ec_set_bit_mutex);
 	result = ec_read(addr, &stored);
 	if (result < 0)
-		return result;
+		goto unlock;
 
 	if (value)
 		set_bit(stored, bit);
 	else
 		unset_bit(stored, bit);
 
-	return ec_write(addr, stored);
+	result = ec_write(addr, stored);
+
+unlock:
+	mutex_unlock(&ec_set_bit_mutex);
+	return result;
 }
 
 static int ec_check_bit(u8 addr, u8 bit, bool *output)
