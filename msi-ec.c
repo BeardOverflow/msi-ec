@@ -3489,24 +3489,6 @@ MODULE_PARM_DESC(debug, "Load the driver in the debug mode, exporting the debug 
 #define unset_bit(v, b) (v &= ~(1 << b))
 #define check_bit(v, b) ((bool)((v >> b) & 1))
 
-// compares two strings, trimming newline at the end the second
-static int strcmp_trim_newline2(const char *s, const char *s_nl)
-{
-	size_t s_nl_length = strlen(s_nl);
-
-	if (s_nl_length - 1 > MSI_EC_SHIFT_MODE_NAME_LIMIT)
-		return -1;
-
-	if (s_nl[s_nl_length - 1] == '\n') {
-		char s2[MSI_EC_SHIFT_MODE_NAME_LIMIT + 1];
-		memcpy(s2, s_nl, s_nl_length - 1);
-		s2[s_nl_length - 1] = '\0';
-		return strcmp(s, s2);
-	}
-
-	return strcmp(s, s_nl);
-}
-
 static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 {
 	int result;
@@ -3752,10 +3734,10 @@ static ssize_t webcam_common_store(u8 address,
 {
 	int result = -EINVAL;
 
-	if (strcmp_trim_newline2(str_for_1, buf) == 0)
+	if (sysfs_streq(str_for_1, buf))
 		result = ec_set_bit(address, conf.webcam.bit, true);
 
-	if (strcmp_trim_newline2(str_for_0, buf) == 0)
+	if (sysfs_streq(str_for_0, buf))
 		result = ec_set_bit(address, conf.webcam.bit, false);
 
 	if (result < 0)
@@ -4007,7 +3989,7 @@ static ssize_t shift_mode_store(struct device *dev,
 	for (int i = 0; conf.shift_mode.modes[i].name; i++) {
 		// NULL entries have NULL name
 
-		if (strcmp_trim_newline2(conf.shift_mode.modes[i].name, buf) == 0) {
+		if (sysfs_streq(conf.shift_mode.modes[i].name, buf)) {
 			result = ec_write(conf.shift_mode.address,
 					  conf.shift_mode.modes[i].value);
 			if (result < 0)
@@ -4105,7 +4087,7 @@ static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 	for (int i = 0; conf.fan_mode.modes[i].name; i++) {
 		// NULL entries have NULL name
 
-		if (strcmp_trim_newline2(conf.fan_mode.modes[i].name, buf) == 0) {
+		if (sysfs_streq(conf.fan_mode.modes[i].name, buf)) {
 			result = ec_write(conf.fan_mode.address,
 					  conf.fan_mode.modes[i].value);
 			if (result < 0)
