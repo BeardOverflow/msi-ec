@@ -3343,7 +3343,7 @@ static struct msi_ec_conf CONF40 __initdata = {
 };
 
 static const char *ALLOWED_FW_41[] __initconst = {
-	"15M1IMS2.111", // MSI VECTOR 16 HX A14VHG
+	"15M1IMS2.111", // MSI Vector 16 HX A14VHG
 	NULL
 };
 
