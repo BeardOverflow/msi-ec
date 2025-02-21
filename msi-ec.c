@@ -3567,12 +3567,6 @@ MODULE_PARM_DESC(debug, "Load the driver in the debug mode, exporting the debug 
 // Helper functions
 // ============================================================ //
 
-#define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
-
-#define set_bit(v, b)   (v |= (1 << b))
-#define unset_bit(v, b) (v &= ~(1 << b))
-#define check_bit(v, b) ((bool)((v >> b) & 1))
-
 static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 {
 	int result;
@@ -3645,9 +3639,9 @@ static int ec_set_bit(u8 addr, u8 bit, bool value)
 		goto unlock;
 
 	if (value)
-		set_bit(stored, bit);
+		stored |= BIT(bit);
 	else
-		unset_bit(stored, bit);
+		stored &= ~BIT(bit);
 
 	result = ec_write(addr, stored);
 
@@ -3665,7 +3659,7 @@ static int ec_check_bit(u8 addr, u8 bit, bool *output)
 	if (result < 0)
 		return result;
 
-	*output = check_bit(stored, bit);
+	*output = stored & BIT(bit);
 
 	return 0;
 }
@@ -3899,11 +3893,11 @@ static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 {
 	int result;
 
-	if (streq(buf, "right")) {
+	if (sysfs_streq("right", buf)) {
 		result = ec_set_bit(conf.fn_win_swap.address,
 				    conf.fn_win_swap.bit,
 				    true ^ conf.fn_win_swap.invert);
-	} else if (streq(buf, "left")) {
+	} else if (sysfs_streq("left", buf)) {
 		result = ec_set_bit(conf.fn_win_swap.address,
 				    conf.fn_win_swap.bit,
 				    false ^ conf.fn_win_swap.invert);
@@ -3935,11 +3929,11 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 {
 	int result;
 
-	if (streq(buf, "right")) {
+	if (sysfs_streq("right", buf)) {
 		result = ec_set_bit(conf.fn_win_swap.address,
 				    conf.fn_win_swap.bit,
 				    false ^ conf.fn_win_swap.invert);
-	} else if (streq(buf, "left")) {
+	} else if (sysfs_streq("left", buf)) {
 		result = ec_set_bit(conf.fn_win_swap.address,
 				    conf.fn_win_swap.bit,
 				    true ^ conf.fn_win_swap.invert);
@@ -3978,15 +3972,15 @@ static ssize_t battery_mode_store(struct device *dev,
 {
 	int result = -EINVAL;
 
-	if (streq(buf, "max"))
+	if (sysfs_streq("max", buf))
 		result = ec_write(conf.charge_control.address,
 				  conf.charge_control.range_max);
 
-	else if (streq(buf, "medium")) // up to 80%
+	else if (sysfs_streq("medium", buf)) // up to 80%
 		result = ec_write(conf.charge_control.address,
 				  conf.charge_control.offset_end + 80);
 
-	else if (streq(buf, "min")) // up to 60%
+	else if (sysfs_streq("min", buf)) // up to 60%
 		result = ec_write(conf.charge_control.address,
 				  conf.charge_control.offset_end + 60);
 
@@ -4017,12 +4011,12 @@ static ssize_t cooler_boost_store(struct device *dev,
 {
 	int result = -EINVAL;
 
-	if (streq(buf, "on"))
+	if (sysfs_streq("on", buf))
 		result = ec_set_bit(conf.cooler_boost.address,
 				    conf.cooler_boost.bit,
 				    true);
 
-	else if (streq(buf, "off"))
+	else if (sysfs_streq("off", buf))
 		result = ec_set_bit(conf.cooler_boost.address,
 				    conf.cooler_boost.bit,
 				    false);
@@ -4122,11 +4116,11 @@ static ssize_t super_battery_store(struct device *dev,
 {
 	int result = -EINVAL;
 
-	if (streq(buf, "on"))
+	if (sysfs_streq("on", buf))
 		result = ec_set_by_mask(conf.super_battery.address,
 				        conf.super_battery.mask);
 
-	else if (streq(buf, "off"))
+	else if (sysfs_streq("off", buf))
 		result = ec_unset_by_mask(conf.super_battery.address,
 					  conf.super_battery.mask);
 
