@@ -3880,6 +3880,8 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 	bool bit_value;
 
 	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	if (result < 0)
+		return result;
 
 	if (bit_value ^ conf.fn_win_swap.invert) {
 		return sysfs_emit(buf, "%s\n", "right");
@@ -3916,6 +3918,8 @@ static ssize_t win_key_show(struct device *device,
 	bool bit_value;
 
 	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	if (result < 0)
+		return result;
 
 	if (bit_value ^ conf.fn_win_swap.invert) {
 		return sysfs_emit(buf, "%s\n", "left");
@@ -3997,6 +4001,8 @@ static ssize_t cooler_boost_show(struct device *device,
 	bool bit_value;
 
 	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &bit_value);
+	if (result < 0)
+		return result;
 
 	if (bit_value) {
 		return sysfs_emit(buf, "%s\n", "on");
@@ -4102,6 +4108,8 @@ static ssize_t super_battery_show(struct device *device,
 	result = ec_check_by_mask(conf.super_battery.address,
 				  conf.super_battery.mask,
 				  &enabled);
+	if (result < 0)
+		return result;
 
 	if (enabled) {
 		return sysfs_emit(buf, "%s\n", "on");
@@ -4783,9 +4791,8 @@ static int __init load_configuration(void)
 	} else {
 		// get fw version from EC
 		result = ec_get_firmware_version(ver_by_ec);
-		if (result < 0) {
+		if (result < 0)
 			return result;
-		}
 
 		ver = ver_by_ec;
 	}
