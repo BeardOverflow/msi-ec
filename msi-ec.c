@@ -3678,6 +3678,32 @@ static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
 	return MSI_EC_FW_VERSION_LENGTH + 1;
 }
 
+static inline const char *str_left_right(bool v)
+{
+	return v ? "left" : "right";
+}
+
+static int direction_is_left(const char *s, bool *res)
+{
+	if (!s)
+		return -EINVAL;
+
+	switch (s[0]) {
+	case 'l':
+	case 'L':
+		*res = true;
+		return 0;
+	case 'r':
+	case 'R':
+		*res = false;
+		return 0;
+	default:
+		break;
+	}
+
+	return -EINVAL;
+}
+
 // ============================================================ //
 // Sysfs power_supply subsystem
 // ============================================================ //
@@ -3862,33 +3888,32 @@ static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 			   char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &value);
 	if (result < 0)
 		return result;
 
-	if (bit_value ^ conf.fn_win_swap.invert) {
-		return sysfs_emit(buf, "%s\n", "right");
-	} else {
-		return sysfs_emit(buf, "%s\n", "left");
-	}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+	value = !value; // fn key position is the opposite of win key
+
+	return sysfs_emit(buf, "%s\n", str_left_right(value));
 }
 
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
 	int result;
+	bool value;
 
-	if (sysfs_streq("right", buf)) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    true ^ conf.fn_win_swap.invert);
-	} else if (sysfs_streq("left", buf)) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    false ^ conf.fn_win_swap.invert);
-	}
+	result = direction_is_left(buf, &value);
+	if (result < 0)
+		return result;
+
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+	value = !value; // fn key position is the opposite of win key
+
+	result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, value);
 
 	if (result < 0)
 		return result;
@@ -3900,33 +3925,30 @@ static ssize_t win_key_show(struct device *device,
 			    struct device_attribute *attr, char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &value);
 	if (result < 0)
 		return result;
 
-	if (bit_value ^ conf.fn_win_swap.invert) {
-		return sysfs_emit(buf, "%s\n", "left");
-	} else {
-		return sysfs_emit(buf, "%s\n", "right");
-	}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+
+	return sysfs_emit(buf, "%s\n", str_left_right(value));
 }
 
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
 	int result;
+	bool value;
 
-	if (sysfs_streq("right", buf)) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    false ^ conf.fn_win_swap.invert);
-	} else if (sysfs_streq("left", buf)) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    true ^ conf.fn_win_swap.invert);
-	}
+	result = direction_is_left(buf, &value);
+	if (result < 0)
+		return result;
+
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+
+	result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, value);
 
 	if (result < 0)
 		return result;
