@@ -4654,7 +4654,7 @@ static const struct attribute_group *msi_platform_groups[] = {
 	NULL
 };
 
-static int msi_platform_probe(struct platform_device *pdev)
+static int __init msi_platform_probe(struct platform_device *pdev)
 {
 	if (debug) {
 		int result = sysfs_create_group(&pdev->dev.kobj,
@@ -4692,7 +4692,6 @@ static struct platform_driver msi_platform_driver = {
 	.driver = {
 		.name = MSI_EC_DRIVER_NAME,
 	},
-	.probe = msi_platform_probe,
 	.remove = msi_platform_remove,
 };
 
@@ -4824,22 +4823,11 @@ static int __init msi_ec_init(void)
 	if (result < 0)
 		return result;
 
-	result = platform_driver_register(&msi_platform_driver);
-	if (result < 0)
-		return result;
-
-	msi_platform_device = platform_device_alloc(MSI_EC_DRIVER_NAME, -1);
-	if (msi_platform_device == NULL) {
-		platform_driver_unregister(&msi_platform_driver);
-		return -ENOMEM;
-	}
-
-	result = platform_device_add(msi_platform_device);
-	if (result < 0) {
-		platform_device_del(msi_platform_device);
-		platform_driver_unregister(&msi_platform_driver);
-		return result;
-	}
+	msi_platform_device = platform_create_bundle(&msi_platform_driver,
+						     msi_platform_probe,
+						     NULL, 0, NULL, 0);
+	if (IS_ERR(msi_platform_device))
+		return PTR_ERR(msi_platform_device);
 
 	if (conf_loaded) {
 		battery_hook_register(&battery_hook);
@@ -4878,8 +4866,8 @@ static void __exit msi_ec_exit(void)
 		battery_hook_unregister(&battery_hook);
 	}
 
+	platform_device_unregister(msi_platform_device);
 	platform_driver_unregister(&msi_platform_driver);
-	platform_device_del(msi_platform_device);
 
 	pr_info("module_exit\n");
 }
