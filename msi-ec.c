@@ -4568,10 +4568,13 @@ static struct attribute *msi_debug_attrs[] = {
 // ============================================================ //
 
 static umode_t msi_ec_is_visible(struct kobject *kobj,
-				   struct attribute *attr,
-				   int idx)
+				 struct attribute *attr,
+				 int idx)
 {
 	int address;
+
+	if (!conf_loaded)
+		return 0;
 
 	/* root group */
 	if (attr == &dev_attr_webcam.attr)
@@ -4663,10 +4666,7 @@ static int __init msi_platform_probe(struct platform_device *pdev)
 			return result;
 	}
 
-	if (!conf_loaded) // an unsupported device loaded in debug mode
-		return 0;
-
-	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
+	return 0;
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 11, 0))
@@ -4678,9 +4678,6 @@ static int msi_platform_remove(struct platform_device *pdev)
 	if (debug)
 		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
 
-	if (conf_loaded)
-		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0))
 	return 0;
 #endif
@@ -4691,6 +4688,7 @@ static struct platform_device *msi_platform_device;
 static struct platform_driver msi_platform_driver = {
 	.driver = {
 		.name = MSI_EC_DRIVER_NAME,
+		.dev_groups = msi_platform_groups,
 	},
 	.remove = msi_platform_remove,
 };
