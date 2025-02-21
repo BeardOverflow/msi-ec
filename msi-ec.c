@@ -47,6 +47,7 @@
 #include <linux/string.h>
 #include <linux/slab.h>
 #include <linux/version.h>
+#include <linux/string_choices.h>
 
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
@@ -3798,39 +3799,31 @@ static struct acpi_battery_hook battery_hook = {
 // Sysfs platform device attributes (root)
 // ============================================================ //
 
-static ssize_t webcam_common_show(u8 address,
-			          char *buf,
-				  const char *str_on_0,
-				  const char *str_on_1)
+static ssize_t webcam_common_show(u8 address, char *buf, bool inverted)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(address, conf.webcam.bit, &bit_value);
+	result = ec_check_bit(address, conf.webcam.bit, &value);
 	if (result < 0)
 		return result;
 
-	if (bit_value) {
-		return sysfs_emit(buf, "%s\n", str_on_1);
-	} else {
-		return sysfs_emit(buf, "%s\n", str_on_0);
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(value ^ inverted));
 }
 
 static ssize_t webcam_common_store(u8 address,
 				   const char *buf,
 				   size_t count,
-				   const char *str_for_0,
-				   const char *str_for_1)
+				   bool inverted)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (sysfs_streq(str_for_1, buf))
-		result = ec_set_bit(address, conf.webcam.bit, true);
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
 
-	if (sysfs_streq(str_for_0, buf))
-		result = ec_set_bit(address, conf.webcam.bit, false);
-
+	result = ec_set_bit(address, conf.webcam.bit, value ^ inverted);
 	if (result < 0)
 		return result;
 
@@ -3841,36 +3834,28 @@ static ssize_t webcam_show(struct device *device,
 			   struct device_attribute *attr,
 			   char *buf)
 {
-	return webcam_common_show(conf.webcam.address,
-				  buf,
-				  "off", "on");
+	return webcam_common_show(conf.webcam.address, buf, false);
 }
 
 static ssize_t webcam_store(struct device *dev,
 			    struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
-	return webcam_common_store(conf.webcam.address,
-				   buf, count,
-				   "off", "on");
+	return webcam_common_store(conf.webcam.address, buf, count, false);
 }
 
 static ssize_t webcam_block_show(struct device *device,
 				 struct device_attribute *attr,
 				 char *buf)
 {
-	return webcam_common_show(conf.webcam.block_address,
-				  buf,
-				  "on", "off");
+	return webcam_common_show(conf.webcam.block_address, buf, true);
 }
 
 static ssize_t webcam_block_store(struct device *dev,
 				  struct device_attribute *attr,
 			          const char *buf, size_t count)
 {
-	return webcam_common_store(conf.webcam.block_address,
-				   buf, count,
-				   "on", "off");
+	return webcam_common_store(conf.webcam.block_address, buf, count, true);
 }
 
 static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
@@ -3998,35 +3983,27 @@ static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &bit_value);
+	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &value);
 	if (result < 0)
 		return result;
 
-	if (bit_value) {
-		return sysfs_emit(buf, "%s\n", "on");
-	} else {
-		return sysfs_emit(buf, "%s\n", "off");
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(value));
 }
 
 static ssize_t cooler_boost_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (sysfs_streq("on", buf))
-		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit,
-				    true);
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
 
-	else if (sysfs_streq("off", buf))
-		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit,
-				    false);
-
+	result = ec_set_bit(conf.cooler_boost.address, conf.cooler_boost.bit, value);
 	if (result < 0)
 		return result;
 
@@ -4111,24 +4088,24 @@ static ssize_t super_battery_show(struct device *device,
 	if (result < 0)
 		return result;
 
-	if (enabled) {
-		return sysfs_emit(buf, "%s\n", "on");
-	} else {
-		return sysfs_emit(buf, "%s\n", "off");
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(enabled));
 }
 
 static ssize_t super_battery_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (sysfs_streq("on", buf))
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
+
+	if (value)
 		result = ec_set_by_mask(conf.super_battery.address,
 				        conf.super_battery.mask);
-
-	else if (sysfs_streq("off", buf))
+	else
 		result = ec_unset_by_mask(conf.super_battery.address,
 					  conf.super_battery.mask);
 
