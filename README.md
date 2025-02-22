@@ -55,26 +55,10 @@ Eager to support the project? Your help is always welcome to keep the project al
 2. Run `yay -S msi-ec-git`
 
 ### On NixOS
-The driver is packaged on `nixos-unstable` under the name
-`linuxKernel.packages.<kernel>.msi-ec`.
+Add these lines to your configuration
 ```nix
-# In your config
-
-{
-	# ...
-	boot.kernelPackages = pkgs.linuxPackages_latest // {
-		# Replace linux_6_6 by your actual kernel
-		msi-ec = linuxKernel.packages.linux_6_6.msi-ec;
-	};
-
-	boot.kernelModules = [
-		# ...
-
-		"msi-ec"
-
-		# ...
-	];
-}
+boot.extraModulePackages = [ config.boot.kernelPackages.msi-ec ];
+boot.kernelModules = [ "msi-ec" ];
 ```
 
 
