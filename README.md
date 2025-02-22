@@ -55,26 +55,10 @@ Eager to support the project? Your help is always welcome to keep the project al
 2. Run `yay -S msi-ec-git`
 
 ### On NixOS
-The driver is packaged on `nixos-unstable` under the name
-`linuxKernel.packages.<kernel>.msi-ec`.
+Add these lines to your configuration
 ```nix
-# In your config
-
-{
-	# ...
-	boot.kernelPackages = pkgs.linuxPackages_latest // {
-		# Replace linux_6_6 by your actual kernel
-		msi-ec = linuxKernel.packages.linux_6_6.msi-ec;
-	};
-
-	boot.kernelModules = [
-		# ...
-
-		"msi-ec"
-
-		# ...
-	];
-}
+boot.extraModulePackages = [ config.boot.kernelPackages.msi-ec ];
+boot.kernelModules = [ "msi-ec" ];
 ```
 
 
@@ -126,14 +110,6 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
   - Valid values:
     - left: windows key goes to the left, function key goes to the right
     - right: windows key goes to the right, function key goes to the left
-
-- `/sys/devices/platform/msi-ec/battery_mode`
-  - Description: This entry allows changing the battery mode for health purposes.
-  - Access: Read, Write
-  - Valid values:
-    - max: best for mobility. Charge the battery to 100% all the time
-    - medium: balanced. Charge the battery when under 70%, stop at 80%
-    - min: best for battery. Charge the battery when under 50%, stop at 60%
 
 - `/sys/devices/platform/msi-ec/cooler_boost`
   - Description: This entry allows enabling the cooler boost function. It provides powerful cooling capability by boosting the airflow.

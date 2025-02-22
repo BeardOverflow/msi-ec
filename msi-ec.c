@@ -7,7 +7,6 @@
  *   webcam            Integrated webcam activation
  *   fn_key            Function key location
  *   win_key           Windows key location
- *   battery_mode      Battery health options
  *   cooler_boost      Cooler boost function
  *   shift_mode        CPU & GPU performance modes
  *   fan_mode          FAN performance modes
@@ -48,6 +47,7 @@
 #include <linux/slab.h>
 #include <linux/version.h>
 #include <linux/rtc.h>
+#include <linux/string_choices.h>
 
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
@@ -3422,6 +3422,85 @@ static struct msi_ec_conf CONF41 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_42[] __initconst = {
+	"14L1EMS1.307", // Modern 14 H D13M
+	"14L1EMS1.308",
+	NULL
+};
+
+static struct msi_ec_conf CONF42 __initdata = {
+	.allowed_fw = ALLOWED_FW_42, // WMI2 based
+	.charge_control = {
+		.address      = 0xd7,
+		.offset_start = 0x8a,
+		.offset_end   = 0x80,
+		.range_min    = 0x8a,
+		.range_max    = 0xe4,
+	},
+	.webcam = {
+		.address       = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4,
+		.invert  = false,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 }, // super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced + silent + ai
+			{ SM_TURBO_NAME,   0xc4 }, // extreme performance
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = 0xeb,
+		.mask    = 0x0f,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0xc9,
+		.rt_fan_speed_base_min = 0x00,
+		.rt_fan_speed_base_max = 0x96,
+		.bs_fan_speed_address  = MSI_EC_ADDR_UNSUPP,
+		.bs_fan_speed_base_min = 0x00,
+		.bs_fan_speed_base_max = 0x0f,
+	},
+	.gpu = {
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.leds = {
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = 0x2c,
+		.bl_modes         = { 0x00, 0x08 }, // 00 - on, 08 - 10 sec auto off
+		.max_mode         = 1,
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -3465,6 +3544,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF39,
 	&CONF40,
 	&CONF41,
+	&CONF42,
 	NULL
 };
 
@@ -3487,12 +3567,6 @@ MODULE_PARM_DESC(debug, "Load the driver in the debug mode, exporting the debug 
 // ============================================================ //
 // Helper functions
 // ============================================================ //
-
-#define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
-
-#define set_bit(v, b)   (v |= (1 << b))
-#define unset_bit(v, b) (v &= ~(1 << b))
-#define check_bit(v, b) ((bool)((v >> b) & 1))
 
 static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 {
@@ -3566,9 +3640,9 @@ static int ec_set_bit(u8 addr, u8 bit, bool value)
 		goto unlock;
 
 	if (value)
-		set_bit(stored, bit);
+		stored |= BIT(bit);
 	else
-		unset_bit(stored, bit);
+		stored &= ~BIT(bit);
 
 	result = ec_write(addr, stored);
 
@@ -3586,7 +3660,7 @@ static int ec_check_bit(u8 addr, u8 bit, bool *output)
 	if (result < 0)
 		return result;
 
-	*output = check_bit(stored, bit);
+	*output = stored & BIT(bit);
 
 	return 0;
 }
@@ -3602,6 +3676,32 @@ static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
 		return result;
 
 	return MSI_EC_FW_VERSION_LENGTH + 1;
+}
+
+static inline const char *str_left_right(bool v)
+{
+	return v ? "left" : "right";
+}
+
+static int direction_is_left(const char *s, bool *res)
+{
+	if (!s)
+		return -EINVAL;
+
+	switch (s[0]) {
+	case 'l':
+	case 'L':
+		*res = true;
+		return 0;
+	case 'r':
+	case 'R':
+		*res = false;
+		return 0;
+	default:
+		break;
+	}
+
+	return -EINVAL;
 }
 
 // ============================================================ //
@@ -3725,39 +3825,31 @@ static struct acpi_battery_hook battery_hook = {
 // Sysfs platform device attributes (root)
 // ============================================================ //
 
-static ssize_t webcam_common_show(u8 address,
-			          char *buf,
-				  const char *str_on_0,
-				  const char *str_on_1)
+static ssize_t webcam_common_show(u8 address, char *buf, bool inverted)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(address, conf.webcam.bit, &bit_value);
+	result = ec_check_bit(address, conf.webcam.bit, &value);
 	if (result < 0)
 		return result;
 
-	if (bit_value) {
-		return sysfs_emit(buf, "%s\n", str_on_1);
-	} else {
-		return sysfs_emit(buf, "%s\n", str_on_0);
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(value ^ inverted));
 }
 
 static ssize_t webcam_common_store(u8 address,
 				   const char *buf,
 				   size_t count,
-				   const char *str_for_0,
-				   const char *str_for_1)
+				   bool inverted)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (sysfs_streq(str_for_1, buf))
-		result = ec_set_bit(address, conf.webcam.bit, true);
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
 
-	if (sysfs_streq(str_for_0, buf))
-		result = ec_set_bit(address, conf.webcam.bit, false);
-
+	result = ec_set_bit(address, conf.webcam.bit, value ^ inverted);
 	if (result < 0)
 		return result;
 
@@ -3768,67 +3860,60 @@ static ssize_t webcam_show(struct device *device,
 			   struct device_attribute *attr,
 			   char *buf)
 {
-	return webcam_common_show(conf.webcam.address,
-				  buf,
-				  "off", "on");
+	return webcam_common_show(conf.webcam.address, buf, false);
 }
 
 static ssize_t webcam_store(struct device *dev,
 			    struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
-	return webcam_common_store(conf.webcam.address,
-				   buf, count,
-				   "off", "on");
+	return webcam_common_store(conf.webcam.address, buf, count, false);
 }
 
 static ssize_t webcam_block_show(struct device *device,
 				 struct device_attribute *attr,
 				 char *buf)
 {
-	return webcam_common_show(conf.webcam.block_address,
-				  buf,
-				  "on", "off");
+	return webcam_common_show(conf.webcam.block_address, buf, true);
 }
 
 static ssize_t webcam_block_store(struct device *dev,
 				  struct device_attribute *attr,
 			          const char *buf, size_t count)
 {
-	return webcam_common_store(conf.webcam.block_address,
-				   buf, count,
-				   "on", "off");
+	return webcam_common_store(conf.webcam.block_address, buf, count, true);
 }
 
 static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 			   char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &value);
+	if (result < 0)
+		return result;
 
-	if (bit_value ^ conf.fn_win_swap.invert) {
-		return sysfs_emit(buf, "%s\n", "right");
-	} else {
-		return sysfs_emit(buf, "%s\n", "left");
-	}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+	value = !value; // fn key position is the opposite of win key
+
+	return sysfs_emit(buf, "%s\n", str_left_right(value));
 }
 
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
 	int result;
+	bool value;
 
-	if (streq(buf, "right")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    true ^ conf.fn_win_swap.invert);
-	} else if (streq(buf, "left")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    false ^ conf.fn_win_swap.invert);
-	}
+	result = direction_is_left(buf, &value);
+	if (result < 0)
+		return result;
+
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+	value = !value; // fn key position is the opposite of win key
+
+	result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, value);
 
 	if (result < 0)
 		return result;
@@ -3840,76 +3925,30 @@ static ssize_t win_key_show(struct device *device,
 			    struct device_attribute *attr, char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &value);
+	if (result < 0)
+		return result;
 
-	if (bit_value ^ conf.fn_win_swap.invert) {
-		return sysfs_emit(buf, "%s\n", "left");
-	} else {
-		return sysfs_emit(buf, "%s\n", "right");
-	}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+
+	return sysfs_emit(buf, "%s\n", str_left_right(value));
 }
 
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
 	int result;
+	bool value;
 
-	if (streq(buf, "right")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    false ^ conf.fn_win_swap.invert);
-	} else if (streq(buf, "left")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    true ^ conf.fn_win_swap.invert);
-	}
-
+	result = direction_is_left(buf, &value);
 	if (result < 0)
 		return result;
 
-	return count;
-}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
 
-static ssize_t battery_mode_show(struct device *device,
-				 struct device_attribute *attr, char *buf)
-{
-	u8 rdata;
-	int result;
-
-	result = ec_read(conf.charge_control.address, &rdata);
-	if (result < 0)
-		return result;
-
-	if (rdata == conf.charge_control.range_max) {
-		return sysfs_emit(buf, "%s\n", "max");
-	} else if (rdata == conf.charge_control.offset_end + 80) { // up to 80%
-		return sysfs_emit(buf, "%s\n", "medium");
-	} else if (rdata == conf.charge_control.offset_end + 60) { // up to 60%
-		return sysfs_emit(buf, "%s\n", "min");
-	} else {
-		return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
-	}
-}
-
-static ssize_t battery_mode_store(struct device *dev,
-				  struct device_attribute *attr,
-				  const char *buf, size_t count)
-{
-	int result = -EINVAL;
-
-	if (streq(buf, "max"))
-		result = ec_write(conf.charge_control.address,
-				  conf.charge_control.range_max);
-
-	else if (streq(buf, "medium")) // up to 80%
-		result = ec_write(conf.charge_control.address,
-				  conf.charge_control.offset_end + 80);
-
-	else if (streq(buf, "min")) // up to 60%
-		result = ec_write(conf.charge_control.address,
-				  conf.charge_control.offset_end + 60);
+	result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, value);
 
 	if (result < 0)
 		return result;
@@ -3921,33 +3960,27 @@ static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &bit_value);
+	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &value);
+	if (result < 0)
+		return result;
 
-	if (bit_value) {
-		return sysfs_emit(buf, "%s\n", "on");
-	} else {
-		return sysfs_emit(buf, "%s\n", "off");
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(value));
 }
 
 static ssize_t cooler_boost_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (streq(buf, "on"))
-		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit,
-				    true);
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
 
-	else if (streq(buf, "off"))
-		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit,
-				    false);
-
+	result = ec_set_bit(conf.cooler_boost.address, conf.cooler_boost.bit, value);
 	if (result < 0)
 		return result;
 
@@ -4029,25 +4062,27 @@ static ssize_t super_battery_show(struct device *device,
 	result = ec_check_by_mask(conf.super_battery.address,
 				  conf.super_battery.mask,
 				  &enabled);
+	if (result < 0)
+		return result;
 
-	if (enabled) {
-		return sysfs_emit(buf, "%s\n", "on");
-	} else {
-		return sysfs_emit(buf, "%s\n", "off");
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(enabled));
 }
 
 static ssize_t super_battery_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (streq(buf, "on"))
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
+
+	if (value)
 		result = ec_set_by_mask(conf.super_battery.address,
 				        conf.super_battery.mask);
-
-	else if (streq(buf, "off"))
+	else
 		result = ec_unset_by_mask(conf.super_battery.address,
 					  conf.super_battery.mask);
 
@@ -4170,7 +4205,6 @@ static DEVICE_ATTR_RW(webcam);
 static DEVICE_ATTR_RW(webcam_block);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
-static DEVICE_ATTR_RW(battery_mode);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
@@ -4179,6 +4213,22 @@ static DEVICE_ATTR_RO(available_fan_modes);
 static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
 static DEVICE_ATTR_RO(fw_release_date);
+
+static struct attribute *msi_root_attrs[] = {
+	&dev_attr_webcam.attr,
+	&dev_attr_webcam_block.attr,
+	&dev_attr_fn_key.attr,
+	&dev_attr_win_key.attr,
+	&dev_attr_cooler_boost.attr,
+	&dev_attr_available_shift_modes.attr,
+	&dev_attr_shift_mode.attr,
+	&dev_attr_super_battery.attr,
+	&dev_attr_available_fan_modes.attr,
+	&dev_attr_fan_mode.attr,
+	&dev_attr_fw_version.attr,
+	&dev_attr_fw_release_date.attr,
+	NULL
+};
 
 // ============================================================ //
 // Sysfs platform device attributes (cpu)
@@ -4290,6 +4340,13 @@ static struct device_attribute dev_attr_cpu_basic_fan_speed = {
 	.store = cpu_basic_fan_speed_store,
 };
 
+static struct attribute *msi_cpu_attrs[] = {
+	&dev_attr_cpu_realtime_temperature.attr,
+	&dev_attr_cpu_realtime_fan_speed.attr,
+	&dev_attr_cpu_basic_fan_speed.attr,
+	NULL
+};
+
 // ============================================================ //
 // Sysfs platform device attributes (gpu)
 // ============================================================ //
@@ -4338,6 +4395,12 @@ static struct device_attribute dev_attr_gpu_realtime_fan_speed = {
 	.show = gpu_realtime_fan_speed_show,
 };
 
+static struct attribute *msi_gpu_attrs[] = {
+	&dev_attr_gpu_realtime_temperature.attr,
+	&dev_attr_gpu_realtime_fan_speed.attr,
+	NULL
+};
+
 // ============================================================ //
 // Sysfs platform device attributes (debug)
 // ============================================================ //
@@ -4348,6 +4411,7 @@ static ssize_t ec_dump_show(struct device *device,
 			    char *buf)
 {
 	int count = 0;
+	char ascii_row[16]; // not null-terminated
 
 	// print header
 	count += sysfs_emit(
@@ -4367,9 +4431,10 @@ static ssize_t ec_dump_show(struct device *device,
 				return result;
 
 			count += sysfs_emit_at(buf, count, " %02x", rdata);
+			ascii_row[j] = isascii(rdata) && isgraph(rdata) ? rdata : '.';
 		}
 
-		count += sysfs_emit_at(buf, count, "\n");
+		count += sysfs_emit_at(buf, count, "  |%.16s|\n", ascii_row);
 	}
 
 	return count;
@@ -4462,23 +4527,90 @@ static struct attribute *msi_debug_attrs[] = {
 	NULL
 };
 
+// ============================================================ //
+// Sysfs platform driver
+// ============================================================ //
+
+static umode_t msi_ec_is_visible(struct kobject *kobj,
+				 struct attribute *attr,
+				 int idx)
+{
+	int address;
+
+	if (!conf_loaded)
+		return 0;
+
+	/* root group */
+	if (attr == &dev_attr_webcam.attr)
+		address = conf.webcam.address;
+
+	else if (attr == &dev_attr_webcam_block.attr)
+		address = conf.webcam.block_address;
+
+	else if (attr == &dev_attr_fn_key.attr ||
+		 attr == &dev_attr_win_key.attr)
+		address = conf.fn_win_swap.address;
+
+	else if (attr == &dev_attr_cooler_boost.attr)
+		address = conf.cooler_boost.address;
+
+	else if (attr == &dev_attr_available_shift_modes.attr ||
+		 attr == &dev_attr_shift_mode.attr)
+		address = conf.shift_mode.address;
+
+	else if (attr == &dev_attr_super_battery.attr)
+		address = conf.super_battery.address;
+
+	else if (attr == &dev_attr_available_fan_modes.attr ||
+		 attr == &dev_attr_fan_mode.attr)
+		address = conf.fan_mode.address;
+
+	/* cpu group */
+	else if (attr == &dev_attr_cpu_realtime_temperature.attr)
+		address = conf.cpu.rt_temp_address;
+
+	else if (attr == &dev_attr_cpu_realtime_fan_speed.attr)
+		address = conf.cpu.rt_fan_speed_address;
+
+	else if (attr == &dev_attr_cpu_basic_fan_speed.attr)
+		address = conf.cpu.bs_fan_speed_address;
+
+	/* gpu group */
+	else if (attr == &dev_attr_gpu_realtime_temperature.attr)
+		address = conf.gpu.rt_temp_address;
+
+	else if (attr == &dev_attr_gpu_realtime_fan_speed.attr)
+		address = conf.gpu.rt_fan_speed_address;
+
+	/* default */
+	else
+		return attr->mode;
+
+	return address == MSI_EC_ADDR_UNSUPP ? 0 : attr->mode;
+}
+
+static struct attribute_group msi_root_group = {
+	.is_visible = msi_ec_is_visible,
+	.attrs = msi_root_attrs,
+};
+
+static struct attribute_group msi_cpu_group = {
+	.name = "cpu",
+	.is_visible = msi_ec_is_visible,
+	.attrs = msi_cpu_attrs,
+};
+static struct attribute_group msi_gpu_group = {
+	.name = "gpu",
+	.is_visible = msi_ec_is_visible,
+	.attrs = msi_gpu_attrs,
+};
+
 static const struct attribute_group msi_debug_group = {
 	.name = "debug",
 	.attrs = msi_debug_attrs,
 };
 
-// ============================================================ //
-// Sysfs platform driver
-// ============================================================ //
-
-static struct attribute_group msi_root_group;
-static struct attribute_group msi_cpu_group = {
-	.name = "cpu",
-};
-static struct attribute_group msi_gpu_group = {
-	.name = "gpu",
-};
-
+/* the debug group is created separately if needed */
 static const struct attribute_group *msi_platform_groups[] = {
 	&msi_root_group,
 	&msi_cpu_group,
@@ -4486,146 +4618,16 @@ static const struct attribute_group *msi_platform_groups[] = {
 	NULL
 };
 
-/*
- * Creates an array of supported attributes
- * Return value has to be freed manually
-*/
-static struct attribute **filter_attributes(struct attribute_support *attributes,
-					    size_t size)
-{
-	struct attribute **filtered =
-		kcalloc(size + 1, sizeof(struct attribute *), GFP_KERNEL);
-	if (!filtered)
-		return NULL;
-
-	// copy supported attributes only
-	for (int i = 0, j = 0; i < size; i++) {
-		if (attributes[i].supported)
-			filtered[j++] = attributes[i].attribute;
-	}
-
-	return filtered;
-}
-
-static int msi_platform_probe(struct platform_device *pdev)
+static int __init msi_platform_probe(struct platform_device *pdev)
 {
 	if (debug) {
 		int result = sysfs_create_group(&pdev->dev.kobj,
 						&msi_debug_group);
 		if (result < 0)
 			return result;
-
-		if (!conf_loaded) // debug mode on an unsupported device
-			return 0;
 	}
 
-	/* root group */
-
-	// ALL root attributes and their support info
-	struct attribute_support root_attrs_support[] = {
-		{
-			&dev_attr_webcam.attr,
-			conf.webcam.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_webcam_block.attr,
-			conf.webcam.block_address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_fn_key.attr,
-			conf.fn_win_swap.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_win_key.attr,
-			conf.fn_win_swap.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_battery_mode.attr,
-			conf.charge_control.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_cooler_boost.attr,
-			conf.cooler_boost.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_available_shift_modes.attr,
-			conf.shift_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_shift_mode.attr,
-			conf.shift_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_super_battery.attr,
-			conf.super_battery.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_available_fan_modes.attr,
-			conf.fan_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_fan_mode.attr,
-			conf.fan_mode.address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_fw_version.attr,
-			true,
-		},
-		{
-			&dev_attr_fw_release_date.attr,
-			true,
-		},
-	};
-
-	msi_root_group.attrs =
-		filter_attributes(root_attrs_support,
-				  sizeof(root_attrs_support) / sizeof(root_attrs_support[0]));
-	if (!msi_root_group.attrs)
-		return -ENOMEM;
-
-	/* cpu group */
-
-	struct attribute_support cpu_attrs_support[] = {
-		{
-			&dev_attr_cpu_realtime_temperature.attr,
-			conf.cpu.rt_temp_address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_cpu_realtime_fan_speed.attr,
-			conf.cpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_cpu_basic_fan_speed.attr,
-			conf.cpu.bs_fan_speed_address != MSI_EC_ADDR_UNSUPP,
-		},
-	};
-
-	msi_cpu_group.attrs =
-		filter_attributes(cpu_attrs_support,
-				  sizeof(cpu_attrs_support) / sizeof(cpu_attrs_support[0]));
-	if (!msi_cpu_group.attrs)
-		return -ENOMEM;
-
-	/* gpu group */
-
-	struct attribute_support gpu_attrs_support[] = {
-		{
-			&dev_attr_gpu_realtime_temperature.attr,
-			conf.gpu.rt_temp_address != MSI_EC_ADDR_UNSUPP,
-		},
-		{
-			&dev_attr_gpu_realtime_fan_speed.attr,
-			conf.gpu.rt_fan_speed_address != MSI_EC_ADDR_UNSUPP,
-		},
-	};
-
-	msi_gpu_group.attrs =
-		filter_attributes(gpu_attrs_support,
-				  sizeof(gpu_attrs_support) / sizeof(gpu_attrs_support[0]));
-	if (!msi_gpu_group.attrs)
-		return -ENOMEM;
-
-	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
+	return 0;
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 11, 0))
@@ -4637,13 +4639,6 @@ static int msi_platform_remove(struct platform_device *pdev)
 	if (debug)
 		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
 
-	if (conf_loaded) {
-		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-		kfree(msi_root_group.attrs);
-		kfree(msi_cpu_group.attrs);
-		kfree(msi_gpu_group.attrs);
-	}
-
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0))
 	return 0;
 #endif
@@ -4654,8 +4649,8 @@ static struct platform_device *msi_platform_device;
 static struct platform_driver msi_platform_driver = {
 	.driver = {
 		.name = MSI_EC_DRIVER_NAME,
+		.dev_groups = msi_platform_groups,
 	},
-	.probe = msi_platform_probe,
 	.remove = msi_platform_remove,
 };
 
@@ -4753,9 +4748,8 @@ static int __init load_configuration(void)
 	} else {
 		// get fw version from EC
 		result = ec_get_firmware_version(ver_by_ec);
-		if (result < 0) {
+		if (result < 0)
 			return result;
-		}
 
 		ver = ver_by_ec;
 	}
@@ -4788,22 +4782,11 @@ static int __init msi_ec_init(void)
 	if (result < 0)
 		return result;
 
-	result = platform_driver_register(&msi_platform_driver);
-	if (result < 0)
-		return result;
-
-	msi_platform_device = platform_device_alloc(MSI_EC_DRIVER_NAME, -1);
-	if (msi_platform_device == NULL) {
-		platform_driver_unregister(&msi_platform_driver);
-		return -ENOMEM;
-	}
-
-	result = platform_device_add(msi_platform_device);
-	if (result < 0) {
-		platform_device_del(msi_platform_device);
-		platform_driver_unregister(&msi_platform_driver);
-		return result;
-	}
+	msi_platform_device = platform_create_bundle(&msi_platform_driver,
+						     msi_platform_probe,
+						     NULL, 0, NULL, 0);
+	if (IS_ERR(msi_platform_device))
+		return PTR_ERR(msi_platform_device);
 
 	if (conf_loaded) {
 		battery_hook_register(&battery_hook);
@@ -4842,8 +4825,8 @@ static void __exit msi_ec_exit(void)
 		battery_hook_unregister(&battery_hook);
 	}
 
+	platform_device_unregister(msi_platform_device);
 	platform_driver_unregister(&msi_platform_driver);
-	platform_device_del(msi_platform_device);
 
 	pr_info("module_exit\n");
 }
