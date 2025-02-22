@@ -4401,6 +4401,7 @@ static ssize_t ec_dump_show(struct device *device,
 			    char *buf)
 {
 	int count = 0;
+	char ascii_row[16]; // not null-terminated
 
 	// print header
 	count += sysfs_emit(
@@ -4420,9 +4421,10 @@ static ssize_t ec_dump_show(struct device *device,
 				return result;
 
 			count += sysfs_emit_at(buf, count, " %02x", rdata);
+			ascii_row[j] = isascii(rdata) && isgraph(rdata) ? rdata : '.';
 		}
 
-		count += sysfs_emit_at(buf, count, "\n");
+		count += sysfs_emit_at(buf, count, "  |%.16s|\n", ascii_row);
 	}
 
 	return count;
