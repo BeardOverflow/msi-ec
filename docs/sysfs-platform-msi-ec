@@ -70,3 +70,23 @@ Description:
 What:		/sys/devices/platform/<platform>/fw_release_date
 Description:
 		Read-only, returns the release date of the EC firmware.
+
+What:		/sys/devices/platform/<platform>/debug/ec_dump
+Description:
+		Read-only, returns a full dump of EC RAM in a form of a table,
+		and an ASCII overview of the RAM contents with unprintable
+		characters replaced with '.'.
+
+What:		/sys/devices/platform/<platform>/debug/ec_set
+Description:
+		Write-only, directly modifies a specified byte in the EC RAM.
+		Argument format: "ab=cd", where "ab" is the address to modify
+		and "cd" is the value, both in hexadecimal format.
+
+What:		/sys/devices/platform/<platform>/debug/ec_get
+Description:
+		Reads a byte from a specified EC RAM address.
+		Write to this file to specify the address in a 2-digit
+		hexadecimal format.
+		Read this file to get the byte at the address in a 2-digit
+		hexadecimal format.

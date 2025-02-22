@@ -1,19 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 /*
- * msi-ec.c - MSI Embedded Controller for laptops support.
+ * msi-ec.c - Embedded Controller driver for MSI laptops.
  *
- * This driver exports a few files in /sys/devices/platform/msi-laptop:
- *   webcam            Integrated webcam activation
- *   fn_key            Function key location
- *   win_key           Windows key location
- *   cooler_boost      Cooler boost function
- *   shift_mode        CPU & GPU performance modes
- *   fan_mode          FAN performance modes
- *   fw_version        Firmware version
- *   fw_release_date   Firmware release date
- *   cpu/..            CPU related options
- *   gpu/..            GPU related options
+ * This driver registers a platform driver at /sys/devices/platform/msi-ec
+ * The list of supported attributes is available in the docs/sysfs-platform-msi-ec file
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
