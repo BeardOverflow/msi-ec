@@ -47,6 +47,7 @@
 #include <linux/string.h>
 #include <linux/slab.h>
 #include <linux/version.h>
+#include <linux/string_choices.h>
 
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
@@ -3567,12 +3568,6 @@ MODULE_PARM_DESC(debug, "Load the driver in the debug mode, exporting the debug 
 // Helper functions
 // ============================================================ //
 
-#define streq(x, y) (strcmp(x, y) == 0 || strcmp(x, y "\n") == 0)
-
-#define set_bit(v, b)   (v |= (1 << b))
-#define unset_bit(v, b) (v &= ~(1 << b))
-#define check_bit(v, b) ((bool)((v >> b) & 1))
-
 static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 {
 	int result;
@@ -3645,9 +3640,9 @@ static int ec_set_bit(u8 addr, u8 bit, bool value)
 		goto unlock;
 
 	if (value)
-		set_bit(stored, bit);
+		stored |= BIT(bit);
 	else
-		unset_bit(stored, bit);
+		stored &= ~BIT(bit);
 
 	result = ec_write(addr, stored);
 
@@ -3665,7 +3660,7 @@ static int ec_check_bit(u8 addr, u8 bit, bool *output)
 	if (result < 0)
 		return result;
 
-	*output = check_bit(stored, bit);
+	*output = stored & BIT(bit);
 
 	return 0;
 }
@@ -3681,6 +3676,32 @@ static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
 		return result;
 
 	return MSI_EC_FW_VERSION_LENGTH + 1;
+}
+
+static inline const char *str_left_right(bool v)
+{
+	return v ? "left" : "right";
+}
+
+static int direction_is_left(const char *s, bool *res)
+{
+	if (!s)
+		return -EINVAL;
+
+	switch (s[0]) {
+	case 'l':
+	case 'L':
+		*res = true;
+		return 0;
+	case 'r':
+	case 'R':
+		*res = false;
+		return 0;
+	default:
+		break;
+	}
+
+	return -EINVAL;
 }
 
 // ============================================================ //
@@ -3804,39 +3825,31 @@ static struct acpi_battery_hook battery_hook = {
 // Sysfs platform device attributes (root)
 // ============================================================ //
 
-static ssize_t webcam_common_show(u8 address,
-			          char *buf,
-				  const char *str_on_0,
-				  const char *str_on_1)
+static ssize_t webcam_common_show(u8 address, char *buf, bool inverted)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(address, conf.webcam.bit, &bit_value);
+	result = ec_check_bit(address, conf.webcam.bit, &value);
 	if (result < 0)
 		return result;
 
-	if (bit_value) {
-		return sysfs_emit(buf, "%s\n", str_on_1);
-	} else {
-		return sysfs_emit(buf, "%s\n", str_on_0);
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(value ^ inverted));
 }
 
 static ssize_t webcam_common_store(u8 address,
 				   const char *buf,
 				   size_t count,
-				   const char *str_for_0,
-				   const char *str_for_1)
+				   bool inverted)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (sysfs_streq(str_for_1, buf))
-		result = ec_set_bit(address, conf.webcam.bit, true);
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
 
-	if (sysfs_streq(str_for_0, buf))
-		result = ec_set_bit(address, conf.webcam.bit, false);
-
+	result = ec_set_bit(address, conf.webcam.bit, value ^ inverted);
 	if (result < 0)
 		return result;
 
@@ -3847,67 +3860,60 @@ static ssize_t webcam_show(struct device *device,
 			   struct device_attribute *attr,
 			   char *buf)
 {
-	return webcam_common_show(conf.webcam.address,
-				  buf,
-				  "off", "on");
+	return webcam_common_show(conf.webcam.address, buf, false);
 }
 
 static ssize_t webcam_store(struct device *dev,
 			    struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
-	return webcam_common_store(conf.webcam.address,
-				   buf, count,
-				   "off", "on");
+	return webcam_common_store(conf.webcam.address, buf, count, false);
 }
 
 static ssize_t webcam_block_show(struct device *device,
 				 struct device_attribute *attr,
 				 char *buf)
 {
-	return webcam_common_show(conf.webcam.block_address,
-				  buf,
-				  "on", "off");
+	return webcam_common_show(conf.webcam.block_address, buf, true);
 }
 
 static ssize_t webcam_block_store(struct device *dev,
 				  struct device_attribute *attr,
 			          const char *buf, size_t count)
 {
-	return webcam_common_store(conf.webcam.block_address,
-				   buf, count,
-				   "on", "off");
+	return webcam_common_store(conf.webcam.block_address, buf, count, true);
 }
 
 static ssize_t fn_key_show(struct device *device, struct device_attribute *attr,
 			   char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &value);
+	if (result < 0)
+		return result;
 
-	if (bit_value ^ conf.fn_win_swap.invert) {
-		return sysfs_emit(buf, "%s\n", "right");
-	} else {
-		return sysfs_emit(buf, "%s\n", "left");
-	}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+	value = !value; // fn key position is the opposite of win key
+
+	return sysfs_emit(buf, "%s\n", str_left_right(value));
 }
 
 static ssize_t fn_key_store(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
 {
 	int result;
+	bool value;
 
-	if (streq(buf, "right")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    true ^ conf.fn_win_swap.invert);
-	} else if (streq(buf, "left")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    false ^ conf.fn_win_swap.invert);
-	}
+	result = direction_is_left(buf, &value);
+	if (result < 0)
+		return result;
+
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+	value = !value; // fn key position is the opposite of win key
+
+	result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, value);
 
 	if (result < 0)
 		return result;
@@ -3919,31 +3925,30 @@ static ssize_t win_key_show(struct device *device,
 			    struct device_attribute *attr, char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &bit_value);
+	result = ec_check_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, &value);
+	if (result < 0)
+		return result;
 
-	if (bit_value ^ conf.fn_win_swap.invert) {
-		return sysfs_emit(buf, "%s\n", "left");
-	} else {
-		return sysfs_emit(buf, "%s\n", "right");
-	}
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+
+	return sysfs_emit(buf, "%s\n", str_left_right(value));
 }
 
 static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 			     const char *buf, size_t count)
 {
 	int result;
+	bool value;
 
-	if (streq(buf, "right")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    false ^ conf.fn_win_swap.invert);
-	} else if (streq(buf, "left")) {
-		result = ec_set_bit(conf.fn_win_swap.address,
-				    conf.fn_win_swap.bit,
-				    true ^ conf.fn_win_swap.invert);
-	}
+	result = direction_is_left(buf, &value);
+	if (result < 0)
+		return result;
+
+	value ^= conf.fn_win_swap.invert; // invert the direction for some laptops
+
+	result = ec_set_bit(conf.fn_win_swap.address, conf.fn_win_swap.bit, value);
 
 	if (result < 0)
 		return result;
@@ -3978,15 +3983,15 @@ static ssize_t battery_mode_store(struct device *dev,
 {
 	int result = -EINVAL;
 
-	if (streq(buf, "max"))
+	if (sysfs_streq("max", buf))
 		result = ec_write(conf.charge_control.address,
 				  conf.charge_control.range_max);
 
-	else if (streq(buf, "medium")) // up to 80%
+	else if (sysfs_streq("medium", buf)) // up to 80%
 		result = ec_write(conf.charge_control.address,
 				  conf.charge_control.offset_end + 80);
 
-	else if (streq(buf, "min")) // up to 60%
+	else if (sysfs_streq("min", buf)) // up to 60%
 		result = ec_write(conf.charge_control.address,
 				  conf.charge_control.offset_end + 60);
 
@@ -4000,33 +4005,27 @@ static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
 	int result;
-	bool bit_value;
+	bool value;
 
-	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &bit_value);
+	result = ec_check_bit(conf.cooler_boost.address, conf.cooler_boost.bit, &value);
+	if (result < 0)
+		return result;
 
-	if (bit_value) {
-		return sysfs_emit(buf, "%s\n", "on");
-	} else {
-		return sysfs_emit(buf, "%s\n", "off");
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(value));
 }
 
 static ssize_t cooler_boost_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (streq(buf, "on"))
-		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit,
-				    true);
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
 
-	else if (streq(buf, "off"))
-		result = ec_set_bit(conf.cooler_boost.address,
-				    conf.cooler_boost.bit,
-				    false);
-
+	result = ec_set_bit(conf.cooler_boost.address, conf.cooler_boost.bit, value);
 	if (result < 0)
 		return result;
 
@@ -4108,25 +4107,27 @@ static ssize_t super_battery_show(struct device *device,
 	result = ec_check_by_mask(conf.super_battery.address,
 				  conf.super_battery.mask,
 				  &enabled);
+	if (result < 0)
+		return result;
 
-	if (enabled) {
-		return sysfs_emit(buf, "%s\n", "on");
-	} else {
-		return sysfs_emit(buf, "%s\n", "off");
-	}
+	return sysfs_emit(buf, "%s\n", str_on_off(enabled));
 }
 
 static ssize_t super_battery_store(struct device *dev,
 				   struct device_attribute *attr,
 				   const char *buf, size_t count)
 {
-	int result = -EINVAL;
+	int result;
+	bool value;
 
-	if (streq(buf, "on"))
+	result = kstrtobool(buf, &value);
+	if (result)
+		return result;
+
+	if (value)
 		result = ec_set_by_mask(conf.super_battery.address,
 				        conf.super_battery.mask);
-
-	else if (streq(buf, "off"))
+	else
 		result = ec_unset_by_mask(conf.super_battery.address,
 					  conf.super_battery.mask);
 
@@ -4567,10 +4568,13 @@ static struct attribute *msi_debug_attrs[] = {
 // ============================================================ //
 
 static umode_t msi_ec_is_visible(struct kobject *kobj,
-				   struct attribute *attr,
-				   int idx)
+				 struct attribute *attr,
+				 int idx)
 {
 	int address;
+
+	if (!conf_loaded)
+		return 0;
 
 	/* root group */
 	if (attr == &dev_attr_webcam.attr)
@@ -4653,7 +4657,7 @@ static const struct attribute_group *msi_platform_groups[] = {
 	NULL
 };
 
-static int msi_platform_probe(struct platform_device *pdev)
+static int __init msi_platform_probe(struct platform_device *pdev)
 {
 	if (debug) {
 		int result = sysfs_create_group(&pdev->dev.kobj,
@@ -4662,10 +4666,7 @@ static int msi_platform_probe(struct platform_device *pdev)
 			return result;
 	}
 
-	if (!conf_loaded) // an unsupported device loaded in debug mode
-		return 0;
-
-	return sysfs_create_groups(&pdev->dev.kobj, msi_platform_groups);
+	return 0;
 }
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(6, 11, 0))
@@ -4677,9 +4678,6 @@ static int msi_platform_remove(struct platform_device *pdev)
 	if (debug)
 		sysfs_remove_group(&pdev->dev.kobj, &msi_debug_group);
 
-	if (conf_loaded)
-		sysfs_remove_groups(&pdev->dev.kobj, msi_platform_groups);
-
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(6, 11, 0))
 	return 0;
 #endif
@@ -4690,8 +4688,8 @@ static struct platform_device *msi_platform_device;
 static struct platform_driver msi_platform_driver = {
 	.driver = {
 		.name = MSI_EC_DRIVER_NAME,
+		.dev_groups = msi_platform_groups,
 	},
-	.probe = msi_platform_probe,
 	.remove = msi_platform_remove,
 };
 
@@ -4789,9 +4787,8 @@ static int __init load_configuration(void)
 	} else {
 		// get fw version from EC
 		result = ec_get_firmware_version(ver_by_ec);
-		if (result < 0) {
+		if (result < 0)
 			return result;
-		}
 
 		ver = ver_by_ec;
 	}
@@ -4824,22 +4821,11 @@ static int __init msi_ec_init(void)
 	if (result < 0)
 		return result;
 
-	result = platform_driver_register(&msi_platform_driver);
-	if (result < 0)
-		return result;
-
-	msi_platform_device = platform_device_alloc(MSI_EC_DRIVER_NAME, -1);
-	if (msi_platform_device == NULL) {
-		platform_driver_unregister(&msi_platform_driver);
-		return -ENOMEM;
-	}
-
-	result = platform_device_add(msi_platform_device);
-	if (result < 0) {
-		platform_device_del(msi_platform_device);
-		platform_driver_unregister(&msi_platform_driver);
-		return result;
-	}
+	msi_platform_device = platform_create_bundle(&msi_platform_driver,
+						     msi_platform_probe,
+						     NULL, 0, NULL, 0);
+	if (IS_ERR(msi_platform_device))
+		return PTR_ERR(msi_platform_device);
 
 	if (conf_loaded) {
 		battery_hook_register(&battery_hook);
@@ -4878,8 +4864,8 @@ static void __exit msi_ec_exit(void)
 		battery_hook_unregister(&battery_hook);
 	}
 
+	platform_device_unregister(msi_platform_device);
 	platform_driver_unregister(&msi_platform_driver);
-	platform_device_del(msi_platform_device);
 
 	pr_info("module_exit\n");
 }
