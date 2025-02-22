@@ -7,7 +7,6 @@
  *   webcam            Integrated webcam activation
  *   fn_key            Function key location
  *   win_key           Windows key location
- *   battery_mode      Battery health options
  *   cooler_boost      Cooler boost function
  *   shift_mode        CPU & GPU performance modes
  *   fan_mode          FAN performance modes
@@ -3956,51 +3955,6 @@ static ssize_t win_key_store(struct device *dev, struct device_attribute *attr,
 	return count;
 }
 
-static ssize_t battery_mode_show(struct device *device,
-				 struct device_attribute *attr, char *buf)
-{
-	u8 rdata;
-	int result;
-
-	result = ec_read(conf.charge_control.address, &rdata);
-	if (result < 0)
-		return result;
-
-	if (rdata == conf.charge_control.range_max) {
-		return sysfs_emit(buf, "%s\n", "max");
-	} else if (rdata == conf.charge_control.offset_end + 80) { // up to 80%
-		return sysfs_emit(buf, "%s\n", "medium");
-	} else if (rdata == conf.charge_control.offset_end + 60) { // up to 60%
-		return sysfs_emit(buf, "%s\n", "min");
-	} else {
-		return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
-	}
-}
-
-static ssize_t battery_mode_store(struct device *dev,
-				  struct device_attribute *attr,
-				  const char *buf, size_t count)
-{
-	int result = -EINVAL;
-
-	if (sysfs_streq("max", buf))
-		result = ec_write(conf.charge_control.address,
-				  conf.charge_control.range_max);
-
-	else if (sysfs_streq("medium", buf)) // up to 80%
-		result = ec_write(conf.charge_control.address,
-				  conf.charge_control.offset_end + 80);
-
-	else if (sysfs_streq("min", buf)) // up to 60%
-		result = ec_write(conf.charge_control.address,
-				  conf.charge_control.offset_end + 60);
-
-	if (result < 0)
-		return result;
-
-	return count;
-}
-
 static ssize_t cooler_boost_show(struct device *device,
 				 struct device_attribute *attr, char *buf)
 {
@@ -4241,7 +4195,6 @@ static DEVICE_ATTR_RW(webcam);
 static DEVICE_ATTR_RW(webcam_block);
 static DEVICE_ATTR_RW(fn_key);
 static DEVICE_ATTR_RW(win_key);
-static DEVICE_ATTR_RW(battery_mode);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
@@ -4256,7 +4209,6 @@ static struct attribute *msi_root_attrs[] = {
 	&dev_attr_webcam_block.attr,
 	&dev_attr_fn_key.attr,
 	&dev_attr_win_key.attr,
-	&dev_attr_battery_mode.attr,
 	&dev_attr_cooler_boost.attr,
 	&dev_attr_available_shift_modes.attr,
 	&dev_attr_shift_mode.attr,
@@ -4586,9 +4538,6 @@ static umode_t msi_ec_is_visible(struct kobject *kobj,
 	else if (attr == &dev_attr_fn_key.attr ||
 		 attr == &dev_attr_win_key.attr)
 		address = conf.fn_win_swap.address;
-
-	else if (attr == &dev_attr_battery_mode.attr)
-		address = conf.charge_control.address;
 
 	else if (attr == &dev_attr_cooler_boost.attr)
 		address = conf.cooler_boost.address;
