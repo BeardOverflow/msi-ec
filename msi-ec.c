@@ -63,13 +63,7 @@ static const char *ALLOWED_FW_0[] __initconst = {
 
 static struct msi_ec_conf CONF0 __initdata = {
 	.allowed_fw = ALLOWED_FW_0, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -144,13 +138,7 @@ static const char *ALLOWED_FW_1[] __initconst = {
 
 static struct msi_ec_conf CONF1 __initdata = {
 	.allowed_fw = ALLOWED_FW_1, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -225,13 +213,7 @@ static const char *ALLOWED_FW_2[] __initconst = {
 
 static struct msi_ec_conf CONF2 __initdata = {
 	.allowed_fw = ALLOWED_FW_2, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -304,13 +286,7 @@ static const char *ALLOWED_FW_3[] __initconst = {
 
 static struct msi_ec_conf CONF3 __initdata = {
 	.allowed_fw = ALLOWED_FW_3, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -383,13 +359,7 @@ static const char *ALLOWED_FW_4[] __initconst = {
 
 static struct msi_ec_conf CONF4 __initdata = {
 	.allowed_fw = ALLOWED_FW_4, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -463,13 +433,7 @@ static const char *ALLOWED_FW_5[] __initconst = {
 
 static struct msi_ec_conf CONF5 __initdata = {
 	.allowed_fw = ALLOWED_FW_5, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -542,13 +506,7 @@ static const char *ALLOWED_FW_6[] __initconst = {
 
 static struct msi_ec_conf CONF6 __initdata = {
 	.allowed_fw = ALLOWED_FW_6, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -623,13 +581,7 @@ static const char *ALLOWED_FW_7[] __initconst = {
 
 static struct msi_ec_conf CONF7 __initdata = {
 	.allowed_fw = ALLOWED_FW_7, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -708,13 +660,7 @@ static const char *ALLOWED_FW_8[] __initconst = {
 
 static struct msi_ec_conf CONF8 __initdata = {
 	.allowed_fw = ALLOWED_FW_8, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -786,13 +732,7 @@ static const char *ALLOWED_FW_9[] __initconst = {
 
 static struct msi_ec_conf CONF9 __initdata = {
 	.allowed_fw = ALLOWED_FW_9, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -864,13 +804,7 @@ static const char *ALLOWED_FW_10[] __initconst = {
 
 static struct msi_ec_conf CONF10 __initdata = {
 	.allowed_fw = ALLOWED_FW_10, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -943,13 +877,7 @@ static const char *ALLOWED_FW_11[] __initconst = {
 
 static struct msi_ec_conf CONF11 __initdata = {
 	.allowed_fw = ALLOWED_FW_11, // WMI2 based
-	.charge_control = {
-		.address      = 0xD7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xD7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNKNOWN,
@@ -1019,13 +947,7 @@ static const char *ALLOWED_FW_12[] __initconst = {
 
 static struct msi_ec_conf CONF12 __initdata = {
 	.allowed_fw = ALLOWED_FW_12, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1098,13 +1020,7 @@ static const char *ALLOWED_FW_13[] __initconst = {
 
 static struct msi_ec_conf CONF13 __initdata = {
 	.allowed_fw = ALLOWED_FW_13, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1176,13 +1092,7 @@ static const char *ALLOWED_FW_14[] __initconst = {
 
 static struct msi_ec_conf CONF14 __initdata = {
 	.allowed_fw = ALLOWED_FW_14, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share  {
 	// 	.address      = 0xbf, // states: 0x08 || 0x28
 	// 	.bit          = 5,
@@ -1266,13 +1176,7 @@ static const char *ALLOWED_FW_15[] __initconst = {
 
 static struct msi_ec_conf CONF15 __initdata = {
 	.allowed_fw = ALLOWED_FW_15, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a, 
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e, 
 		.block_address = 0x2f,
@@ -1345,13 +1249,7 @@ static const char *ALLOWED_FW_16[] __initconst = {
 
 static struct msi_ec_conf CONF16 __initdata = {
 	.allowed_fw = ALLOWED_FW_16, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1423,13 +1321,7 @@ static const char *ALLOWED_FW_17[] __initconst = {
 
 static struct msi_ec_conf CONF17 __initdata = {
 	.allowed_fw = ALLOWED_FW_17, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share  {
 	// 	.address      = 0xbf, // states: 0x08 || 0x28
 	// 	.bit          = 5,
@@ -1506,13 +1398,7 @@ static const char *ALLOWED_FW_18[] __initconst = {
 
 static struct msi_ec_conf CONF18 __initdata = {
 	.allowed_fw = ALLOWED_FW_18, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1584,13 +1470,7 @@ static const char *ALLOWED_FW_19[] __initconst = {
 
 static struct msi_ec_conf CONF19 __initdata = {
 	.allowed_fw = ALLOWED_FW_19, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -1663,13 +1543,7 @@ static const char *ALLOWED_FW_20[] __initconst = {
 
 static struct msi_ec_conf CONF20 __initdata = {
 	.allowed_fw = ALLOWED_FW_20, // WMI2 based
-	.charge_control = { // tested
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = { // tested
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1743,13 +1617,7 @@ static const char *ALLOWED_FW_21[] __initconst = {
 
 static struct msi_ec_conf CONF21 __initdata = {
 	.allowed_fw = ALLOWED_FW_21, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0xbc,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1826,13 +1694,7 @@ static const char *ALLOWED_FW_22[] __initconst = {
 
 static struct msi_ec_conf CONF22 __initdata = {
 	.allowed_fw = ALLOWED_FW_22, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -1905,13 +1767,7 @@ static const char *ALLOWED_FW_23[] __initconst = {
 
 static struct msi_ec_conf CONF23 __initdata = {
 	.allowed_fw = ALLOWED_FW_23, // WMI1 based
-	.charge_control = { // threshold
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4, // 0xe4 = 100%, but 0x80 too?
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
@@ -1988,13 +1844,7 @@ static const char *ALLOWED_FW_24[] __initconst = {
 
 static struct msi_ec_conf CONF24 __initdata = {
 	.allowed_fw = ALLOWED_FW_24, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2E,
 		.block_address = 0x2F,
@@ -2067,13 +1917,7 @@ static const char *ALLOWED_FW_25[] __initconst = {
 
 static struct msi_ec_conf CONF25 __initdata = {
 	.allowed_fw = ALLOWED_FW_25, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -2145,13 +1989,7 @@ static const char *ALLOWED_FW_26[] __initconst = {
 
 static struct msi_ec_conf CONF26 __initdata = {
 	.allowed_fw = ALLOWED_FW_26, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0xbc,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -2223,13 +2061,7 @@ static const char *ALLOWED_FW_27[] __initconst = {
 
 static struct msi_ec_conf CONF27 __initdata = {
 	.allowed_fw = ALLOWED_FW_27, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -2308,13 +2140,7 @@ static const char *ALLOWED_FW_28[] __initconst = {
 
 static struct msi_ec_conf CONF28 __initdata = {
 	.allowed_fw = ALLOWED_FW_28,
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share  {
 	// 	.address      = 0xbf, // states: 0x08 || 0x28
 	// 	.bit          = 5,
@@ -2391,13 +2217,7 @@ static const char *ALLOWED_FW_29[] __initconst = {
 
 static struct msi_ec_conf CONF29 __initdata = {
 	.allowed_fw = ALLOWED_FW_29,
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share  {
 	// 	.address      = 0xbf,
 	// 	.bit          = 5,
@@ -2473,13 +2293,7 @@ static const char *ALLOWED_FW_30[] __initconst = {
 
 static struct msi_ec_conf CONF30 __initdata = {
 	.allowed_fw = ALLOWED_FW_30, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -2552,13 +2366,7 @@ static const char *ALLOWED_FW_31[] __initconst = {
 
 static struct msi_ec_conf CONF31 __initdata = {
 	.allowed_fw = ALLOWED_FW_31,
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -2632,13 +2440,7 @@ static const char *ALLOWED_FW_32[] __initconst = {
 
 static struct msi_ec_conf CONF32 __initdata = {
 	.allowed_fw = ALLOWED_FW_32,
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = MSI_EC_ADDR_UNSUPP,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -2710,13 +2512,7 @@ static const char *ALLOWED_FW_33[] __initconst = {
 
 static struct msi_ec_conf CONF33 __initdata = {
 	.allowed_fw = ALLOWED_FW_33,
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -2788,13 +2584,7 @@ static const char *ALLOWED_FW_34[] __initconst = {
 
 static struct msi_ec_conf CONF34 __initdata = {
 	.allowed_fw = ALLOWED_FW_34,
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -2862,13 +2652,7 @@ static const char *ALLOWED_FW_35[] __initconst = {
 
 static struct msi_ec_conf CONF35 __initdata = {
 	.allowed_fw = ALLOWED_FW_35, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share = {
 	//  	.address      = 0xbf, // states: 0x08 || 0x28
 	//  	.bit          = 5,
@@ -2946,13 +2730,7 @@ static const char *ALLOWED_FW_36[] __initconst = {
 
 static struct msi_ec_conf CONF36 __initdata = {
 	.allowed_fw = ALLOWED_FW_36, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a, // offset 10%
-		.offset_end   = 0x80, // offset 0%
-		.range_min    = 0x8a, // 10%
-		.range_max    = 0xe4, // 100%
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP, // not supported but it is already controlled by hardware
@@ -3024,13 +2802,7 @@ static const char *ALLOWED_FW_37[] __initconst = {
 
 static struct msi_ec_conf CONF37 __initdata = {
 	.allowed_fw = ALLOWED_FW_37, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share  {
 	// 	.address      = 0xbf, // states: 0x08 || 0x28
 	// 	.bit          = 5,
@@ -3107,13 +2879,7 @@ static const char *ALLOWED_FW_38[] __initconst = {
 
 static struct msi_ec_conf CONF38 __initdata = {
 	.allowed_fw = ALLOWED_FW_38, // WMI1 based
-	.charge_control = {
-		.address      = 0xef,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = 0x2f,
@@ -3183,13 +2949,7 @@ static const char *ALLOWED_FW_39[] __initconst = {
 
 static struct msi_ec_conf CONF39 __initdata = {
 	.allowed_fw = ALLOWED_FW_39, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -3261,13 +3021,7 @@ static const char *ALLOWED_FW_40[] __initconst = {
 
 static struct msi_ec_conf CONF40 __initdata = {
 	.allowed_fw = ALLOWED_FW_40, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	// .usb_share = {
 	//  	.address      = 0xbf, // states: 0x08 || 0x28
 	//  	.bit          = 5,
@@ -3345,13 +3099,7 @@ static const char *ALLOWED_FW_41[] __initconst = {
 
 static struct msi_ec_conf CONF41 __initdata = {
 	.allowed_fw = ALLOWED_FW_41, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
@@ -3421,13 +3169,7 @@ static const char *ALLOWED_FW_42[] __initconst = {
 
 static struct msi_ec_conf CONF42 __initdata = {
 	.allowed_fw = ALLOWED_FW_42, // WMI2 based
-	.charge_control = {
-		.address      = 0xd7,
-		.offset_start = 0x8a,
-		.offset_end   = 0x80,
-		.range_min    = 0x8a,
-		.range_max    = 0xe4,
-	},
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = MSI_EC_ADDR_UNSUPP,
 		.block_address = 0x2f,
@@ -3542,10 +3284,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 static bool conf_loaded = false;
 static struct msi_ec_conf conf; // current configuration
 
-struct attribute_support {
-	struct attribute *attribute;
-	bool supported;
-};
+static bool charge_control_supported = false;
 
 static char *firmware = NULL;
 module_param(firmware, charp, 0);
@@ -3699,54 +3438,51 @@ static int direction_is_left(const char *s, bool *res)
 // Sysfs power_supply subsystem
 // ============================================================ //
 
-static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
-					     struct device_attribute *attr,
-					     char *buf)
+static int get_end_threshold(u8 *out)
 {
 	u8 rdata;
 	int result;
 
-	result = ec_read(conf.charge_control.address, &rdata);
+	result = ec_read(conf.charge_control_address, &rdata);
 	if (result < 0)
 		return result;
 
-	// thresholds are unknown
-	if (rdata == 0x80) {
-		return sysfs_emit(buf, "0\n");
-	}
+	rdata &= ~BIT(7); // last 7 bits contain the threshold
 
-	return sysfs_emit(buf, "%i\n", rdata - offset);
-}
+	// the thresholds are unknown
+	if (rdata == 0)
+		return -ENODATA;
 
-static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
-					      struct device_attribute *attr,
-					      const char *buf, size_t count)
-{
-	u8 wdata;
-	int result;
-
-	result = kstrtou8(buf, 10, &wdata);
-	if (result < 0)
-		return result;
-
-	wdata += offset;
-	if (wdata < conf.charge_control.range_min ||
-	    wdata > conf.charge_control.range_max)
+	if (rdata < 10 || rdata > 100)
 		return -EINVAL;
 
-	result = ec_write(conf.charge_control.address, wdata);
-	if (result < 0)
-		return result;
+	*out = rdata;
+	return 0;
+}
 
-	return count;
+static int set_end_threshold(u8 value)
+{
+	if (value < 10 || value > 100)
+		return -EINVAL;
+
+	return ec_write(conf.charge_control_address, value | BIT(7));
 }
 
 static ssize_t
 charge_control_start_threshold_show(struct device *device,
 				    struct device_attribute *attr, char *buf)
 {
-	return charge_control_threshold_show(conf.charge_control.offset_start,
-					     device, attr, buf);
+	int result;
+	u8 threshold;
+
+	result = get_end_threshold(&threshold);
+
+	if (result == -ENODATA)
+		return sysfs_emit(buf, "0\n");
+	else if (result < 0)
+		return result;
+
+	return sysfs_emit(buf, "%u\n", threshold - 10);
 }
 
 static ssize_t
@@ -3754,24 +3490,53 @@ charge_control_start_threshold_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
-	return charge_control_threshold_store(
-		conf.charge_control.offset_start, dev, attr, buf, count);
+	int result;
+	u8 threshold;
+
+	result = kstrtou8(buf, 10, &threshold);
+	if (result < 0)
+		return result;
+
+	result = set_end_threshold(threshold + 10);
+	if (result < 0)
+		return result;
+
+	return count;
 }
 
 static ssize_t charge_control_end_threshold_show(struct device *device,
 						 struct device_attribute *attr,
 						 char *buf)
 {
-	return charge_control_threshold_show(conf.charge_control.offset_end,
-					     device, attr, buf);
+	int result;
+	u8 threshold;
+
+	result = get_end_threshold(&threshold);
+
+	if (result == -ENODATA)
+		return sysfs_emit(buf, "0\n");
+	else if (result < 0)
+		return result;
+
+	return sysfs_emit(buf, "%u\n", threshold);
 }
 
 static ssize_t charge_control_end_threshold_store(struct device *dev,
 						  struct device_attribute *attr,
 						  const char *buf, size_t count)
 {
-	return charge_control_threshold_store(conf.charge_control.offset_end,
-					      dev, attr, buf, count);
+	int result;
+	u8 threshold;
+
+	result = kstrtou8(buf, 10, &threshold);
+	if (result < 0)
+		return result;
+
+	result = set_end_threshold(threshold);
+	if (result < 0)
+		return result;
+
+	return count;
 }
 
 static DEVICE_ATTR_RW(charge_control_start_threshold);
@@ -4779,24 +4544,37 @@ static int __init msi_ec_init(void)
 	if (IS_ERR(msi_platform_device))
 		return PTR_ERR(msi_platform_device);
 
-	if (conf_loaded) {
-		battery_hook_register(&battery_hook);
+	pr_info("module_init\n");
+	if (!conf_loaded)
+		return 0;
 
-		// register LED classdevs
-		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
-			led_classdev_register(&msi_platform_device->dev,
-					      &micmute_led_cdev);
-
-		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
-			led_classdev_register(&msi_platform_device->dev,
-					      &mute_led_cdev);
-
-		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
-			led_classdev_register(&msi_platform_device->dev,
-					      &msiacpi_led_kbdlight);
+	/*
+	 * Additional check: battery thresholds are supported only if
+	 * the 7th bit is set.
+	 */
+	if (conf.charge_control_address != MSI_EC_ADDR_UNSUPP) {
+		result = ec_check_bit(conf.charge_control_address, 7,
+				      &charge_control_supported);
+		if (result < 0)
+			return result;
 	}
 
-	pr_info("module_init\n");
+	if (charge_control_supported)
+		battery_hook_register(&battery_hook);
+
+	// register LED classdevs
+	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &micmute_led_cdev);
+
+	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &mute_led_cdev);
+
+	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &msiacpi_led_kbdlight);
+
 	return 0;
 }
 
@@ -4813,7 +4591,8 @@ static void __exit msi_ec_exit(void)
 		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
 			led_classdev_unregister(&msiacpi_led_kbdlight);
 
-		battery_hook_unregister(&battery_hook);
+		if (charge_control_supported)
+			battery_hook_unregister(&battery_hook);
 	}
 
 	platform_device_unregister(msi_platform_device);
