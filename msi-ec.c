@@ -3699,9 +3699,7 @@ static int direction_is_left(const char *s, bool *res)
 // Sysfs power_supply subsystem
 // ============================================================ //
 
-static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
-					     struct device_attribute *attr,
-					     char *buf)
+static int get_end_threshold(u8 *out)
 {
 	u8 rdata;
 	int result;
@@ -3710,43 +3708,42 @@ static ssize_t charge_control_threshold_show(u8 offset, struct device *device,
 	if (result < 0)
 		return result;
 
-	// thresholds are unknown
-	if (rdata == 0x80) {
-		return sysfs_emit(buf, "0\n");
-	}
+	rdata &= ~BIT(7); // last 7 bits contain the threshold
 
-	return sysfs_emit(buf, "%i\n", rdata - offset);
-}
+	// the thresholds are unknown
+	if (rdata == 0)
+		return -ENODATA;
 
-static ssize_t charge_control_threshold_store(u8 offset, struct device *dev,
-					      struct device_attribute *attr,
-					      const char *buf, size_t count)
-{
-	u8 wdata;
-	int result;
-
-	result = kstrtou8(buf, 10, &wdata);
-	if (result < 0)
-		return result;
-
-	wdata += offset;
-	if (wdata < conf.charge_control.range_min ||
-	    wdata > conf.charge_control.range_max)
+	if (rdata < 10 || rdata > 100)
 		return -EINVAL;
 
-	result = ec_write(conf.charge_control.address, wdata);
-	if (result < 0)
-		return result;
+	*out = rdata;
+	return 0;
+}
 
-	return count;
+static int set_end_threshold(u8 value)
+{
+	if (value < 10 || value > 100)
+		return -EINVAL;
+
+	return ec_write(conf.charge_control.address, value | BIT(7));
 }
 
 static ssize_t
 charge_control_start_threshold_show(struct device *device,
 				    struct device_attribute *attr, char *buf)
 {
-	return charge_control_threshold_show(conf.charge_control.offset_start,
-					     device, attr, buf);
+	int result;
+	u8 threshold;
+
+	result = get_end_threshold(&threshold);
+
+	if (result == -ENODATA)
+		return sysfs_emit(buf, "0\n");
+	else if (result < 0)
+		return result;
+
+	return sysfs_emit(buf, "%u\n", threshold - 10);
 }
 
 static ssize_t
@@ -3754,24 +3751,53 @@ charge_control_start_threshold_store(struct device *dev,
 				     struct device_attribute *attr,
 				     const char *buf, size_t count)
 {
-	return charge_control_threshold_store(
-		conf.charge_control.offset_start, dev, attr, buf, count);
+	int result;
+	u8 threshold;
+
+	result = kstrtou8(buf, 10, &threshold);
+	if (result < 0)
+		return result;
+
+	result = set_end_threshold(threshold + 10);
+	if (result < 0)
+		return result;
+
+	return count;
 }
 
 static ssize_t charge_control_end_threshold_show(struct device *device,
 						 struct device_attribute *attr,
 						 char *buf)
 {
-	return charge_control_threshold_show(conf.charge_control.offset_end,
-					     device, attr, buf);
+	int result;
+	u8 threshold;
+
+	result = get_end_threshold(&threshold);
+
+	if (result == -ENODATA)
+		return sysfs_emit(buf, "0\n");
+	else if (result < 0)
+		return result;
+
+	return sysfs_emit(buf, "%u\n", threshold);
 }
 
 static ssize_t charge_control_end_threshold_store(struct device *dev,
 						  struct device_attribute *attr,
 						  const char *buf, size_t count)
 {
-	return charge_control_threshold_store(conf.charge_control.offset_end,
-					      dev, attr, buf, count);
+	int result;
+	u8 threshold;
+
+	result = kstrtou8(buf, 10, &threshold);
+	if (result < 0)
+		return result;
+
+	result = set_end_threshold(threshold);
+	if (result < 0)
+		return result;
+
+	return count;
 }
 
 static DEVICE_ATTR_RW(charge_control_start_threshold);
