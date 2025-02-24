@@ -3284,10 +3284,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 static bool conf_loaded = false;
 static struct msi_ec_conf conf; // current configuration
 
-struct attribute_support {
-	struct attribute *attribute;
-	bool supported;
-};
+static bool charge_control_supported = false;
 
 static char *firmware = NULL;
 module_param(firmware, charp, 0);
@@ -4547,24 +4544,37 @@ static int __init msi_ec_init(void)
 	if (IS_ERR(msi_platform_device))
 		return PTR_ERR(msi_platform_device);
 
-	if (conf_loaded) {
-		battery_hook_register(&battery_hook);
+	pr_info("module_init\n");
+	if (!conf_loaded)
+		return 0;
 
-		// register LED classdevs
-		if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
-			led_classdev_register(&msi_platform_device->dev,
-					      &micmute_led_cdev);
-
-		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
-			led_classdev_register(&msi_platform_device->dev,
-					      &mute_led_cdev);
-
-		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
-			led_classdev_register(&msi_platform_device->dev,
-					      &msiacpi_led_kbdlight);
+	/*
+	 * Additional check: battery thresholds are supported only if
+	 * the 7th bit is set.
+	 */
+	if (conf.charge_control_address != MSI_EC_ADDR_UNSUPP) {
+		result = ec_check_bit(conf.charge_control_address, 7,
+				      &charge_control_supported);
+		if (result < 0)
+			return result;
 	}
 
-	pr_info("module_init\n");
+	if (charge_control_supported)
+		battery_hook_register(&battery_hook);
+
+	// register LED classdevs
+	if (conf.leds.micmute_led_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &micmute_led_cdev);
+
+	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &mute_led_cdev);
+
+	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &msiacpi_led_kbdlight);
+
 	return 0;
 }
 
@@ -4581,7 +4591,8 @@ static void __exit msi_ec_exit(void)
 		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
 			led_classdev_unregister(&msiacpi_led_kbdlight);
 
-		battery_hook_unregister(&battery_hook);
+		if (charge_control_supported)
+			battery_hook_unregister(&battery_hook);
 	}
 
 	platform_device_unregister(msi_platform_device);
