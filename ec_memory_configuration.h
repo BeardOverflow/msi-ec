@@ -16,14 +16,6 @@
 #define MSI_EC_FW_DATE_LENGTH     8
 #define MSI_EC_FW_TIME_LENGTH     8
 
-struct msi_ec_charge_control_conf {
-	int address;
-	int offset_start;
-	int offset_end;
-	int range_min;
-	int range_max;
-};
-
 struct msi_ec_webcam_conf {
 	int address;
 	int block_address;
@@ -98,7 +90,7 @@ struct msi_ec_kbd_bl_conf {
 struct msi_ec_conf {
 	const char **allowed_fw;
 
-	struct msi_ec_charge_control_conf charge_control;
+	int charge_control_address;
 	struct msi_ec_webcam_conf         webcam;
 	struct msi_ec_fn_win_swap_conf    fn_win_swap;
 	struct msi_ec_cooler_boost_conf   cooler_boost;
