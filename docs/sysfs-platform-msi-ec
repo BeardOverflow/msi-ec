@@ -1,0 +1,92 @@
+What:		/sys/devices/platform/<platform>/webcam
+Description:
+		Control the camera. Valid values: "on", "off".
+
+What:		/sys/devices/platform/<platform>/webcam_block
+Description:
+		Block the camera from being turned on:
+			* "off" - camera is not blocked
+			* "on"  - camera is disabled and blocked
+
+What:		/sys/devices/platform/<platform>/fn_key
+Description:
+		The position of the Fn key relative to the Win key.
+		Used to swap Fn and Win keys.
+		Valid values: "left", "right".
+
+What:		/sys/devices/platform/<platform>/win_key
+Description:
+		The position of the Win key relative to the Fn key.
+		Used to swap Fn and Win keys.
+		Valid values: "left", "right".
+
+What:		/sys/devices/platform/<platform>/cooler_boost
+Description:
+		Control the cooler boost feature. This feature sets the fans
+		to the maximum speed for quicker cooling.
+		Valid values: "on", "off".
+
+What:		/sys/devices/platform/<platform>/available_shift_modes
+Description:
+		Read-only, shows the list of available shift modes for
+		the laptop model.
+		Possible values:
+			* "eco"
+			* "comfort"
+			* "sport"
+			* "turbo"
+
+What:		/sys/devices/platform/<platform>/shift_mode
+Description:
+		Allows to read and set the current shift mode.
+		Valid values: the values present in the available_shift_modes
+		list.
+
+What:		/sys/devices/platform/<platform>/super_battery
+Description:
+		Allows to enable the super battery saving mode.
+		Valid values: "on", "off"
+
+What:		/sys/devices/platform/<platform>/available_fan_modes
+Description:
+		Read-only, shows the list of available fan modes for
+		the laptop model.
+		Possible values:
+			* "auto"     - the fan is controlled automatically
+			* "silent"   - lower fan speed with less noise
+			* "basic"    - constant fan speed modifier
+			* "advanced" - the fan speed follows a custom fan curve
+
+What:		/sys/devices/platform/<platform>/fan_mode
+Description:
+		Allows to read and set the current fan mode.
+		Valid values: the values present in the available_fan_modes
+		list.
+
+What:		/sys/devices/platform/<platform>/fw_version
+Description:
+		Read-only, returns the version of the EC firmware.
+
+What:		/sys/devices/platform/<platform>/fw_release_date
+Description:
+		Read-only, returns the release date of the EC firmware.
+
+What:		/sys/devices/platform/<platform>/debug/ec_dump
+Description:
+		Read-only, returns a full dump of EC RAM in a form of a table,
+		and an ASCII overview of the RAM contents with unprintable
+		characters replaced with '.'.
+
+What:		/sys/devices/platform/<platform>/debug/ec_set
+Description:
+		Write-only, directly modifies a specified byte in the EC RAM.
+		Argument format: "ab=cd", where "ab" is the address to modify
+		and "cd" is the value, both in hexadecimal format.
+
+What:		/sys/devices/platform/<platform>/debug/ec_get
+Description:
+		Reads a byte from a specified EC RAM address.
+		Write to this file to specify the address in a 2-digit
+		hexadecimal format.
+		Read this file to get the byte at the address in a 2-digit
+		hexadecimal format.

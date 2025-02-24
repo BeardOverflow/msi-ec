@@ -1,19 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 /*
- * msi-ec.c - MSI Embedded Controller for laptops support.
+ * msi-ec.c - Embedded Controller driver for MSI laptops.
  *
- * This driver exports a few files in /sys/devices/platform/msi-laptop:
- *   webcam            Integrated webcam activation
- *   fn_key            Function key location
- *   win_key           Windows key location
- *   cooler_boost      Cooler boost function
- *   shift_mode        CPU & GPU performance modes
- *   fan_mode          FAN performance modes
- *   fw_version        Firmware version
- *   fw_release_date   Firmware release date
- *   cpu/..            CPU related options
- *   gpu/..            GPU related options
+ * This driver registers a platform driver at /sys/devices/platform/msi-ec
+ * The list of supported attributes is available in the docs/sysfs-platform-msi-ec file
  *
  * In addition to these platform device attributes the driver
  * registers itself in the Linux power_supply subsystem and is
@@ -4528,6 +4519,82 @@ static struct attribute *msi_debug_attrs[] = {
 };
 
 // ============================================================ //
+// Sysfs leds subsystem
+// ============================================================ //
+
+static int micmute_led_sysfs_set(struct led_classdev *led_cdev,
+				 enum led_brightness brightness)
+{
+	int result;
+
+	result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit, brightness);
+
+	if (result < 0)
+		return result;
+
+	return 0;
+}
+
+static int mute_led_sysfs_set(struct led_classdev *led_cdev,
+			      enum led_brightness brightness)
+{
+	int result;
+
+	result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit, brightness);
+
+	if (result < 0)
+		return result;
+
+	return 0;
+}
+
+static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
+{
+	u8 rdata;
+	int result = ec_read(conf.kbd_bl.bl_state_address, &rdata);
+	if (result < 0)
+		return 0;
+	return rdata & MSI_EC_KBD_BL_STATE_MASK;
+}
+
+static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
+			    enum led_brightness brightness)
+{
+	// By default, on an unregister event, 
+	// kernel triggers the setter with 0 brightness.
+	if (led_cdev->flags & LED_UNREGISTERING) 
+		return 0;
+
+	u8 wdata;
+	if (brightness < 0 || brightness > 3)
+		return -1;
+	wdata = conf.kbd_bl.state_base_value | brightness;
+	return ec_write(conf.kbd_bl.bl_state_address, wdata);
+}
+
+static struct led_classdev micmute_led_cdev = {
+	.name = "platform::micmute",
+	.max_brightness = 1,
+	.brightness_set_blocking = &micmute_led_sysfs_set,
+	.default_trigger = "audio-micmute",
+};
+
+static struct led_classdev mute_led_cdev = {
+	.name = "platform::mute",
+	.max_brightness = 1,
+	.brightness_set_blocking = &mute_led_sysfs_set,
+	.default_trigger = "audio-mute",
+};
+
+static struct led_classdev msiacpi_led_kbdlight = {
+	.name = "msiacpi::kbd_backlight",
+	.max_brightness = 3,
+	.flags = LED_BRIGHT_HW_CHANGED,
+	.brightness_set_blocking = &kbd_bl_sysfs_set,
+	.brightness_get = &kbd_bl_sysfs_get,
+};
+
+// ============================================================ //
 // Sysfs platform driver
 // ============================================================ //
 
@@ -4652,82 +4719,6 @@ static struct platform_driver msi_platform_driver = {
 		.dev_groups = msi_platform_groups,
 	},
 	.remove = msi_platform_remove,
-};
-
-// ============================================================ //
-// Sysfs leds subsystem
-// ============================================================ //
-
-static int micmute_led_sysfs_set(struct led_classdev *led_cdev,
-				 enum led_brightness brightness)
-{
-	int result;
-
-	result = ec_set_bit(conf.leds.micmute_led_address, conf.leds.bit, brightness);
-
-	if (result < 0)
-		return result;
-
-	return 0;
-}
-
-static int mute_led_sysfs_set(struct led_classdev *led_cdev,
-			      enum led_brightness brightness)
-{
-	int result;
-
-	result = ec_set_bit(conf.leds.mute_led_address, conf.leds.bit, brightness);
-
-	if (result < 0)
-		return result;
-
-	return 0;
-}
-
-static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
-{
-	u8 rdata;
-	int result = ec_read(conf.kbd_bl.bl_state_address, &rdata);
-	if (result < 0)
-		return 0;
-	return rdata & MSI_EC_KBD_BL_STATE_MASK;
-}
-
-static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
-			    enum led_brightness brightness)
-{
-	// By default, on an unregister event, 
-	// kernel triggers the setter with 0 brightness.
-	if (led_cdev->flags & LED_UNREGISTERING) 
-		return 0;
-
-	u8 wdata;
-	if (brightness < 0 || brightness > 3)
-		return -1;
-	wdata = conf.kbd_bl.state_base_value | brightness;
-	return ec_write(conf.kbd_bl.bl_state_address, wdata);
-}
-
-static struct led_classdev micmute_led_cdev = {
-	.name = "platform::micmute",
-	.max_brightness = 1,
-	.brightness_set_blocking = &micmute_led_sysfs_set,
-	.default_trigger = "audio-micmute",
-};
-
-static struct led_classdev mute_led_cdev = {
-	.name = "platform::mute",
-	.max_brightness = 1,
-	.brightness_set_blocking = &mute_led_sysfs_set,
-	.default_trigger = "audio-mute",
-};
-
-static struct led_classdev msiacpi_led_kbdlight = {
-	.name = "msiacpi::kbd_backlight",
-	.max_brightness = 3,
-	.flags = LED_BRIGHT_HW_CHANGED,
-	.brightness_set_blocking = &kbd_bl_sysfs_set,
-	.brightness_get = &kbd_bl_sysfs_get,
 };
 
 // ============================================================ //
