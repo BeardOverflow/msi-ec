@@ -12,7 +12,7 @@
  *
  *   charge_control_start_threshold
  *   charge_control_end_threshold
- * 
+ *
  * This driver also registers available led class devices for
  * mute, micmute and keyboard_backlight leds
  *
@@ -101,8 +101,8 @@ static struct msi_ec_conf CONF0 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -171,8 +171,8 @@ static struct msi_ec_conf CONF1 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -242,8 +242,8 @@ static struct msi_ec_conf CONF2 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -310,8 +310,8 @@ static struct msi_ec_conf CONF3 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -377,8 +377,8 @@ static struct msi_ec_conf CONF4 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, // needs testing
-		.rt_fan_speed_address  = 0x71, // needs testing
+		.rt_temp_address      = 0x68, // needs testing
+		.rt_fan_speed_address = 0x71, // needs testing
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -446,8 +446,8 @@ static struct msi_ec_conf CONF5 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
@@ -515,8 +515,8 @@ static struct msi_ec_conf CONF6 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -585,8 +585,8 @@ static struct msi_ec_conf CONF7 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
@@ -658,8 +658,8 @@ static struct msi_ec_conf CONF8 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -725,8 +725,8 @@ static struct msi_ec_conf CONF9 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -793,8 +793,8 @@ static struct msi_ec_conf CONF10 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -817,7 +817,7 @@ static struct msi_ec_conf CONF10 __initdata = {
 
 static const char *ALLOWED_FW_11[] __initconst = {
 	"16S6EMS1.111", // Prestige 15 A11SCX
-	NULL 
+	NULL
 };
 
 static struct msi_ec_conf CONF11 __initdata = {
@@ -860,8 +860,8 @@ static struct msi_ec_conf CONF11 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -930,8 +930,8 @@ static struct msi_ec_conf CONF12 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -997,8 +997,8 @@ static struct msi_ec_conf CONF13 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1053,7 +1053,6 @@ static struct msi_ec_conf CONF14 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 }, // High
 			{ SM_TURBO_NAME,   0xc4 }, // Turbo
 			MSI_EC_MODE_NULL
-			
 		},
 	},
 	.super_battery = {
@@ -1071,8 +1070,8 @@ static struct msi_ec_conf CONF14 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1103,7 +1102,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 	.allowed_fw = ALLOWED_FW_15, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
-		.address       = 0x2e, 
+		.address       = 0x2e,
 		.block_address = 0x2f,
 		.bit           = 1,
 	},
@@ -1117,7 +1116,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 		.bit     = 7,
 	},
 	.shift_mode = {
-		.address = 0xf2, 
+		.address = 0xf2,
 		.modes = {
 			{ SM_ECO_NAME,     0xa5 }, // super battery
 			{ SM_COMFORT_NAME, 0xa1 }, // balanced
@@ -1130,7 +1129,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 		.mask    = 0x0f
 	},
 	.fan_mode = {
-		.address = 0xf4, 
+		.address = 0xf4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
@@ -1139,11 +1138,11 @@ static struct msi_ec_conf CONF15 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, 
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = 0x80,  
+		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
@@ -1207,8 +1206,8 @@ static struct msi_ec_conf CONF16 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
@@ -1278,8 +1277,8 @@ static struct msi_ec_conf CONF17 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 		// n/rpm register is C9
 	},
 	.gpu = {
@@ -1346,8 +1345,8 @@ static struct msi_ec_conf CONF18 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -1368,9 +1367,9 @@ static struct msi_ec_conf CONF18 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_19[] __initconst = { 
+static const char *ALLOWED_FW_19[] __initconst = {
 	"1543EMS1.113", // GP66 Leopard 11UG / 11U*
-	NULL 
+	NULL
 };
 
 static struct msi_ec_conf CONF19 __initdata = {
@@ -1414,8 +1413,8 @@ static struct msi_ec_conf CONF19 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1482,8 +1481,8 @@ static struct msi_ec_conf CONF20 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, // tested
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68, // tested
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80, // tested
@@ -1551,8 +1550,8 @@ static struct msi_ec_conf CONF21 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1619,8 +1618,8 @@ static struct msi_ec_conf CONF22 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1687,8 +1686,8 @@ static struct msi_ec_conf CONF23 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71, // target speed
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71, // target speed
 		// current RPM speed is 480000/x
 		// with x 2 bytes at 0xcc and 0xcd
 	},
@@ -1758,8 +1757,8 @@ static struct msi_ec_conf CONF24 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -1826,8 +1825,8 @@ static struct msi_ec_conf CONF25 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1880,7 +1879,7 @@ static struct msi_ec_conf CONF26 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // 0x33 switches between 0x0D and 0x05 
+		.address = MSI_EC_ADDR_UNSUPP, // 0x33 switches between 0x0D and 0x05
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -1893,8 +1892,8 @@ static struct msi_ec_conf CONF26 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -1961,8 +1960,8 @@ static struct msi_ec_conf CONF27 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1988,9 +1987,7 @@ static const char *ALLOWED_FW_28[] __initconst = {
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
 	"1822EMS1.112",
-// .116 reports as .114
-// DMIDECODE Version: E1822IMS.116 but /sys/devices/platform/msi-ec/debug/fw_version reads 1822EMS1.114
-	"1822EMS1.114", 
+	"1822EMS1.114",
 	NULL
 };
 
@@ -2038,8 +2035,8 @@ static struct msi_ec_conf CONF28 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 		// n/rpm register is C9
 	},
 	.gpu = {
@@ -2110,8 +2107,8 @@ static struct msi_ec_conf CONF29 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2178,8 +2175,8 @@ static struct msi_ec_conf CONF30 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2245,8 +2242,8 @@ static struct msi_ec_conf CONF31 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 		// n/rpm register is C9
 	},
 	.gpu = {
@@ -2314,8 +2311,8 @@ static struct msi_ec_conf CONF32 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -2381,8 +2378,8 @@ static struct msi_ec_conf CONF33 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2448,8 +2445,8 @@ static struct msi_ec_conf CONF34 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
@@ -2519,8 +2516,8 @@ static struct msi_ec_conf CONF35 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 		// Fan rpm is 480000 / value at combined: c8..c9
 	},
 	.gpu = {
@@ -2588,8 +2585,8 @@ static struct msi_ec_conf CONF36 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68, // CPU temperature
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68, // CPU temperature
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80, // GPU temperature
@@ -2659,8 +2656,8 @@ static struct msi_ec_conf CONF37 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2726,8 +2723,8 @@ static struct msi_ec_conf CONF38 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2792,8 +2789,8 @@ static struct msi_ec_conf CONF39 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2863,8 +2860,8 @@ static struct msi_ec_conf CONF40 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 		// Fan rpm is 480000 / value at combined: c8..c9
 	},
 	.gpu = {
@@ -2929,8 +2926,8 @@ static struct msi_ec_conf CONF41 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -2997,8 +2994,8 @@ static struct msi_ec_conf CONF42 __initdata = {
 		},
 	},
 	.cpu = {
-		.rt_temp_address       = 0x68,
-		.rt_fan_speed_address  = 0x71,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
@@ -3984,7 +3981,7 @@ static ssize_t ec_get_show(struct device *device,
 {
 	u8 rdata;
 	int result;
-	
+
 	result = ec_read(ec_get_addr, &rdata);
 	if (result < 0)
 		return result;
@@ -4047,9 +4044,9 @@ static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
 static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
 			    enum led_brightness brightness)
 {
-	// By default, on an unregister event, 
+	// By default, on an unregister event,
 	// kernel triggers the setter with 0 brightness.
-	if (led_cdev->flags & LED_UNREGISTERING) 
+	if (led_cdev->flags & LED_UNREGISTERING)
 		return 0;
 
 	u8 wdata;
