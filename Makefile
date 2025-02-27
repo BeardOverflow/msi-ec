@@ -1,4 +1,4 @@
-VERSION         := 0.09
+VERSION         := 0.08
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 TARGET ?= $(shell uname -r)
 
