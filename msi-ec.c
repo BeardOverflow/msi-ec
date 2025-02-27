@@ -4123,9 +4123,6 @@ static umode_t msi_ec_is_visible(struct kobject *kobj,
 	else if (attr == &dev_attr_cpu_realtime_fan_speed.attr)
 		address = conf.cpu.rt_fan_speed_address;
 
-	else if (attr == &dev_attr_cpu_basic_fan_speed.attr)
-		address = conf.cpu.bs_fan_speed_address;
-
 	/* gpu group */
 	else if (attr == &dev_attr_gpu_realtime_temperature.attr)
 		address = conf.gpu.rt_temp_address;
