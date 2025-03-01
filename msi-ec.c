@@ -1230,6 +1230,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 
 static const char *ALLOWED_FW_17[] __initconst = {
 	"15K1IMS1.110", // Cyborg 15 A12VF
+	"15K1IMS1.112", // Cyborg 15 A13VFK
 	"15K1IMS1.113", // Cyborg 15 A13VF
 	NULL
 };
