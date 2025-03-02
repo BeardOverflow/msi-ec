@@ -3893,14 +3893,14 @@ static ssize_t ec_dump_show(struct device *device,
 	// print header
 	count += sysfs_emit(
 		buf,
-		"     | _0 _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f\n"
-		"-----+------------------------------------------------\n");
+		"|      | _0 _1 _2 _3 _4 _5 _6 _7 _8 _9 _a _b _c _d _e _f\n"
+		"|------+------------------------------------------------\n");
 
 	// print dump
 	for (u8 i = 0x0; i <= 0xf; i++) {
 		u8 addr_base = i * 16;
 
-		count += sysfs_emit_at(buf, count, "%#x_ |", i);
+		count += sysfs_emit_at(buf, count, "| %#x_ |", i);
 		for (u8 j = 0x0; j <= 0xf; j++) {
 			u8 rdata;
 			int result = ec_read(addr_base + j, &rdata);
