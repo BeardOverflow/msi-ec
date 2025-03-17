@@ -1990,6 +1990,7 @@ static const char *ALLOWED_FW_28[] __initconst = {
 	"1822EMS1.111",
 	"1822EMS1.112",
 	"1822EMS1.114",
+	"1822EMS1.115",
 	NULL
 };
 
@@ -2054,8 +2055,8 @@ static struct msi_ec_conf CONF28 __initdata = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // KB auto turn off
 		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
 		.max_mode         = 1,
-		.bl_state_address = 0xd3,
-		.state_base_value = 0x81,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // bugged RGB
+		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
 };
