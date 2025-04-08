@@ -1118,9 +1118,9 @@ static struct msi_ec_conf CONF15 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_ECO_NAME,     0xa5 }, // super battery
-			{ SM_COMFORT_NAME, 0xa1 }, // balanced
-			{ SM_TURBO_NAME,   0xa0 }, // extreme
+			{ SM_ECO_NAME,     0xc2 }, // super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // silent-balanced
+			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			MSI_EC_MODE_NULL
 		},
 	},
