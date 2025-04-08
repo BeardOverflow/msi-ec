@@ -3159,6 +3159,72 @@ static struct msi_ec_conf CONF44 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_45[] __initconst = {
+	"158NIMS1.10D", // Bravo 15 C7UCX
+	NULL
+};
+
+static struct msi_ec_conf CONF45 __initdata = {
+	.allowed_fw = ALLOWED_FW_45, // WMI2 based
+	.charge_control_address = 0xd7,
+	.webcam = { // tested
+		.address       = 0x2e,
+		.block_address = 0x09,
+		.bit           = 1,
+	},
+	.fn_win_swap = { // tested
+		.address = 0xe8,
+		.bit     = 4,
+		.invert  = true,
+	},
+	.cooler_boost = { // tested
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = { // tested
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 }, // ECO - Silent
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced + silent + ai
+			{ SM_TURBO_NAME,   0xc4 }, // extreme performance
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = { // done
+		.address = MSI_EC_ADDR_UNSUPP, 
+	},
+	.fan_mode = { // untested
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = { // tested	
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0xc9,
+	},
+	.gpu = { // tested
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.leds = {
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { },
+		.max_mode         = 1,
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -3205,6 +3271,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF42,
 	&CONF43,
 	&CONF44,
+	&CONF45,
 	NULL
 };
 
