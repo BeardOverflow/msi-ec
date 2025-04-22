@@ -2912,7 +2912,8 @@ static struct msi_ec_conf CONF41 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
+			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
+			{ SM_ECO_NAME,     0xc2 }, // Silent / Eco
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
