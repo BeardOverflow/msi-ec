@@ -3022,6 +3022,7 @@ static struct msi_ec_conf CONF42 __initdata = {
 
 static const char *ALLOWED_FW_43[] __initconst = {
 	"14DKEMS1.104", // Modern 14 B4MW
+	"14DKEMS1.105",
 	NULL
 };
 
