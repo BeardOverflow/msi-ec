@@ -3161,6 +3161,79 @@ static struct msi_ec_conf CONF44 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_45[] __initconst = {
+	"1545IMS1.109", // Raider GE67 HX - 12U
+	NULL
+};
+
+static struct msi_ec_conf CONF45 __initdata = {
+	.allowed_fw = ALLOWED_FW_45,
+	.charge_control_address = 0xd7,
+	// .usb_share = {
+	//  	.address      = 0xbf, // states: 0x08 (off) || 0x28 (on)
+	//  	.bit          = 5,
+	// },
+	.webcam = {  // no option in msi-center
+		.address       = 0x2e,
+		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4,  // 01 or 11
+		.invert  = true,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
+			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_TURBO_NAME,   0xc4 }, // Performance
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = 0xeb,
+		.mask    = 0x0f,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x4d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
+		// Fan rpm is 480000 / value at combined: c8..c9
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+		// Fan rpm is 480000 / value at combined: ca..cb
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -3207,6 +3280,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF42,
 	&CONF43,
 	&CONF44,
+	&CONF45,
 	NULL
 };
 
