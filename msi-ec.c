@@ -3169,7 +3169,7 @@ static struct msi_ec_conf CONF45 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = { // tested
 		.address       = 0x2e,
-		.block_address = 0x09,
+		.block_address = MSI_EC_ADDR_UNKNOWN,
 		.bit           = 1,
 	},
 	.fn_win_swap = { // tested
@@ -3212,7 +3212,7 @@ static struct msi_ec_conf CONF45 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = 0x2d,
 		.bit                 = 1,
 	},
 	.kbd_bl = {
