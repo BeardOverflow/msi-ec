@@ -3419,12 +3419,12 @@ static const char *ALLOWED_FW_49[] __initconst = {
 };
 
 static struct msi_ec_conf CONF49 __initdata = {
-	.allowed_fw = ALLOWED_FW_48,
+	.allowed_fw = ALLOWED_FW_49,
 	.charge_control_address = 0xd7,
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit = 4,
-		.inverted = true,
+		.invert = true,
 	},
 	.shift_mode = {
 		.address = 0xd2,
@@ -3464,7 +3464,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 		.state_base_value = 0x80,
 		.max_state = 3,
 	},
-}
+};
 
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
