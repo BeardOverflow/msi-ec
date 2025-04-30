@@ -870,8 +870,10 @@ static struct msi_ec_conf CONF11 __initdata = {
 };
 
 static const char *ALLOWED_FW_12[] __initconst = {
-	"16R6EMS1.104", // GF63 Thin 11UC
-	"16R6EMS1.106", "16R6EMS1.107", NULL
+	"16R6EMS1.104", // GF63 Thin 11UC / 11SC
+	"16R6EMS1.106",
+	"16R6EMS1.107",
+	NULL
 };
 
 static struct msi_ec_conf CONF12 __initdata = {
@@ -885,7 +887,7 @@ static struct msi_ec_conf CONF12 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
