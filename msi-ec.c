@@ -2748,7 +2748,9 @@ static struct msi_ec_conf CONF38 __initdata = {
 	},
 };
 static const char *ALLOWED_FW_39[] __initconst = {
-	"16R8IMS1.117", // Thin GF63 12UC & Thin GF63 12UCX
+	"16R8IMS1.108", // Thin GF63 12UCX
+	"16R8IMS1.111", // Thin GF63 12V(E/F)
+	"16R8IMS1.117", // Thin GF63 12UC
 	NULL
 };
 
@@ -2763,7 +2765,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -2772,9 +2774,10 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,      0xc2},
-			{ SM_COMFORT_NAME,  0xc1},
-			{ SM_TURBO_NAME,    0xc4},
+			{ SM_ECO_NAME,     0xc2},
+			{ SM_COMFORT_NAME, 0xc1},
+			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc4},
 			MSI_EC_MODE_NULL
 		},
 	},
