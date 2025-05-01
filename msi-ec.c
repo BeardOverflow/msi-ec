@@ -2774,10 +2774,10 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2},
-			{ SM_COMFORT_NAME, 0xc1},
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4},
+			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -3471,7 +3471,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -3484,7 +3484,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 		.address = 0xf4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
-			{ FM_BASIC_NAME,    0x4d },
+			{ FM_SILENT_NAME,   0x1d },
 			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
