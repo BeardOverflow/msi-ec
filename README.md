@@ -13,7 +13,7 @@ You might want to use a graphical interface instead of executing commands to use
 
 ## Supported devices
 
-Check if your device is supported before attempting to install and use the driver. The list of supported devices can be found [here](docs/supported_devices.md).
+Before installation, check if your device is supported in [this list](https://github.com/BeardOverflow/msi-ec/discussions/277).
 
 Can't find your device in the list? Check the contribution guides and open a new issue.
 
