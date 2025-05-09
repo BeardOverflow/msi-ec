@@ -42,13 +42,15 @@ Eager to support the project? Your help is always welcome to keep the project al
 
 1. Verify that dkms is available: `which dkms`
 2. Install the msi-ec kernel module: `sudo make dkms-install`
-3. (Optional) To uninstall: `sudo make dkms-uninstall`
+3. **REBOOT**
+4. (Optional) To uninstall: `sudo make dkms-uninstall`
 
 #### (OR) Classic installation (without DKMS):
 
 1. Build the driver: `make`
 2. Install the msi-ec kernel module: `sudo make install`
-3. (Optional) To uninstall: `sudo make uninstall`
+3. **REBOOT**
+4. (Optional) To uninstall: `sudo make uninstall`
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
