@@ -54,7 +54,7 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 9. Navigate to the EC tab (page):
 ![open ec tab](pics/support_guide/open_ec_tab.png)
 
-10. Here you should see a table of all the values your Embedded Chip has in its memory.
+9. Here you should see a table of all the values your Embedded Chip has in its memory.
 
 > [!CAUTION]
 > **Do not attempt to edit the memory manually. Writing the wrong values to the wrong addresses will DAMAGE YOUR HARDWARE or even BRICK YOUR DEVICE! This can't be reversed by resetting the EC or BIOS.**
