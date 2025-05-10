@@ -41,17 +41,18 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 7.  Launch it as administrator:
 ![run as admin](pics/support_guide/run_as_admin.png)
 
-8. In windows 11, you might encounter an error about a driver that can't be loaded, in that case you need to do the following:
+> [!NOTE]
+> In Windows 11, you might encounter an error about a driver that can't be loaded, in that case you need to do the following:
+>
+> + Disable "Memory Integrity" in the settings.
+>
+> + Then open the registry editor (Windows key + R and type `regedit`) after that set to zero this key in the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Config\VulnerableDriverBlocklistEnable`
+>
+> And the app should open **after** restating Windows 11.
+> 
+> *These changes affect Windows security and must be reverted after using RWEverything **IF** you plan to keep using Windows 11.*
 
-   Disable "Memory Integrity" in the settings.
-
-   Then open the registry editor (Windows key + R and type `regedit`) after that set to zero this key in the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Config\VulnerableDriverBlocklistEnable`
-
-   And the app should open **after** restating windows 11.
-
-   These changes affect windows security and must be reverted after using RWEverything **IF** you plan to keep using windows 11.
-
-9. Navigate to the EC tab (page):
+8. Navigate to the EC tab (page):
 ![open ec tab](pics/support_guide/open_ec_tab.png)
 
 9. Here you should see a table of all the values your Embedded Chip has in its memory.
