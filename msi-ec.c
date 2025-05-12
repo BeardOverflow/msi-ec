@@ -2271,21 +2271,22 @@ static struct msi_ec_conf CONF31 __initdata = {
 static const char *ALLOWED_FW_32[] __initconst = {
 	"158PIMS1.207", // Bravo 15 B7E
 	"158PIMS1.112", // Bravo 15 B7ED
+	"158PIMS1.114",
 	NULL
 };
 
 static struct msi_ec_conf CONF32 __initdata = {
-	.allowed_fw = ALLOWED_FW_32,
+	.allowed_fw = ALLOWED_FW_32, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
-		.address       = MSI_EC_ADDR_UNSUPP,
+		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
