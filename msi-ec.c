@@ -3715,6 +3715,64 @@ static struct msi_ec_conf CONF52 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_53[] __initconst = {
+	"159KIMS1.108", // Summit A16 AI+ A3HMTG
+	NULL
+};
+
+static struct msi_ec_conf CONF53 __initdata = {
+	.allowed_fw = ALLOWED_FW_53, // WMI2 based
+	.charge_control_address = 0xd7,
+	.webcam = {
+		.address = MSI_EC_ADDR_UNSUPP,
+	},
+	.fn_win_swap = {
+		.address = MSI_EC_ADDR_UNSUPP,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_TURBO_NAME,   0xc4 },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNSUPP,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.gpu = {
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_state_address = 0xd3,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -3769,6 +3827,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF50,
 	&CONF51,
 	&CONF52,
+	&CONF53,
 	NULL
 };
 
