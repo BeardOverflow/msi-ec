@@ -1784,6 +1784,7 @@ static struct msi_ec_conf CONF24 __initdata = {
 static const char *ALLOWED_FW_25[] __initconst = {
 	"14F1EMS1.209", // Summit E14 Flip Evo A13MT
 	"14F1EMS1.211",
+	"14F1EMS1.207", // Prestige 14 Evo - B13M
 	NULL
 };
 
