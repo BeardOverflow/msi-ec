@@ -3649,6 +3649,7 @@ static struct msi_ec_conf CONF51 __initdata = {
 static const char *ALLOWED_FW_52[] __initconst = {
 	"16V1EMS1.109", // GS66 Stealth 10SFS
 	"16V1EMS1.116",
+	"16V1EMS1.118", // GS66 Stealth 10SE
 	NULL
 };
 
@@ -3663,7 +3664,7 @@ static struct msi_ec_conf CONF52 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
