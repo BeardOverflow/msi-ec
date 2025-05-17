@@ -3716,18 +3716,22 @@ static struct msi_ec_conf CONF52 __initdata = {
 };
 
 static const char *ALLOWED_FW_53[] __initconst = {
-	"159KIMS1.108", // Summit A16 AI+ A3HMTG
+	"159KIMS1.108", // Summit A16 AI+ A3HMTG, Prestige A16 AI+ A3HMG
 	NULL
-};
+}; // lid position sensor requires 0xD9 bit 0 being set to work
 
 static struct msi_ec_conf CONF53 __initdata = {
-	.allowed_fw = ALLOWED_FW_53, // WMI2 based
+	.allowed_fw = ALLOWED_FW_53, // WMI2 based, Center S app
 	.charge_control_address = 0xd7,
-	.webcam = {
-		.address = MSI_EC_ADDR_UNSUPP,
+	.webcam = { // have no ability to power off camera module, just plastic cover
+		.address       = MSI_EC_ADDR_UNSUPP,
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = MSI_EC_ADDR_UNSUPP,
+		.address = 0xe8,
+		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -3745,25 +3749,27 @@ static struct msi_ec_conf CONF53 __initdata = {
 	.super_battery = {
 		.address = MSI_EC_ADDR_UNSUPP,
 	},
-	.fan_mode = {
+	.fan_mode = { // have 2 fans
 		.address = 0xd4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d }, // not present in app, but works with CPU curve
 			MSI_EC_MODE_NULL
 		},
 	},
-	.cpu = {
+	.cpu = { // two fans use CPU as target
 		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = 0x71,
 	},
-	.gpu = {
+	.gpu = { // no dGPU
 		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
 		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
 	},
-	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+	.leds = { // requires 0xD9 bit 0 being set to work reliably
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
