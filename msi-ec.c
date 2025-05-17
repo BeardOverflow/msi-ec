@@ -3724,10 +3724,14 @@ static struct msi_ec_conf CONF53 __initdata = {
 	.allowed_fw = ALLOWED_FW_53, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
-		.address = MSI_EC_ADDR_UNSUPP,
+		.address       = 0x2e,
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = MSI_EC_ADDR_UNSUPP,
+		.address = 0xe8,
+		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -3750,20 +3754,22 @@ static struct msi_ec_conf CONF53 __initdata = {
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
 	.cpu = {
 		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
