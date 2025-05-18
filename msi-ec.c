@@ -3240,6 +3240,7 @@ static struct msi_ec_conf CONF45 __initdata = {
 static const char *ALLOWED_FW_46[] __initconst = {
 	"16W1EMS1.102", // GF65 Thin 9SEXR
 	"16W1EMS1.104",
+	"16W2EMS1.101", // GF65 Thin 10UE
 	NULL
 };
 
