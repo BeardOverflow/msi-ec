@@ -334,6 +334,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 
 static const char *ALLOWED_FW_4[] __initconst = {
 	"16V4EMS1.114", // GS66 Stealth 11UE
+	"16V4EMS1.115",
 	NULL
 };
 
@@ -682,6 +683,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 
 static const char *ALLOWED_FW_9[] __initconst = {
 	"14JKEMS1.104", // Modern 14 C5M
+	"14JKEMS1.300", // Modern 14 C7M
 	NULL
 };
 
@@ -1230,6 +1232,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 
 static const char *ALLOWED_FW_17[] __initconst = {
 	"15K1IMS1.110", // Cyborg 15 A12VF
+	"15K1IMS1.111", // Cyborg 15 A13VF
 	"15K1IMS1.112", // Cyborg 15 A13VFK
 	"15K1IMS1.113", // Cyborg 15 A13VF
 	NULL
@@ -1782,6 +1785,7 @@ static struct msi_ec_conf CONF24 __initdata = {
 };
 
 static const char *ALLOWED_FW_25[] __initconst = {
+	"14F1EMS1.207", // Prestige 14 Evo B13M
 	"14F1EMS1.209", // Summit E14 Flip Evo A13MT
 	"14F1EMS1.211",
 	NULL
@@ -2133,7 +2137,8 @@ static struct msi_ec_conf CONF29 __initdata = {
 };
 
 static const char *ALLOWED_FW_30[] __initconst = {
-	"17Q2IMS1.10D", // Titan GT77HX 13VH
+	"17Q2IMS1.107", // Titan GT77HX 13VH
+	"17Q2IMS1.10D",
 	NULL
 };
 
@@ -2544,7 +2549,8 @@ static struct msi_ec_conf CONF35 __initdata = {
 };
 
 static const char *ALLOWED_FW_36[] __initconst = {
-	"1585EMS1.115", // MSI Katana 15 B13VFK
+	"1585EMS1.112", // Katana 15 B13VGK
+	"1585EMS1.115", // Katana 15 B13VFK
 	NULL
 };
 
@@ -3380,6 +3386,7 @@ static struct msi_ec_conf CONF47 __initdata = {
 
 static const char *ALLOWED_FW_48[] __initconst = {
 	"158NIMS1.10D", // Bravo 15 C7UCX
+	"158NIMS1.30C", // Bravo 15 C7VFKP
 	NULL
 };
 
@@ -3404,7 +3411,7 @@ static struct msi_ec_conf CONF48 __initdata = {
 		.address = 0xd2,
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // ECO - Silent
-			{ SM_COMFORT_NAME, 0xc1 }, // balanced + silent + ai
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced + silent
 			{ SM_TURBO_NAME,   0xc4 }, // extreme performance
 			MSI_EC_MODE_NULL
 		},
