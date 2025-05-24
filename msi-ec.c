@@ -1747,6 +1747,7 @@ static const char *ALLOWED_FW_21[] __initconst = {
 	"16R3EMS1.100", // GF63 Thin 9SC
 	"16R3EMS1.102",
 	"16R3EMS1.104",
+	"16R4EMS2.102", // GF63 Thin 9SCSR
 	NULL
 };
 
@@ -1815,7 +1816,7 @@ static struct msi_ec_conf CONF21 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = 0x2d,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
 	},
 	.kbd_bl = {
