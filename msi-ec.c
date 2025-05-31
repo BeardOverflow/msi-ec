@@ -2576,7 +2576,7 @@ static struct msi_ec_conf CONF36 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc4 },
+			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
