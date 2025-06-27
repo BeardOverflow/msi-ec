@@ -1,21 +1,58 @@
 name: Bug report
 description: Report a bug
 labels: ["bug"]
+title: "[BUG] "
 
 body:
+  - type: markdown
+    attributes:
+      value: >
+        **⮬ Please add model name, EC version and short description to Issue title ⮭**
+
+  - type: markdown
+    attributes:
+      value: >
+        > [!IMPORTANT]
+        
+        > Check the [supported devices list](https://github.com/BeardOverflow/msi-ec/discussions/277) **BEFORE** opening new Issue.
+        
+        >
+        
+        > If you see your device in supported list, but driver reports that it unsupported -
+        **YOU SHOULD NOT OPEN BUG REPORT ISSUE !!!**
+        
+        >
+        
+        > This is the wrong place to report if the driver returning `Your firmware version is not supported!`.
+        Use [Support request Issue template](https://github.com/BeardOverflow/msi-ec/issues/new?template=support_request.yml)
+        or check older issues related to your device.
+
+
   - type: input
     id: model
     attributes:
       label: Laptop model
-      description: Your laptop model
+      description: Please provide full model name
+      placeholder: "Example: [MSI] Summit E14 Flip Evo A13MT"
     validations:
-      required: false
+      required: true
+
+  - type: checkboxes
+    id: proof
+    attributes:
+      label: Confirmation
+      options:
+        - label: >
+            I'm confirming that EC version is supported in the [supported devices list](https://github.com/BeardOverflow/msi-ec/discussions/277) or in my fork. 
+            In other case use [Support Request template](https://github.com/BeardOverflow/msi-ec/issues/new?template=support_request.yml)
+          required: true
 
   - type: input
     id: ec-firmware
     attributes:
       label: EC firmware version
       description: cat /sys/devices/platform/msi-ec/fw_version
+      placeholder: "Example: ****EMS1.101 or ****IMS1.101"
     validations:
       required: false
 
