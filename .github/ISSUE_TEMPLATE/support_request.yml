@@ -1,57 +1,89 @@
 name: New firmware request
 description: Request to add support for a new device (new EC configuration)
-labels: ["New firmware"]
+labels: [ "New firmware" ]
+title: "[Support request] "
 
 body:
   - type: markdown
     attributes:
       value: >
-        Before you open a new issue, please check the [supported devices list](https://github.com/BeardOverflow/msi-ec/discussions/277),
-        If it's not there, you should follow the guide mentioned on the main page,
-        and then make a list of the addresses for features and their values to submit it here.
+        **⮬ Please add model name and EC version to Issue title ⮭**
+
+  - type: markdown
+    attributes:
+      value: >
+        > [!IMPORTANT]
         
-        It's also possible to skip the issue and make a pull request directly, but please provide an EC dump.
+        > Check the [supported devices list](https://github.com/BeardOverflow/msi-ec/discussions/277) **BEFORE** opening new Issue.
+        
+        >
+        
+        > If you see your device as supported, but driver reports that it unsupported - check last links/issues 
+        for your device name or EC version (preferred) and write your problem there **WITHOUT** opening new Issue.
+        
+        >
+        
+        > If your device is not supported at all, please answer next questions about your device
+        and attach EC dump. Additionally you can try to analyze App features using
+        [Support Guide](https://github.com/BeardOverflow/msi-ec/blob/main/docs/device_support_guide.md).
+
+  - type: markdown
+    attributes:
+      value: >
+        > [!TIP]
+        
+        > It's also possible to skip the issue and make a pull request directly, but please provide an EC dump.
 
   - type: input
     id: model
     attributes:
       label: Laptop model
-      description: Your laptop model
+      description: Please provide full model name. You can skip writing MSI
+      placeholder: "Example: [MSI] Summit E14 Flip Evo A13MT"
     validations:
       required: true
 
-    - type: input
-    id: distribution
+  - type: markdown
     attributes:
-      label: What distribution do you use?
-      description: Don't forget to add the version if there is one.
-    validations:
-      required: true
-
-- type: input
-    id: bios-version
-    attributes:
-      label: BIOS version
-      description: On linux: copy and paste the output of (cat /sys/class/dmi/id/bios_version),
-      or get it from the info page in the bios.
-    validations:
-      required: false
+      value: |
+        ### Please provide EC dump in text form using one of next methods:
+        + [MSI-EC Debug mode](https://github.com/BeardOverflow/msi-ec/blob/main/docs/device_support_guide.md#msi-ec-debug-mode)
+        + [EC-SYS driver](https://github.com/BeardOverflow/msi-ec/blob/main/docs/device_support_guide.md#ec-sys-method)
+        + [RW Everything](https://github.com/BeardOverflow/msi-ec/blob/main/docs/device_support_guide.md#windows-method-recommended) on Windows (share text from save file)
+        + [YAMDCC](https://github.com/Sparronator9999/YAMDCC/wiki/How-to-make-a-config-for-YAMDCC#manually-based-on-other-config) on Windows
+        
+        If you have found definitions for some addresses - paste them to [Additional context](#additional-context).
+        
+        > [!NOTE]
+        > Don't be confused with BIOS and EC versions.
 
   - type: input
     id: ec-firmware
     attributes:
       label: EC firmware version
-      description: Get your current EC firmware version from the msi app on windows or the info page in the bios.
+      description: >
+        Don't be confused with **BIOS version**, which starts from `E` and looks like `E****IMS.101` or `E****AMS.101`.
+      placeholder: "Example: ****EMS1.101 or ****IMS1.101"
     validations:
-      required: false
+      required: true
 
   - type: textarea
-    id: feature-list
+    id: ec-dump
     attributes:
-      label: List of addresses and their values
-      description: Provide an ec dump by following any of the linux methods in the guide,
-      you can also mention the address of each feature and possible values.
+      label: EC Dump
+      description: >
+        Please provide EC dump in text form **ONLY** (save dump and paste its text). Attached files might be ignored.
       render: text
+    validations:
+      required: true
+
+  - type: input
+    id: bios-version
+    attributes:
+      label: BIOS version
+      description: >
+        Starts from `E` and looks like `E****IMS.101` or `E****AMS.101`.
+      placeholder: "Example: E****IMS.101 or E****AMS.101"
     validations:
       required: false
 
@@ -63,6 +95,7 @@ body:
       options:
         - Nvidia
         - AMD
+        - Intel Arc (as dGPU)
         - iGPU only (Intel)
         - iGPU only (AMD)
     validations:
@@ -71,56 +104,61 @@ body:
   - type: dropdown
     id: fans
     attributes:
-      label: How many fans does your laptop have?
-      description: most laptops with 1 GPU have only one fan.
+      label: Number of fans
+      description: How many fans does your laptop have?
       options:
+        - No answer / I don't know
         - 1 fan
         - 2 fans
-        - More than 2
-        - I don't know
-        - Other (please mention in the end)
+        - 3 fans
+        - 4 fans
+        - Fanless
     validations:
       required: true
 
-  - type: dropdown
+  - type: checkboxes
     id: webcam
     attributes:
-      label: How do you block the webcam?
-      description: Some laptops have webcams that can be blocked physically (slider), while others use software to block it (no slider).
+      label: Webcam block
+      description: >
+        Select one or few options about Webcam block:
       options:
-        - Slider (small thing that covers the camera)
-        - No slider (camera is blocked using the msi app on windows)
-        - No webcam
-        - Other (please mention in the end)
-    validations:
-      required: true
+        - label: No webcam
+        - label: Slider (small thing that covers the camera)
+        - label: Camera Button (often on F6 key)
+        - label: Camera Toggle Switch (often on the side of case)
+        - label: Camera switch in MSI App
 
   - type: dropdown
     id: rgb-keyboard
     attributes:
-      label: Is your keyboard RGB?
+      label: Keyboard backlight type
       description: Does your keyboard support multi color RGB backlight?
       options:
-        - No (single color)
-        - Yes (multi color RGB)
+        - Single color
+        - RGB
         - No backlight
     validations:
       required: true
 
-  - type: dropdown
+  - type: checkboxes
     id: speaker-mic-led
     attributes:
       label: Mic and Speaker mute LED
-      description: Does your keyboard have small leds on the mute buttons for speaker and mic?
-      usually found on F1 and F5 keys
+      description: |
+        Does your keyboard have small leds on the speaker and mic mute buttons?
+        They are usually found on F1 and F5 keys
       options:
-        - No leds / no mute buttons
-        - Only 1 (for mic mute)
-        - Only 1 (for speaker mute)
-        - 2 LEDs (mic and speaker)
-        - I don't know
+        - label: Speaker mute led
+        - label: Mic mute led
+        - label: No leds / no mute buttons
+
+  - type: input
+    id: distribution
+    attributes:
+      label: Distro name and version
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: additional-context
