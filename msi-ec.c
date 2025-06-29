@@ -3809,7 +3809,8 @@ static struct msi_ec_conf CONF54 __initdata = {
 	},
 	.fn_win_swap = {
         .address = 0xe8,
-        .bit     = 4,
+        .bit  = 4,
+		.invert =  true,
     },
 	.shift_mode = {
 		.address = 0xd2,
