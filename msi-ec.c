@@ -3790,6 +3790,73 @@ static struct msi_ec_conf CONF53 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_54[] __initconst = { 
+    "17K3EMS1.115", //MSI GP76 11U*
+	NULL 
+};
+
+static struct msi_ec_conf CONF54 __initdata = {
+	.allowed_fw = ALLOWED_FW_54,
+	.charge_control_address = 0XD7,
+	.webcam = {
+		.address       = 0x2e,
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.fn_win_swap = {
+        .address = 0xe8,
+        .bit  = 4,
+		.invert =  true,
+    },
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 }, //super battery
+			{ SM_COMFORT_NAME, 0xc1 }, //balanced
+			{ SM_TURBO_NAME,   0xc4 }, //extreme performance-user
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+        .address = 0xeb,
+        .mask = 0x0f,
+    },
+	.fan_mode = {
+        .address = 0xd4,
+        .modes = {
+            { FM_AUTO_NAME,     0x0d },
+            { FM_SILENT_NAME,   0x1d },
+            { FM_ADVANCED_NAME, 0x8d },
+            MSI_EC_MODE_NULL
+        },
+    },
+	.cpu = {
+		.rt_temp_address       = 0x68,
+		.rt_fan_speed_address  = 0x71,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+	},
+	.leds = {
+        .micmute_led_address = MSI_EC_ADDR_UNKNOWN,
+        .mute_led_address    = MSI_EC_ADDR_UNKNOWN,
+        .bit                 = 1,
+    },
+    .kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, //no option in msi center
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, //rgb
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -3845,6 +3912,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF51,
 	&CONF52,
 	&CONF53,
+	&CONF54,
 	NULL
 };
 
