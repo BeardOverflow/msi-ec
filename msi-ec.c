@@ -3791,7 +3791,7 @@ static struct msi_ec_conf CONF53 __initdata = {
 };
 
 static const char *ALLOWED_FW_54[] __initconst = { 
-    "E17K3IMS.322", //MSI GP76 11U*
+    "17K3EMS1.115", //MSI GP76 11U*
 	NULL 
 };
 
