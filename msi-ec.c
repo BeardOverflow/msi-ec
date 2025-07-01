@@ -1373,7 +1373,8 @@ static struct msi_ec_conf CONF18 __initdata = {
 };
 
 static const char *ALLOWED_FW_19[] __initconst = {
-	"1543EMS1.113", // GP66 Leopard 11UG / 11U*
+	"1543EMS1.113", // GP66 Leopard 11UG / GE66 Raider 11UE
+	"17K3EMS1.115", // GP76 Leopard 11UG
 	NULL
 };
 
@@ -1388,7 +1389,7 @@ static struct msi_ec_conf CONF19 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1397,10 +1398,10 @@ static struct msi_ec_conf CONF19 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_ECO_NAME,     0xc2 }, // super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
 			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_TURBO_NAME,   0xc4 }, // extreme performance-user
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1431,10 +1432,10 @@ static struct msi_ec_conf CONF19 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = {},
 		.max_mode         = 1,
-		.bl_state_address = 0xd3,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
