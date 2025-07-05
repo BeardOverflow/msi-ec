@@ -55,14 +55,16 @@ body:
         If you have found definitions for some addresses - paste them to [Additional context](#additional-context).
         
         > [!NOTE]
-        > Don't be confused with BIOS and EC versions.
+        > Don't be confused with BIOS and EC versions:
+        >
+        > EC example: `****EMS1.101` or `****IMS1.101`
+        >
+        > BIOS example: `E****IMS.101` or `E****AMS.101`
 
   - type: input
     id: ec-firmware
     attributes:
       label: EC firmware version
-      description: >
-        Don't be confused with **BIOS version**, which starts from `E` and looks like `E****IMS.101` or `E****AMS.101`.
       placeholder: "Example: ****EMS1.101 or ****IMS1.101"
     validations:
       required: true
@@ -138,6 +140,18 @@ body:
         - Single color
         - RGB
         - No backlight
+    validations:
+      required: true
+
+  - type: dropdown
+    id: fn-win
+    attributes:
+      label: Win and FN button location
+      description: Where is the FN key located on your keyboard relatively to Win
+      options:
+        - No answer
+        - The FN key is on the left side of the Win key
+        - The FN key is on the right side of the Win key
     validations:
       required: true
 
