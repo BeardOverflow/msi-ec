@@ -30,6 +30,11 @@ Eager to support the project? Your help is always welcome to keep the project al
 
 #### Prerequisities:
 
+> [!NOTE]
+> Minimal kernel version is 6.5.0
+> 
+> Check version with `uname -r`
+
 1. Install the following packages using the terminal:
    - For Debian: `sudo apt install build-essential linux-headers-amd64`
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
