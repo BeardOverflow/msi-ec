@@ -3246,8 +3246,9 @@ static struct msi_ec_conf CONF45 __initdata = {
 };
 
 static const char *ALLOWED_FW_46[] __initconst = {
-	"16W1EMS1.102", // GF65 Thin 9SEXR
+	"16W1EMS1.102", // GF65 Thin 9SE(X(R)) / 9SD
 	"16W1EMS1.104",
+	"16W1EMS2.103", // GF65 Thin 10SCSXR / 10SD(R) / 10SE(R)
 	"16W2EMS1.101", // GF65 Thin 10UE
 	NULL
 };
@@ -3287,6 +3288,7 @@ static struct msi_ec_conf CONF46 __initdata = {
 		.address = 0xf4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
 			{ FM_BASIC_NAME,    0x4d },
 			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
