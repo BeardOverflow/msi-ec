@@ -19,13 +19,14 @@ body:
         >
         
         > If you see your device in supported list, but driver reports that it unsupported -
-        **YOU SHOULD NOT OPEN BUG REPORT ISSUE !!!**
+        **write about this problem to last issue related to your device, which is linked in [device list](https://github.com/BeardOverflow/msi-ec/discussions/277).**
         
         >
         
-        > This is the wrong place to report if the driver returning `Your firmware version is not supported!`.
+        > If you see `Your firmware version is not supported!` when loading module - your version is not supported.
+        Check issues related to your device via search, in [device list](https://github.com/BeardOverflow/msi-ec/discussions/277).
         Use [Support request Issue template](https://github.com/BeardOverflow/msi-ec/issues/new?template=support_request.yml)
-        or check older issues related to your device.
+        if you have not found any older issues related to your device.
 
 
   - type: input
@@ -51,10 +52,29 @@ body:
     id: ec-firmware
     attributes:
       label: EC firmware version
-      description: cat /sys/devices/platform/msi-ec/fw_version
-      placeholder: "Example: ****EMS1.101 or ****IMS1.101"
+      description: |
+        + `cat /sys/devices/platform/msi-ec/fw_version`
+        + `sudo modprobe ec_sys` and `sudo strings /sys/kernel/debug/ec/ec0/io` and copy string which looks like example
+      placeholder: "Example: 14JKEMS1.1041024202210:53:30"
     validations:
       required: false
+
+  - type: input
+    id: distro
+    attributes:
+      label: Distro name and version
+      placeholder: "Example: Arch Linux From Scratch, version 101"
+    validations:
+      required: true
+
+  - type: input
+    id: kernel
+    attributes:
+      label: Kernel version
+      description: "To get kernel version run: `uname -r`"
+      placeholder: "Example: 6.16.0-arch1-1"
+    validations:
+      required: true
 
   - type: textarea
     id: description

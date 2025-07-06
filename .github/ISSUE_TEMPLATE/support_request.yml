@@ -141,6 +141,18 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: fn-win
+    attributes:
+      label: Win and FN button location
+      description: MSI have few keyboard locations, on which FN key might be left relative to Win and vice versa
+      options:
+        - No answer
+        - FN left, Win right
+        - Win left, FN right
+    validations:
+      required: true
+
   - type: checkboxes
     id: speaker-mic-led
     attributes:
