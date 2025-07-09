@@ -55,14 +55,44 @@ struct msi_ec_fan_mode_conf {
 	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
 };
 
+/**
+ * Maximum of curve entries (should be more than the real maximum for extensibility).
+ */
+#define CURVE_MAX_ENTRIES 16
+
+/**
+ * Keeps the curve on non-advanced fan mode
+ */
+#define CURVE_APPLY_STRATEGY_NORMAL 0
+
+/**
+ * Resets the curve to default when non-advanced fan mode is turned on.
+ * Required on some devices where a non-advanced fan mode may be broken 
+ * by the custom curve in EC memory.
+ */
+#define CURVE_APPLY_STRATEGY_RESET_ON_AUTO 1
+
+struct msi_ec_fan_curve {
+	int speed_start_address;
+	int temperature_start_address;
+	int entries_count;
+
+	// Defaults to CURVE_APPLY_STRATEGY_NORMAL
+	int apply_strategy;
+};
+
 struct msi_ec_cpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime % RPM
+
+	struct msi_ec_fan_curve fan_curve;
 };
 
 struct msi_ec_gpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime % RPM
+
+	struct msi_ec_fan_curve fan_curve;
 };
 
 struct msi_ec_led_conf {
