@@ -2829,6 +2829,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 
 static const char *ALLOWED_FW_40[] __initconst = {
 	"17S1IMS1.105", // Raider GE78HX 13VI
+	"17S1IMS1.113",
 	NULL
 };
 
@@ -2841,7 +2842,7 @@ static struct msi_ec_conf CONF40 __initdata = {
 	// },
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
