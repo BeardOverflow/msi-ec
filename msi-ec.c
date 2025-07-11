@@ -55,9 +55,8 @@ static DEFINE_MUTEX(ec_set_bit_mutex);
 #define FM_ADVANCED_NAME	"advanced"
 
 static const char *ALLOWED_FW_0[] __initconst = {
-	"14C1EMS1.012", // Prestige 14 A10SC
-	"14C1EMS1.101",
-	"14C1EMS1.102",
+	"14C1EMS1.0", // Prestige 14 A10SC
+	"14C1EMS1.1",
 	NULL
 };
 
@@ -124,10 +123,7 @@ static struct msi_ec_conf CONF0 __initdata = {
 };
 
 static const char *ALLOWED_FW_1[] __initconst = {
-	"17F2EMS1.103", // GF75 Thin 9SC
-	"17F2EMS1.104",
-	"17F2EMS1.106",
-	"17F2EMS1.107",
+	"17F2EMS1.1", // GF75 Thin 9SC
 	NULL
 };
 
@@ -194,10 +190,7 @@ static struct msi_ec_conf CONF1 __initdata = {
 };
 
 static const char *ALLOWED_FW_2[] __initconst = {
-	"1552EMS1.115", // Modern 15 A11M
-	"1552EMS1.118",
-	"1552EMS1.119",
-	"1552EMS1.120",
+	"1552EMS1.1", // Modern 15 A11M
 	NULL
 };
 
@@ -265,7 +258,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 };
 
 static const char *ALLOWED_FW_3[] __initconst = {
-	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
+	"1592EMS1.1", // Summit E16 Flip A12UCT / A12MT
 	NULL
 };
 
@@ -333,8 +326,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 };
 
 static const char *ALLOWED_FW_4[] __initconst = {
-	"16V4EMS1.114", // GS66 Stealth 11UE
-	"16V4EMS1.115",
+	"16V4EMS1.1", // GS66 Stealth 11UE
 	NULL
 };
 
@@ -401,9 +393,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 };
 
 static const char *ALLOWED_FW_5[] __initconst = {
-	"158LEMS1.103", // Alpha 15 B5EE / B5EEK
-	"158LEMS1.105",
-	"158LEMS1.106",
+	"158LEMS1.1", // Alpha 15 B5EE / B5EEK
 	NULL
 };
 
@@ -470,8 +460,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 };
 
 static const char *ALLOWED_FW_6[] __initconst = {
-	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
-	"1542EMS1.104",
+	"1542EMS1.1", // GP66 Leopard 10UG / 10UE / 10UH
 	NULL
 };
 
@@ -539,9 +528,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 };
 
 static const char *ALLOWED_FW_7[] __initconst = {
-	"17FKEMS1.108", // Bravo 17 A4DDR / A4DDK
-	"17FKEMS1.109",
-	"17FKEMS1.10A",
+	"17FKEMS1.1", // Bravo 17 A4DDR / A4DDK
 	NULL
 };
 
@@ -609,13 +596,7 @@ static struct msi_ec_conf CONF7 __initdata = {
 };
 
 static const char *ALLOWED_FW_8[] __initconst = {
-	"14F1EMS1.114", // Summit E14 Evo A12M
-	"14F1EMS1.115",
-	"14F1EMS1.116",
-	"14F1EMS1.117",
-	"14F1EMS1.118",
-	"14F1EMS1.119",
-	"14F1EMS1.120",
+	"14F1EMS1.1", // Summit E14 Evo A12M
 	NULL
 };
 
@@ -682,8 +663,8 @@ static struct msi_ec_conf CONF8 __initdata = {
 };
 
 static const char *ALLOWED_FW_9[] __initconst = {
-	"14JKEMS1.104", // Modern 14 C5M
-	"14JKEMS1.300", // Modern 14 C7M
+	"14JKEMS1.1", // Modern 14 C5M
+	"14JKEMS1.3", // Modern 14 C7M
 	NULL
 };
 
@@ -750,7 +731,7 @@ static struct msi_ec_conf CONF9 __initdata = {
 };
 
 static const char *ALLOWED_FW_10[] __initconst = {
-	"1582EMS1.107", // Katana GF66 11UC / 11UD
+	"1582EMS1.1", // Katana GF66 11UC / 11UD
 	NULL
 };
 
@@ -818,7 +799,7 @@ static struct msi_ec_conf CONF10 __initdata = {
 };
 
 static const char *ALLOWED_FW_11[] __initconst = {
-	"16S6EMS1.111", // Prestige 15 A11SCX
+	"16S6EMS1.1", // Prestige 15 A11SCX
 	NULL
 };
 
@@ -885,9 +866,7 @@ static struct msi_ec_conf CONF11 __initdata = {
 };
 
 static const char *ALLOWED_FW_12[] __initconst = {
-	"16R6EMS1.104", // GF63 Thin 11UC / 11SC
-	"16R6EMS1.106",
-	"16R6EMS1.107",
+	"16R6EMS1.1", // GF63 Thin 11UC / 11SC
 	NULL
 };
 
@@ -955,7 +934,7 @@ static struct msi_ec_conf CONF12 __initdata = {
 };
 
 static const char *ALLOWED_FW_13[] __initconst = {
-	"1594EMS1.109", // Prestige 16 Studio A13VE
+	"1594EMS1.1", // Prestige 16 Studio A13VE
 	NULL
 };
 
@@ -1022,7 +1001,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
-	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
+	"17L2EMS1.1", // Katana 17 B11UCX, Katana GF76 11UC
 	NULL
 };
 
@@ -1096,7 +1075,7 @@ static struct msi_ec_conf CONF14 __initdata = {
 };
 
 static const char *ALLOWED_FW_15[] __initconst = {
-	"15CKEMS1.108", // Delta 15 A5EFK
+	"15CKEMS1.1", // Delta 15 A5EFK
 	NULL
 };
 
@@ -1163,8 +1142,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 };
 
 static const char *ALLOWED_FW_16[] __initconst = {
-	"155LEMS1.105", // Modern 15 A5M
-	"155LEMS1.106",
+	"155LEMS1.1", // Modern 15 A5M
 	NULL
 };
 
@@ -1231,10 +1209,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 };
 
 static const char *ALLOWED_FW_17[] __initconst = {
-	"15K1IMS1.110", // Cyborg 15 A12VF
-	"15K1IMS1.111", // Cyborg 15 A13VF
-	"15K1IMS1.112", // Cyborg 15 A13VFK
-	"15K1IMS1.113", // Cyborg 15 A13VF
+	"15K1IMS1.1", // Cyborg 15 A12VF / A13VFK
 	NULL
 };
 
@@ -1306,7 +1281,7 @@ static struct msi_ec_conf CONF17 __initdata = {
 };
 
 static const char *ALLOWED_FW_18[] __initconst = {
-	"15HKEMS1.104", // Modern 15 B7M
+	"15HKEMS1.1", // Modern 15 B7M
 	NULL
 };
 
@@ -1373,8 +1348,8 @@ static struct msi_ec_conf CONF18 __initdata = {
 };
 
 static const char *ALLOWED_FW_19[] __initconst = {
-	"1543EMS1.113", // GP66 Leopard 11UG / GE66 Raider 11UE
-	"17K3EMS1.115", // GP76 Leopard 11UG
+	"1543EMS1.1", // GP66 Leopard 11UG / GE66 Raider 11UE
+	"17K3EMS1.1", // GP76 Leopard 11UG
 	NULL
 };
 
@@ -1442,7 +1417,7 @@ static struct msi_ec_conf CONF19 __initdata = {
 };
 
 static const char *ALLOWED_FW_20[] __initconst = {
-	"1581EMS1.107", // Katana GF66 11UE / 11UG
+	"1581EMS1.1", // Katana GF66 11UE / 11UG
 	NULL
 };
 
@@ -1510,10 +1485,8 @@ static struct msi_ec_conf CONF20 __initdata = {
 };
 
 static const char *ALLOWED_FW_21[] __initconst = {
-	"16R3EMS1.100", // GF63 Thin 9SC
-	"16R3EMS1.102",
-	"16R3EMS1.104",
-	"16R4EMS2.102", // GF63 Thin 9SCSR
+	"16R3EMS1.1", // GF63 Thin 9SC
+	"16R4EMS2.1", // GF63 Thin 9SCSR
 	NULL
 };
 
@@ -1581,7 +1554,7 @@ static struct msi_ec_conf CONF21 __initdata = {
 };
 
 static const char *ALLOWED_FW_22[] __initconst = {
-	"17LLEMS1.106", // Alpha 17 B5EEK
+	"17LLEMS1.1", // Alpha 17 B5EEK
 	NULL
 };
 
@@ -1649,7 +1622,7 @@ static struct msi_ec_conf CONF22 __initdata = {
 };
 
 static const char *ALLOWED_FW_23[] __initconst = {
-	"16WKEMS1.105", // MSI Bravo 15 A4DDR (issue #134)
+	"16WKEMS1.1", // MSI Bravo 15 A4DDR (issue #134)
 	NULL
 };
 
@@ -1721,7 +1694,7 @@ static struct msi_ec_conf CONF23 __initdata = {
 };
 
 static const char *ALLOWED_FW_24[] __initconst = {
-	"14D1EMS1.103", // Modern 14 B10MW (#100)
+	"14D1EMS1.1", // Modern 14 B10MW (#100)
 	NULL
 };
 
@@ -1788,9 +1761,7 @@ static struct msi_ec_conf CONF24 __initdata = {
 };
 
 static const char *ALLOWED_FW_25[] __initconst = {
-	"14F1EMS1.207", // Prestige 14 Evo B13M
-	"14F1EMS1.209", // Summit E14 Flip Evo A13MT
-	"14F1EMS1.211",
+	"14F1EMS1.2", // Prestige 14 Evo B13M / Summit E14 Flip Evo A13MT
 	NULL
 };
 
@@ -1857,7 +1828,7 @@ static struct msi_ec_conf CONF25 __initdata = {
 };
 
 static const char *ALLOWED_FW_26[] __initconst = {
-	"14DLEMS1.105", // Modern 14 B5M
+	"14DLEMS1.1", // Modern 14 B5M
 	NULL
 };
 
@@ -1924,7 +1895,7 @@ static struct msi_ec_conf CONF26 __initdata = {
 };
 
 static const char *ALLOWED_FW_27[] __initconst = {
-	"17S2IMS1.113", // Raider GE78 HX Smart Touchpad 13V
+	"17S2IMS1.1", // Raider GE78 HX Smart Touchpad 13V
 	NULL
 };
 
@@ -1992,12 +1963,7 @@ static struct msi_ec_conf CONF27 __initdata = {
 };
 
 static const char *ALLOWED_FW_28[] __initconst = {
-	"1822EMS1.105", // Titan 18 HX A14V
-	"1822EMS1.109", // WMI 2.8
-	"1822EMS1.111",
-	"1822EMS1.112",
-	"1822EMS1.114",
-	"1822EMS1.115",
+	"1822EMS1.1", // Titan 18 HX A14V / WMI 2.8
 	NULL
 };
 
@@ -2069,7 +2035,7 @@ static struct msi_ec_conf CONF28 __initdata = {
 };
 
 static const char *ALLOWED_FW_29[] __initconst = {
-	"16V5EMS1.107", // MSI GS66 12UGS
+	"16V5EMS1.1", // MSI GS66 12UGS
 	NULL
 };
 
@@ -2140,8 +2106,7 @@ static struct msi_ec_conf CONF29 __initdata = {
 };
 
 static const char *ALLOWED_FW_30[] __initconst = {
-	"17Q2IMS1.107", // Titan GT77HX 13VH
-	"17Q2IMS1.10D",
+	"17Q2IMS1.1", // Titan GT77HX 13VH
 	NULL
 };
 
@@ -2209,7 +2174,7 @@ static struct msi_ec_conf CONF30 __initdata = {
 };
 
 static const char *ALLOWED_FW_31[] __initconst = {
-	"16Q4EMS1.110", // GS65 Stealth
+	"16Q4EMS1.1", // GS65 Stealth
 	NULL
 };
 
@@ -2277,9 +2242,8 @@ static struct msi_ec_conf CONF31 __initdata = {
 };
 
 static const char *ALLOWED_FW_32[] __initconst = {
-	"158PIMS1.207", // Bravo 15 B7E
-	"158PIMS1.112", // Bravo 15 B7ED
-	"158PIMS1.114",
+	"158PIMS1.2", // Bravo 15 B7E
+	"158PIMS1.1", // Bravo 15 B7ED
 	NULL
 };
 
@@ -2346,7 +2310,7 @@ static struct msi_ec_conf CONF32 __initdata = {
 };
 
 static const char *ALLOWED_FW_33[] __initconst = {
-	"17N1EMS1.109", // MSI Creator Z17 A12UGST
+	"17N1EMS1.1", // MSI Creator Z17 A12UGST
 	NULL
 };
 
@@ -2413,7 +2377,7 @@ static struct msi_ec_conf CONF33 __initdata = {
 };
 
 static const char *ALLOWED_FW_34[] __initconst = {
-	"14C6EMS1.109", // Prestige 14 Evo A12M
+	"14C6EMS1.1", // Prestige 14 Evo A12M
 	NULL
 };
 
@@ -2480,7 +2444,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 };
 
 static const char *ALLOWED_FW_35[] __initconst = {
-	"15M2IMS1.113", // Raider GE68HX 13VG
+	"15M2IMS1.1", // Raider GE68HX 13VG
 	NULL
 };
 
@@ -2553,8 +2517,7 @@ static struct msi_ec_conf CONF35 __initdata = {
 };
 
 static const char *ALLOWED_FW_36[] __initconst = {
-	"1585EMS1.112", // Katana 15 B13VGK
-	"1585EMS1.115", // Katana 15 B13VFK
+	"1585EMS1.1", // Katana 15 B13VGK B13VFK
 	NULL
 };
 
@@ -2621,7 +2584,7 @@ static struct msi_ec_conf CONF36 __initdata = {
 };
 
 static const char *ALLOWED_FW_37[] __initconst = {
-	"15M1IMS1.113", // Vector GP68 HX 12V
+	"15M1IMS1.1", // Vector GP68 HX 12V
 	NULL
 };
 
@@ -2692,8 +2655,8 @@ static struct msi_ec_conf CONF37 __initdata = {
 };
 
 static const char *ALLOWED_FW_38[] __initconst = {
-	"17E8IMS1.106", // GL75 Leopard 10SCXR/MS-17E8
-	"17E8EMS1.101",
+	"17E8IMS1.1", // GL75 Leopard 10SCXR/MS-17E8
+	"17E8EMS1.1",
 	NULL
 };
 
@@ -2758,9 +2721,7 @@ static struct msi_ec_conf CONF38 __initdata = {
 	},
 };
 static const char *ALLOWED_FW_39[] __initconst = {
-	"16R8IMS1.108", // Thin GF63 12UCX
-	"16R8IMS1.111", // Thin GF63 12V(E/F)
-	"16R8IMS1.117", // Thin GF63 12UC
+	"16R8IMS1.1", // Thin GF63 12UCX / 12V(E/F) / 12UC
 	NULL
 };
 
@@ -2828,7 +2789,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 };
 
 static const char *ALLOWED_FW_40[] __initconst = {
-	"17S1IMS1.105", // Raider GE78HX 13VI
+	"17S1IMS1.1", // Raider GE78HX 13VI
 	NULL
 };
 
@@ -2901,7 +2862,7 @@ static struct msi_ec_conf CONF40 __initdata = {
 };
 
 static const char *ALLOWED_FW_41[] __initconst = {
-	"15M1IMS2.111", // MSI Vector 16 HX A14VHG
+	"15M1IMS2.1", // MSI Vector 16 HX A14VHG
 	NULL
 };
 
@@ -2966,8 +2927,7 @@ static struct msi_ec_conf CONF41 __initdata = {
 };
 
 static const char *ALLOWED_FW_42[] __initconst = {
-	"14L1EMS1.307", // Modern 14 H D13M
-	"14L1EMS1.308",
+	"14L1EMS1.3", // Modern 14 H D13M
 	NULL
 };
 
@@ -3034,8 +2994,7 @@ static struct msi_ec_conf CONF42 __initdata = {
 };
 
 static const char *ALLOWED_FW_43[] __initconst = {
-	"14DKEMS1.104", // Modern 14 B4MW
-	"14DKEMS1.105",
+	"14DKEMS1.1", // Modern 14 B4MW
 	NULL
 };
 
@@ -3102,7 +3061,7 @@ static struct msi_ec_conf CONF43 __initdata = {
 };
 
 static const char *ALLOWED_FW_44[] __initconst = {
-	"17LNIMS1.505", // Katana A17 AI B8VF
+	"17LNIMS1.5", // Katana A17 AI B8VF
 	NULL
 };
 
@@ -3175,7 +3134,7 @@ static struct msi_ec_conf CONF44 __initdata = {
 };
 
 static const char *ALLOWED_FW_45[] __initconst = {
-	"1545IMS1.109", // Raider GE67 HX - 12U
+	"1545IMS1.1", // Raider GE67 HX - 12U
 	NULL
 };
 
@@ -3248,11 +3207,9 @@ static struct msi_ec_conf CONF45 __initdata = {
 };
 
 static const char *ALLOWED_FW_46[] __initconst = {
-	"16W1EMS1.102", // GF65 Thin 9SE(X(R)) / 9SD
-	"16W1EMS1.103",
-	"16W1EMS1.104",
-	"16W1EMS2.103", // GF65 Thin 10SCSXR / 10SD(R) / 10SE(R)
-	"16W2EMS1.101", // GF65 Thin 10UE
+	"16W1EMS1.1", // GF65 Thin 9SE(X(R)) / 9SD
+	"16W1EMS2.1", // GF65 Thin 10SCSXR / 10SD(R) / 10SE(R)
+	"16W2EMS1.1", // GF65 Thin 10UE
 	NULL
 };
 
@@ -3321,9 +3278,7 @@ static struct msi_ec_conf CONF46 __initdata = {
 };
 
 static const char *ALLOWED_FW_47[] __initconst = {
-	"17KKIMS1.108", // Alpha 17 C7VF / C7VG
-	"17KKIMS1.109",
-	"17KKIMS1.114",
+	"17KKIMS1.1", // Alpha 17 C7VF / C7VG
 	NULL
 };
 
@@ -3393,8 +3348,8 @@ static struct msi_ec_conf CONF47 __initdata = {
 };
 
 static const char *ALLOWED_FW_48[] __initconst = {
-	"158NIMS1.10D", // Bravo 15 C7UCX
-	"158NIMS1.30C", // Bravo 15 C7VFKP
+	"158NIMS1.1", // Bravo 15 C7UCX / C7VFKP
+	"158NIMS1.3",
 	NULL
 };
 
@@ -3460,9 +3415,8 @@ static struct msi_ec_conf CONF48 __initdata = {
 };
 
 static const char *ALLOWED_FW_49[] __initconst = {
-	"16R4EMS1.101", // GF63 Thin 10SCX(R) / 10SCS(R)
-	"16R4EMS1.102",
-	"16R5EMS1.102", // GF63 Thin 10U(C/D) / 10SC
+	"16R4EMS1.1", // GF63 Thin 10SCX(R) / 10SCS(R)
+	"16R5EMS1.1", // GF63 Thin 10U(C/D) / 10SC
 	NULL
 };
 
@@ -3530,7 +3484,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 };
 
 static const char *ALLOWED_FW_50[] __initconst = {
-	"1584EMS1.112", // Katana GF66 12UC
+	"1584EMS1.1", // Katana GF66 12UC
 	NULL
 };
 
@@ -3597,10 +3551,8 @@ static struct msi_ec_conf CONF50 __initdata = {
 };
 
 static const char *ALLOWED_FW_51[] __initconst = {
-	"158MEMS1.101", // Bravo 15 B5ED
-	"158KEMS1.104",	// Bravo 15 B5DD
-	"158KEMS1.106",
-	"158KEMS1.109",
+	"158MEMS1.1", // Bravo 15 B5ED
+	"158KEMS1.1",	// Bravo 15 B5DD
 	NULL
 };
 
@@ -3667,10 +3619,8 @@ static struct msi_ec_conf CONF51 __initdata = {
 };
 
 static const char *ALLOWED_FW_52[] __initconst = {
-	"16V1EMS1.109", // GS66 Stealth 10SFS
-	"16V1EMS1.116",
-	"16V1EMS1.118", // GS66 Stealth 10SE
-	"16V3EMS1.106", // GS66 Stealth 10UE
+	"16V1EMS1.1", // GS66 Stealth 10SFS / 10SE
+	"16V3EMS1.1", // GS66 Stealth 10UE
 	NULL
 };
 
@@ -3737,7 +3687,7 @@ static struct msi_ec_conf CONF52 __initdata = {
 };
 
 static const char *ALLOWED_FW_53[] __initconst = {
-	"159KIMS1.108", // Summit A16 AI+ A3HMTG, Prestige A16 AI+ A3HMG
+	"159KIMS1.1", // Summit A16 AI+ A3HMTG, Prestige A16 AI+ A3HMG
 	NULL
 }; // lid position sensor requires 0xD9 bit 0 being set to work
 
@@ -3801,7 +3751,7 @@ static struct msi_ec_conf CONF53 __initdata = {
 };
 
 static const char *ALLOWED_FW_54[] __initconst = {
-	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
+	"16R8IMS2.1", // Thin 15 B12UCX / B12VE
 	NULL
 };
 
@@ -3866,7 +3816,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 };
 
 static const char *ALLOWED_FW_55[] __initconst = {
-	"17G1EMS1.107", // GS75 Stealth 9SF
+	"17G1EMS1.1", // GS75 Stealth 9SF
 	NULL
 };
 
