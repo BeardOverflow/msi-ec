@@ -333,8 +333,9 @@ static struct msi_ec_conf CONF3 __initdata = {
 };
 
 static const char *ALLOWED_FW_4[] __initconst = {
-	"16V4EMS1.114", // GS66 Stealth 11UE
+	"16V4EMS1.114", // GS66 Stealth 11UE / 11UG
 	"16V4EMS1.115",
+	"16V4EMS1.116",
 	NULL
 };
 
