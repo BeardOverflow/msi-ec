@@ -2759,6 +2759,7 @@ static struct msi_ec_conf CONF38 __initdata = {
 	},
 };
 static const char *ALLOWED_FW_39[] __initconst = {
+	"16R8IMS1.107", // Thin GF63 12VE
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
