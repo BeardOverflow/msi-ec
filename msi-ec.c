@@ -1024,6 +1024,8 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
+	"17L1EMS1.106", // Katana GF76 11UG
+	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
 	NULL
 };
@@ -1054,7 +1056,6 @@ static struct msi_ec_conf CONF14 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Low
 			{ SM_COMFORT_NAME, 0xc1 }, // Medium
-			{ SM_SPORT_NAME,   0xc0 }, // High
 			{ SM_TURBO_NAME,   0xc4 }, // Turbo
 			MSI_EC_MODE_NULL
 		},
@@ -1377,7 +1378,7 @@ static struct msi_ec_conf CONF18 __initdata = {
 static const char *ALLOWED_FW_19[] __initconst = {
 	"1543EMS1.113", // GP66 Leopard 11UG / GE66 Raider 11UE
 	"17K4EMS1.108", // GE76 Raider  12UE
-	"17K4EMS1.112", // GE76 Raider  2UGS
+	"17K4EMS1.112", // GE76 Raider  12UGS
 	"17K3EMS1.115", // GP76 Leopard 11UG
 	NULL
 };
@@ -2833,6 +2834,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 
 static const char *ALLOWED_FW_40[] __initconst = {
 	"17S1IMS1.105", // Raider GE78HX 13VI
+	"17S1IMS2.107", // Vector 17 HX  A14V
 	NULL
 };
 
@@ -3536,6 +3538,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 
 static const char *ALLOWED_FW_50[] __initconst = {
 	"1584EMS1.112", // Katana GF66 12UC
+	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
 	NULL
 };
 
@@ -3544,7 +3547,7 @@ static struct msi_ec_conf CONF50 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -3871,6 +3874,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 };
 
 static const char *ALLOWED_FW_55[] __initconst = {
+	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.107", // GS75 Stealth 9SF
 	NULL
 };
