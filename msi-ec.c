@@ -124,6 +124,8 @@ static struct msi_ec_conf CONF0 __initdata = {
 };
 
 static const char *ALLOWED_FW_1[] __initconst = {
+	"17F4EMS2.100", // GF75 Thin 9SCSR
+	"17F3EMS2.103", // GF75 Thin 10SER
 	"17F2EMS1.103", // GF75 Thin 9SC
 	"17F2EMS1.104",
 	"17F2EMS1.106",
@@ -917,7 +919,6 @@ static struct msi_ec_conf CONF12 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -1026,6 +1027,8 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
+	"17L1EMS1.106", // Katana GF76 11UG
+	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
 	NULL
 };
@@ -1056,7 +1059,6 @@ static struct msi_ec_conf CONF14 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Low
 			{ SM_COMFORT_NAME, 0xc1 }, // Medium
-			{ SM_SPORT_NAME,   0xc0 }, // High
 			{ SM_TURBO_NAME,   0xc4 }, // Turbo
 			MSI_EC_MODE_NULL
 		},
@@ -1380,7 +1382,10 @@ static struct msi_ec_conf CONF18 __initdata = {
 static const char *ALLOWED_FW_19[] __initconst = {
 	"1543EMS1.113", // GP66 Leopard 11UG / GE66 Raider 11UE
 	"1543EMS1.115",
+	"17K3EMS1.114", // GE76 Raider 11U
 	"17K3EMS1.115", // GP76 Leopard 11UG
+	"17K4EMS1.108", // Raider GE76 12UE
+	"17K4EMS1.112", // Raider GE76 12UGS / Vector GP76 12UH
 	NULL
 };
 
@@ -1406,7 +1411,6 @@ static struct msi_ec_conf CONF19 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super battery
 			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 }, // extreme performance-user
 			MSI_EC_MODE_NULL
 		},
@@ -2516,8 +2520,8 @@ static struct msi_ec_conf CONF35 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -2562,7 +2566,8 @@ static struct msi_ec_conf CONF35 __initdata = {
 
 static const char *ALLOWED_FW_36[] __initconst = {
 	"1585EMS1.112", // Katana 15 B13VGK
-	"1585EMS1.115", // Katana 15 B13VFK
+	"1585EMS1.115", // Pulse 15 B13VGK
+	"1585EMS2.115", // Katana 15 B12VFK
 	NULL
 };
 
@@ -2700,8 +2705,7 @@ static struct msi_ec_conf CONF37 __initdata = {
 };
 
 static const char *ALLOWED_FW_38[] __initconst = {
-	"17E8IMS1.106", // GL75 Leopard 10SCXR/MS-17E8
-	"17E8EMS1.101",
+	"17E8EMS1.101", // GL75 Leopard 10SCXR
 	NULL
 };
 
@@ -2795,7 +2799,6 @@ static struct msi_ec_conf CONF39 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -2839,6 +2842,7 @@ static struct msi_ec_conf CONF39 __initdata = {
 static const char *ALLOWED_FW_40[] __initconst = {
 	"17S1IMS1.105", // Raider GE78HX 13VI
 	"17S1IMS1.113",
+	"17S1IMS2.107", // Vector 17 HX  A14V
 	NULL
 };
 
@@ -2866,8 +2870,8 @@ static struct msi_ec_conf CONF40 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -2935,8 +2939,8 @@ static struct msi_ec_conf CONF41 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
 			{ SM_ECO_NAME,     0xc2 }, // Silent / Eco
+			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -2948,6 +2952,7 @@ static struct msi_ec_conf CONF41 __initdata = {
 		.address = 0xd4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
 			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
@@ -3112,8 +3117,8 @@ static struct msi_ec_conf CONF43 __initdata = {
 };
 
 static const char *ALLOWED_FW_44[] __initconst = {
-	"17LNIMS1.10E", // Katana A17 AI B8VF
-	"17LNIMS1.505",
+	"17LNIMS1.10E", // Bravo 17 C7VE
+	"17LNIMS1.505", // Katana A17 AI B8VF
 	NULL
 };
 
@@ -3186,7 +3191,7 @@ static struct msi_ec_conf CONF44 __initdata = {
 };
 
 static const char *ALLOWED_FW_45[] __initconst = {
-	"1545IMS1.109", // Raider GE67 HX - 12U
+	"1545IMS1.109", // Raider GE67 HX 12U
 	NULL
 };
 
@@ -3404,6 +3409,7 @@ static struct msi_ec_conf CONF47 __initdata = {
 };
 
 static const char *ALLOWED_FW_48[] __initconst = {
+	"158NIMS1.109", // Bravo 15 C7V
 	"158NIMS1.10D", // Bravo 15 C7UCX
 	"158NIMS1.10E",
 	"158NIMS1.30C", // Bravo 15 C7VFKP
@@ -3544,6 +3550,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 
 static const char *ALLOWED_FW_50[] __initconst = {
 	"1584EMS1.112", // Katana GF66 12UC
+	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
 	NULL
 };
 
@@ -3552,7 +3559,7 @@ static struct msi_ec_conf CONF50 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -3611,7 +3618,7 @@ static struct msi_ec_conf CONF50 __initdata = {
 
 static const char *ALLOWED_FW_51[] __initconst = {
 	"158MEMS1.101", // Bravo 15 B5ED
-	"158KEMS1.104",	// Bravo 15 B5DD
+	"158KEMS1.104", // Bravo 15 B5DD
 	"158KEMS1.106",
 	"158KEMS1.109",
 	NULL
@@ -3815,6 +3822,7 @@ static struct msi_ec_conf CONF53 __initdata = {
 
 static const char *ALLOWED_FW_54[] __initconst = {
 	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
+	"16R8IMS2.117",
 	NULL
 };
 
@@ -3879,6 +3887,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 };
 
 static const char *ALLOWED_FW_55[] __initconst = {
+	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.107", // GS75 Stealth 9SF
 	NULL
 };
@@ -4359,7 +4368,7 @@ static ssize_t webcam_block_show(struct device *device,
 
 static ssize_t webcam_block_store(struct device *dev,
 				  struct device_attribute *attr,
-			          const char *buf, size_t count)
+				  const char *buf, size_t count)
 {
 	return webcam_common_store(conf.webcam.block_address, buf, count, true);
 }
@@ -4468,8 +4477,8 @@ static ssize_t cooler_boost_store(struct device *dev,
 }
 
 static ssize_t available_shift_modes_show(struct device *device,
-				          struct device_attribute *attr,
-				          char *buf)
+					  struct device_attribute *attr,
+					  char *buf)
 {
 	int result = 0;
 	int count = 0;
@@ -4561,7 +4570,7 @@ static ssize_t super_battery_store(struct device *dev,
 
 	if (value)
 		result = ec_set_by_mask(conf.super_battery.address,
-				        conf.super_battery.mask);
+					conf.super_battery.mask);
 	else
 		result = ec_unset_by_mask(conf.super_battery.address,
 					  conf.super_battery.mask);
