@@ -58,6 +58,7 @@ static const char *ALLOWED_FW_0[] __initconst = {
 	"14C1EMS1.012", // Prestige 14 A10SC
 	"14C1EMS1.101",
 	"14C1EMS1.102",
+	"16S3EMS1.103", // Prestige 15 A10SC
 	NULL
 };
 
@@ -473,6 +474,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 };
 
 static const char *ALLOWED_FW_6[] __initconst = {
+	"1541EMS1.113", // GE66 Raider 10SF
 	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
 	"1542EMS1.104",
 	NULL
@@ -2769,11 +2771,15 @@ static struct msi_ec_conf CONF38 __initdata = {
 		.max_state        = 3,
 	},
 };
+
 static const char *ALLOWED_FW_39[] __initconst = {
+	"16R7IMS1.104", // Thin GF63 12HW
 	"16R8IMS1.107", // Thin GF63 12VE
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
+	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
+	"16R8IMS2.117",
 	NULL
 };
 
@@ -2797,9 +2803,9 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_ECO_NAME,     0xc2 }, // eco-silent + super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
+			{ SM_TURBO_NAME,   0xc4 }, // perf
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2810,13 +2816,13 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
-			{ FM_AUTO_NAME,      0x0d},
-			{ FM_SILENT_NAME,    0x1d},
-			{ FM_ADVANCED_NAME,  0x8d},
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d }, // not used in Eco-silent
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
-	.cpu = {
+	.cpu = { // single fan
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
 	},
@@ -3821,79 +3827,13 @@ static struct msi_ec_conf CONF53 __initdata = {
 };
 
 static const char *ALLOWED_FW_54[] __initconst = {
-	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
-	"16R8IMS2.117",
-	NULL
-};
-
-static struct msi_ec_conf CONF54 __initdata = {
-	.allowed_fw = ALLOWED_FW_54, // WMI2 based
-	.charge_control_address = 0xd7,
-	.webcam = { // not present in app, but ec supports
-		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // eco-silent + super battery
-			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-			{ SM_TURBO_NAME,   0xc4 }, // perf
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d }, // not used in Eco-silent
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = { // single fan
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = { // not present on keyboard but app writes to them
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_55[] __initconst = {
 	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.107", // GS75 Stealth 9SF
 	NULL
 };
 
-static struct msi_ec_conf CONF55 __initdata = {
-	.allowed_fw = ALLOWED_FW_55, // WMI1 based
+static struct msi_ec_conf CONF54 __initdata = {
+	.allowed_fw = ALLOWED_FW_54, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
@@ -4010,7 +3950,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF52,
 	&CONF53,
 	&CONF54,
-	&CONF55,
 	NULL
 };
 
