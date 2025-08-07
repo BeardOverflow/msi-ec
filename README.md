@@ -59,7 +59,7 @@ Eager to support the project? Your help is always welcome to keep the project al
 
 ### From AUR (Arch Linux)
 1. Install any AUR helper ([yay](https://github.com/Jguer/yay) for example)
-2. Run `yay -S msi-ec-git`
+2. Run `yay -S msi-ec-dkms-git`
 
 ### On NixOS
 Add these lines to your configuration
