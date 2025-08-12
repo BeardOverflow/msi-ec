@@ -3974,7 +3974,7 @@ static struct msi_ec_conf CONF56 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4, // 0x00 (not flipped) or 0x10 (flipped)
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
