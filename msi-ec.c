@@ -3954,6 +3954,67 @@ static struct msi_ec_conf CONF55 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_56[] __initconst = {
+	"182LIMS1.108", // Vector A18 HX A9WHG
+	NULL
+};
+
+static struct msi_ec_conf CONF56 __initdata = {
+	.allowed_fw = ALLOWED_FW_56,
+	.charge_control_address = MSI_EC_ADDR_UNSUPP,
+	.webcam = {
+		.address       = MSI_EC_ADDR_UNSUPP,
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.bit     = 4,
+		.invert  = true,
+	},
+	.cooler_boost = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2, {{1, 0xd3, 0x80}} },
+			{ SM_COMFORT_NAME, 0xc1, {{1, 0xd3, 0x81}} },
+			{ SM_TURBO_NAME,   0xc4, {{1, 0xd3, 0x81}} },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNSUPP,
+	},
+	.fan_mode = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.modes = {
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.gpu = {
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
+		.state_base_value = 0,
+		.max_state        = 0,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -4011,6 +4072,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF53,
 	&CONF54,
 	&CONF55,
+	&CONF56,
 	NULL
 };
 
@@ -4534,6 +4596,13 @@ static ssize_t shift_mode_store(struct device *dev,
 					  conf.shift_mode.modes[i].value);
 			if (result < 0)
 				return result;
+			
+			// Has more ec mode extras ?
+			for (int ii = 0; conf.shift_mode.modes[i].extras[ii].valid != 0; ++ii) {
+				result = ec_write(conf.shift_mode.modes[i].extras[ii].address, conf.shift_mode.modes[i].extras[ii].value);
+				if (result < 0)
+					return result;
+			}
 
 			return count;
 		}
