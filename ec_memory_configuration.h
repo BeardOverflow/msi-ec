@@ -105,4 +105,4 @@ struct msi_ec_conf {
 	struct msi_ec_kbd_bl_conf         kbd_bl;
 };
 
-#endif // __MSI_EC_REGISTERS_CONFIG__
+#endif // __MSI_EC_REGISTERS_CONFIG__ 
