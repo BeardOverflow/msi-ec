@@ -33,10 +33,17 @@ struct msi_ec_cooler_boost_conf {
 	int bit;
 };
 
-#define MSI_EC_MODE_NULL { NULL, 0 }
+struct msi_ec_mode_extra {
+	int valid;
+	int address;
+	int value;
+};
+
+#define MSI_EC_MODE_NULL { NULL, 0, 0 }
 struct msi_ec_mode {
 	const char *name;
 	int value;
+	struct msi_ec_mode_extra extras[2];
 };
 
 #define MSI_EC_SHIFT_MODE_NAME_LIMIT 20
