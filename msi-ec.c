@@ -5345,4 +5345,4 @@ MODULE_DESCRIPTION("MSI Embedded Controller");
 MODULE_VERSION("0.09");
 
 module_init(msi_ec_init);
-module_exit(msi_ec_exit);
+module_exit(msi_ec_exit); 
