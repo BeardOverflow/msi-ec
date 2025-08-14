@@ -3961,27 +3961,27 @@ static const char *ALLOWED_FW_56[] __initconst = {
 
 static struct msi_ec_conf CONF56 __initdata = {
 	.allowed_fw = ALLOWED_FW_56,
-	.charge_control_address = MSI_EC_ADDR_UNSUPP,
+	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = MSI_EC_ADDR_UNSUPP,
 		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
-		.address = MSI_EC_ADDR_UNSUPP,
+		.address = 0xe8,
 		.bit     = 4,
 		.invert  = true,
 	},
 	.cooler_boost = {
-		.address = MSI_EC_ADDR_UNSUPP,
+		.address = 0x98,
 		.bit     = 7,
 	},
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2, {{1, 0xd3, 0x80}} },
-			{ SM_COMFORT_NAME, 0xc1, {{1, 0xd3, 0x81}} },
-			{ SM_TURBO_NAME,   0xc4, {{1, 0xd3, 0x81}} },
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -3989,29 +3989,31 @@ static struct msi_ec_conf CONF56 __initdata = {
 		.address = MSI_EC_ADDR_UNSUPP,
 	},
 	.fan_mode = {
-		.address = MSI_EC_ADDR_UNSUPP,
+		.address = 0xd4,
 		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_ADVANCED_NAME, 0x8d }, 
 			MSI_EC_MODE_NULL
 		},
 	},
 	.cpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
 		.bit                 = 1,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0,
-		.max_state        = 0,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,	// Can see 0xd3's value was changed, but not effected
+		.state_base_value = 0x80,
+		.max_state        = 3,
 	},
 };
 
@@ -4596,13 +4598,6 @@ static ssize_t shift_mode_store(struct device *dev,
 					  conf.shift_mode.modes[i].value);
 			if (result < 0)
 				return result;
-			
-			// Has more ec mode extras ?
-			for (int ii = 0; conf.shift_mode.modes[i].extras[ii].valid != 0; ++ii) {
-				result = ec_write(conf.shift_mode.modes[i].extras[ii].address, conf.shift_mode.modes[i].extras[ii].value);
-				if (result < 0)
-					return result;
-			}
 
 			return count;
 		}
@@ -5345,4 +5340,4 @@ MODULE_DESCRIPTION("MSI Embedded Controller");
 MODULE_VERSION("0.09");
 
 module_init(msi_ec_init);
-module_exit(msi_ec_exit); 
+module_exit(msi_ec_exit);
