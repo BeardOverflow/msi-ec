@@ -124,12 +124,12 @@ static struct msi_ec_conf CONF0 __initdata = {
 };
 
 static const char *ALLOWED_FW_1[] __initconst = {
-	"17F4EMS2.100", // GF75 Thin 9SCSR
-	"17F3EMS2.103", // GF75 Thin 10SER
 	"17F2EMS1.103", // GF75 Thin 9SC
 	"17F2EMS1.104",
 	"17F2EMS1.106",
 	"17F2EMS1.107",
+	"17F3EMS2.103", // GF75 Thin 10SER
+	"17F4EMS2.100", // GF75 Thin 9SCSR
 	NULL
 };
 
@@ -1030,6 +1030,8 @@ static const char *ALLOWED_FW_14[] __initconst = {
 	"17L1EMS1.106", // Katana GF76 11UG
 	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
+	"17L3EMS1.106", // Crosshair 17 B12UGZ
+	"17L3EMS1.109", // Katana GF76 12UG
 	NULL
 };
 
@@ -1064,9 +1066,8 @@ static struct msi_ec_conf CONF14 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // enabled by Low Performance Level
-		// .address = 0xeb, // states: 0x00 || 0x0f
-		.mask    = 0x0f,
+		.address = 0xeb,
+		.mask    = 0x0f
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -2634,7 +2635,9 @@ static struct msi_ec_conf CONF36 __initdata = {
 };
 
 static const char *ALLOWED_FW_37[] __initconst = {
+	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
+	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	NULL
 };
 
@@ -3549,6 +3552,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 };
 
 static const char *ALLOWED_FW_50[] __initconst = {
+	"1584EMS1.104",	// Katana GF66 12UD
 	"1584EMS1.112", // Katana GF66 12UC
 	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
 	NULL
@@ -3617,7 +3621,8 @@ static struct msi_ec_conf CONF50 __initdata = {
 };
 
 static const char *ALLOWED_FW_51[] __initconst = {
-	"158MEMS1.101", // Bravo 15 B5ED
+	"158MEMS1.100", // Bravo 15 B5ED
+	"158MEMS1.101",
 	"158KEMS1.104", // Bravo 15 B5DD
 	"158KEMS1.106",
 	"158KEMS1.109",
@@ -3690,6 +3695,7 @@ static const char *ALLOWED_FW_52[] __initconst = {
 	"16V1EMS1.109", // GS66 Stealth 10SFS
 	"16V1EMS1.116",
 	"16V1EMS1.118", // GS66 Stealth 10SE
+	"16V2EMS1.104", // Creator 15 A10SD
 	"16V3EMS1.106", // GS66 Stealth 10UE
 	NULL
 };
@@ -3741,9 +3747,9 @@ static struct msi_ec_conf CONF52 __initdata = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
 	},
-	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+	.leds = { // enabled for Creator 15 A10SD
+		.micmute_led_address = 0x2b,
+		.mute_led_address    = 0x2c,
 		.bit                 = 2,
 	},
 	.kbd_bl = {
@@ -3823,6 +3829,7 @@ static struct msi_ec_conf CONF53 __initdata = {
 static const char *ALLOWED_FW_54[] __initconst = {
 	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
 	"16R8IMS2.117",
+	"16RKIMS1.110", // Thin A15 B7VF
 	NULL
 };
 
@@ -3831,7 +3838,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = { // not present in app, but ec supports
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -3889,6 +3896,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 static const char *ALLOWED_FW_55[] __initconst = {
 	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.107", // GS75 Stealth 9SF
+	"17G3EMS1.115", // GS75 Stealth 10SF
 	NULL
 };
 
