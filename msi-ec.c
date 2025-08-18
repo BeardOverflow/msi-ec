@@ -473,6 +473,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 };
 
 static const char *ALLOWED_FW_6[] __initconst = {
+	"1541EMS1.113", // GE66 Raider 10SF
 	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
 	"1542EMS1.104",
 	NULL
@@ -483,7 +484,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -506,7 +507,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = 0xd5,
+		.address = MSI_EC_ADDR_UNKNOWN,
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -1032,6 +1033,7 @@ static const char *ALLOWED_FW_14[] __initconst = {
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
 	"17L3EMS1.106", // Crosshair 17 B12UGZ
 	"17L3EMS1.109", // Katana GF76 12UG
+	"17L4EMS1.112", // Katana GF76 12UC
 	NULL
 };
 
@@ -1521,6 +1523,7 @@ static struct msi_ec_conf CONF20 __initdata = {
 };
 
 static const char *ALLOWED_FW_21[] __initconst = {
+	"16R1EMS1.105", // GF63 8RC-249
 	"16R3EMS1.100", // GF63 Thin 9SC
 	"16R3EMS1.102",
 	"16R3EMS1.104",
@@ -2221,6 +2224,8 @@ static struct msi_ec_conf CONF30 __initdata = {
 };
 
 static const char *ALLOWED_FW_31[] __initconst = {
+	"16Q2EMS1.107", // GS65 Stealth Thin 8RF
+	"16Q2EMS1.T40",
 	"16Q4EMS1.110", // GS65 Stealth
 	NULL
 };
@@ -2230,7 +2235,7 @@ static struct msi_ec_conf CONF31 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2258,8 +2263,8 @@ static struct msi_ec_conf CONF31 __initdata = {
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
-			{ FM_BASIC_NAME,    0x4c },
 			{ FM_AUTO_NAME,     0x0c },
+			{ FM_BASIC_NAME,    0x4c },
 			{ FM_ADVANCED_NAME, 0x8c },
 			MSI_EC_MODE_NULL
 		},
@@ -2425,6 +2430,7 @@ static struct msi_ec_conf CONF33 __initdata = {
 };
 
 static const char *ALLOWED_FW_34[] __initconst = {
+	"14C4EMS1.120", // Prestige 14 A11SCX
 	"14C6EMS1.109", // Prestige 14 Evo A12M
 	NULL
 };
@@ -2440,7 +2446,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -2638,6 +2644,8 @@ static const char *ALLOWED_FW_37[] __initconst = {
 	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
+	"15M3EMS1.106"
+	"15M3EMS1.107",
 	NULL
 };
 
@@ -3484,7 +3492,8 @@ static struct msi_ec_conf CONF48 __initdata = {
 static const char *ALLOWED_FW_49[] __initconst = {
 	"16R4EMS1.101", // GF63 Thin 10SCX(R) / 10SCS(R)
 	"16R4EMS1.102",
-	"16R5EMS1.102", // GF63 Thin 10U(C/D) / 10SC
+	"16R5EMS1.101", // GF63 Thin 10U(C/D) / 10SC
+	"16R5EMS1.102",
 	NULL
 };
 
