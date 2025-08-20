@@ -1030,6 +1030,7 @@ static const char *ALLOWED_FW_14[] __initconst = {
 	"17L1EMS1.106", // Katana GF76 11UG
 	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
+	"17L3EMS1.106", // Crosshair 17 B12UGZ
 	NULL
 };
 
