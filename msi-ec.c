@@ -4018,6 +4018,79 @@ static struct msi_ec_conf CONF56 __initdata = {
 	},
 };
 
+
+
+static const char *ALLOWED_FW_57[] __initconst = {
+	"1824EMS1.107", // Titan 18 HX Dragon Edition
+	NULL
+};
+
+static struct msi_ec_conf CONF57 __initdata = {
+	.allowed_fw = ALLOWED_FW_57,
+	.charge_control_address = 0xd7,
+	// .usb_share  {
+	// 	.address      = 0xbf, // states: 0x08 || 0x28
+	// 	.bit          = 5,
+	// }, // Like Katana 17 B11UCX
+	.webcam = {
+		.address       = MSI_EC_ADDR_UNSUPP, // Manually slide-able cover
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4, // 0x00 (not flipped) or 0x10 (flipped)
+		.invert  = true,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7, // 0x02 (off) or 0x82 (on)
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_ECO_NAME,     0xc2 }, // Eco (Super Battery)
+			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
+			{ SM_TURBO_NAME,   0xc4 }, // Extreme Performance
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = 0xeb, // 0x0f ( on ) or 0x00 ( off )
+		.mask    = 0x0f,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = 0x68, // Temp in Hex
+		.rt_fan_speed_address = 0x71, // Fan Speed in %
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80, // Temp in Hex
+		.rt_fan_speed_address = 0x89, // Fan Speed in %
+	},
+	.leds = {
+		.micmute_led_address = 0x2c, // off (0x00) or on (0x02)
+		.mute_led_address    = 0x2d, // off (0x24) or on (0x26)
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 }, 
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // Technically 0xd3, but its bugged
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF0,
 	&CONF1,
@@ -4076,6 +4149,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF54,
 	&CONF55,
 	&CONF56,
+	&CONF57,
 	NULL
 };
 
