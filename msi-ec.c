@@ -1174,6 +1174,7 @@ static struct msi_ec_conf CONF15 __initdata = {
 static const char *ALLOWED_FW_16[] __initconst = {
 	"155LEMS1.105", // Modern 15 A5M
 	"155LEMS1.106",
+	"1551EMS1.106", // Modern 15 A10M
 	NULL
 };
 
@@ -1188,7 +1189,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1199,7 +1200,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -3128,6 +3129,8 @@ static struct msi_ec_conf CONF43 __initdata = {
 };
 
 static const char *ALLOWED_FW_44[] __initconst = {
+	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS2.115", // Katana 17 B12VEK
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
 	NULL
@@ -3142,7 +3145,7 @@ static struct msi_ec_conf CONF44 __initdata = {
 	// },
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -3157,8 +3160,8 @@ static struct msi_ec_conf CONF44 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
