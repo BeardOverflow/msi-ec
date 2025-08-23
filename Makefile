@@ -1,6 +1,6 @@
-VERSION         := 0.08
+VERSION         := 0.11
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
-TARGET ?= $(shell uname -r)
+KERNELRELEASE ?= $(shell uname -r)
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
@@ -10,10 +10,10 @@ obj-m += msi-ec.o
 all: modules
 
 modules:
-	@$(MAKE) -C /lib/modules/$(TARGET)/build M=$(CURDIR) modules
+	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(CURDIR) modules
 
 clean:
-	@$(MAKE) -C /lib/modules/$(TARGET)/build M=$(CURDIR) clean
+	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(CURDIR) clean
 
 load:
 	insmod msi-ec.ko
@@ -29,28 +29,27 @@ reload: unload load
 reload-debug: unload load-debug
 
 install:
-	mkdir -p /lib/modules/$(TARGET)/extra
-	cp msi-ec.ko /lib/modules/$(TARGET)/extra
+	mkdir -p /lib/modules/$(KERNELRELEASE)/extra
+	cp msi-ec.ko /lib/modules/$(KERNELRELEASE)/extra
 	depmod -a
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
 	modprobe -v msi-ec
 
 uninstall:
 	-modprobe -rv msi-ec
-	rm -f /lib/modules/$(TARGET)/extra/msi-ec.ko
+	rm -f /lib/modules/$(KERNELRELEASE)/extra/msi-ec.ko
 	depmod -a
 	rm -f /etc/modules-load.d/msi-ec.conf
 
 dkms-install:
-	dkms --version >> /dev/null
+	@dkms --version
 	mkdir -p $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/dkms.conf $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
 
-	sed -e "s/@CFLGS@/${MCFLAGS}/" \
-	    -e "s/@VERSION@/$(VERSION)/" \
+	sed -e "s/@VERSION@/$(VERSION)/" \
 	    -i $(DKMS_ROOT_PATH)/dkms.conf
 
 	dkms add msi_ec/$(VERSION)
