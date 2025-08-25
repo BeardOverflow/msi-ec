@@ -1175,6 +1175,7 @@ static const char *ALLOWED_FW_16[] __initconst = {
 	"155LEMS1.105", // Modern 15 A5M
 	"155LEMS1.106",
 	"1551EMS1.106", // Modern 15 A10M
+	"1551EMS1.107",
 	NULL
 };
 
@@ -2645,7 +2646,7 @@ static const char *ALLOWED_FW_37[] __initconst = {
 	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
-	"15M3EMS1.106"
+	"15M3EMS1.106",
 	"15M3EMS1.107",
 	NULL
 };
