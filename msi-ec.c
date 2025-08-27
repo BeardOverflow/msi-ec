@@ -58,6 +58,7 @@ static const char *ALLOWED_FW_0[] __initconst = {
 	"14C1EMS1.012", // Prestige 14 A10SC
 	"14C1EMS1.101",
 	"14C1EMS1.102",
+	"16S3EMS1.103", // Prestige 15 A10SC
 	NULL
 };
 
@@ -124,12 +125,12 @@ static struct msi_ec_conf CONF0 __initdata = {
 };
 
 static const char *ALLOWED_FW_1[] __initconst = {
-	"17F4EMS2.100", // GF75 Thin 9SCSR
-	"17F3EMS2.103", // GF75 Thin 10SER
 	"17F2EMS1.103", // GF75 Thin 9SC
 	"17F2EMS1.104",
 	"17F2EMS1.106",
 	"17F2EMS1.107",
+	"17F3EMS2.103", // GF75 Thin 10SER
+	"17F4EMS2.100", // GF75 Thin 9SCSR
 	NULL
 };
 
@@ -473,6 +474,7 @@ static struct msi_ec_conf CONF5 __initdata = {
 };
 
 static const char *ALLOWED_FW_6[] __initconst = {
+	"1541EMS1.113", // GE66 Raider 10SF
 	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
 	"1542EMS1.104",
 	NULL
@@ -483,7 +485,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -506,7 +508,7 @@ static struct msi_ec_conf CONF6 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = 0xd5,
+		.address = MSI_EC_ADDR_UNKNOWN,
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -1031,6 +1033,8 @@ static const char *ALLOWED_FW_14[] __initconst = {
 	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
 	"17L3EMS1.106", // Crosshair 17 B12UGZ
+	"17L3EMS1.109", // Katana GF76 12UG
+	"17L4EMS1.112", // Katana GF76 12UC
 	NULL
 };
 
@@ -1065,9 +1069,8 @@ static struct msi_ec_conf CONF14 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // enabled by Low Performance Level
-		// .address = 0xeb, // states: 0x00 || 0x0f
-		.mask    = 0x0f,
+		.address = 0xeb,
+		.mask    = 0x0f
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1186,7 +1189,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 	.fn_win_swap = {
 		.address = 0xbf,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1521,6 +1524,7 @@ static struct msi_ec_conf CONF20 __initdata = {
 };
 
 static const char *ALLOWED_FW_21[] __initconst = {
+	"16R1EMS1.105", // GF63 8RC-249
 	"16R3EMS1.100", // GF63 Thin 9SC
 	"16R3EMS1.102",
 	"16R3EMS1.104",
@@ -2221,7 +2225,9 @@ static struct msi_ec_conf CONF30 __initdata = {
 };
 
 static const char *ALLOWED_FW_31[] __initconst = {
-	"16Q4EMS1.110", // GS65 Stealth
+	"16Q2EMS1.107", // GS65 Stealth Thin 8RF
+	"16Q2EMS1.T40",
+	"16Q4EMS1.110", // GS65 Stealth 8S / 9S
 	NULL
 };
 
@@ -2230,7 +2236,7 @@ static struct msi_ec_conf CONF31 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2258,8 +2264,8 @@ static struct msi_ec_conf CONF31 __initdata = {
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
-			{ FM_BASIC_NAME,    0x4c },
 			{ FM_AUTO_NAME,     0x0c },
+			{ FM_BASIC_NAME,    0x4c },
 			{ FM_ADVANCED_NAME, 0x8c },
 			MSI_EC_MODE_NULL
 		},
@@ -2425,6 +2431,7 @@ static struct msi_ec_conf CONF33 __initdata = {
 };
 
 static const char *ALLOWED_FW_34[] __initconst = {
+	"14C4EMS1.120", // Prestige 14 A11SCX
 	"14C6EMS1.109", // Prestige 14 Evo A12M
 	NULL
 };
@@ -2440,7 +2447,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -2635,7 +2642,11 @@ static struct msi_ec_conf CONF36 __initdata = {
 };
 
 static const char *ALLOWED_FW_37[] __initconst = {
+	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
+	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
+	"15M3EMS1.106",
+	"15M3EMS1.107",
 	NULL
 };
 
@@ -2770,11 +2781,15 @@ static struct msi_ec_conf CONF38 __initdata = {
 		.max_state        = 3,
 	},
 };
+
 static const char *ALLOWED_FW_39[] __initconst = {
+	"16R7IMS1.104", // Thin GF63 12HW
 	"16R8IMS1.107", // Thin GF63 12VE
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
+	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
+	"16R8IMS2.117",
 	NULL
 };
 
@@ -2798,9 +2813,9 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_ECO_NAME,     0xc2 }, // eco-silent + super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
+			{ SM_TURBO_NAME,   0xc4 }, // perf
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2811,13 +2826,13 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
-			{ FM_AUTO_NAME,      0x0d},
-			{ FM_SILENT_NAME,    0x1d},
-			{ FM_ADVANCED_NAME,  0x8d},
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d }, // not used in Eco-silent
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
-	.cpu = {
+	.cpu = { // single fan
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
 	},
@@ -3118,6 +3133,8 @@ static struct msi_ec_conf CONF43 __initdata = {
 };
 
 static const char *ALLOWED_FW_44[] __initconst = {
+	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS2.115", // Katana 17 B12VEK
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
 	NULL
@@ -3132,7 +3149,7 @@ static struct msi_ec_conf CONF44 __initdata = {
 	// },
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -3147,8 +3164,8 @@ static struct msi_ec_conf CONF44 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -3482,7 +3499,8 @@ static struct msi_ec_conf CONF48 __initdata = {
 static const char *ALLOWED_FW_49[] __initconst = {
 	"16R4EMS1.101", // GF63 Thin 10SCX(R) / 10SCS(R)
 	"16R4EMS1.102",
-	"16R5EMS1.102", // GF63 Thin 10U(C/D) / 10SC
+	"16R5EMS1.101", // GF63 Thin 10U(C/D) / 10SC
+	"16R5EMS1.102",
 	NULL
 };
 
@@ -3550,6 +3568,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 };
 
 static const char *ALLOWED_FW_50[] __initconst = {
+	"1584EMS1.104",// Katana GF66 12UD
 	"1584EMS1.112", // Katana GF66 12UC
 	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
 	NULL
@@ -3618,7 +3637,8 @@ static struct msi_ec_conf CONF50 __initdata = {
 };
 
 static const char *ALLOWED_FW_51[] __initconst = {
-	"158MEMS1.101", // Bravo 15 B5ED
+	"158MEMS1.100", // Bravo 15 B5ED
+	"158MEMS1.101",
 	"158KEMS1.104", // Bravo 15 B5DD
 	"158KEMS1.106",
 	"158KEMS1.109",
@@ -3824,6 +3844,7 @@ static struct msi_ec_conf CONF53 __initdata = {
 static const char *ALLOWED_FW_54[] __initconst = {
 	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
 	"16R8IMS2.117",
+	"16RKIMS1.110", // Thin A15 B7VF
 	NULL
 };
 
@@ -3832,7 +3853,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = { // not present in app, but ec supports
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -3890,6 +3911,7 @@ static struct msi_ec_conf CONF54 __initdata = {
 static const char *ALLOWED_FW_55[] __initconst = {
 	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.107", // GS75 Stealth 9SF
+	"17G3EMS1.115", // GS75 Stealth 10SF
 	NULL
 };
 
@@ -3993,7 +4015,7 @@ static struct msi_ec_conf CONF56 __initdata = {
 		.address = 0xd4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
-			{ FM_ADVANCED_NAME, 0x8d }, 
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -4083,7 +4105,7 @@ static struct msi_ec_conf CONF57 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 }, 
+		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP, // Technically 0xd3, but its bugged
 		.state_base_value = 0x80,
