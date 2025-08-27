@@ -1029,6 +1029,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
+	"17L1EMS1.105", // Crosshair 17 A11UEK
 	"17L1EMS1.106", // Katana GF76 11UG
 	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
@@ -1736,7 +1737,8 @@ static struct msi_ec_conf CONF23 __initdata = {
 };
 
 static const char *ALLOWED_FW_24[] __initconst = {
-	"14D1EMS1.103", // Modern 14 B10MW (#100)
+	"14D1EMS1.102", // Modern 14 B10MW
+	"14D1EMS1.103",
 	NULL
 };
 
@@ -2647,6 +2649,8 @@ static const char *ALLOWED_FW_37[] __initconst = {
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
 	"15M3EMS1.107",
+	"15M3EMS1.109",
+	"15M3EMS1.110",
 	NULL
 };
 
@@ -2784,7 +2788,8 @@ static struct msi_ec_conf CONF38 __initdata = {
 
 static const char *ALLOWED_FW_39[] __initconst = {
 	"16R7IMS1.104", // Thin GF63 12HW
-	"16R8IMS1.107", // Thin GF63 12VE
+	"16R8IMS1.101", // Thin GF63 12VE
+	"16R8IMS1.107",
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
@@ -3134,6 +3139,7 @@ static struct msi_ec_conf CONF43 __initdata = {
 
 static const char *ALLOWED_FW_44[] __initconst = {
 	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS1.115",
 	"17L5EMS2.115", // Katana 17 B12VEK
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
