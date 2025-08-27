@@ -58,6 +58,7 @@ static const char *ALLOWED_FW_0[] __initconst = {
 	"14C1EMS1.012", // Prestige 14 A10SC
 	"14C1EMS1.101",
 	"14C1EMS1.102",
+	"16S3EMS1.103", // Prestige 15 A10SC
 	NULL
 };
 
@@ -2782,11 +2783,15 @@ static struct msi_ec_conf CONF38 __initdata = {
 		.max_state        = 3,
 	},
 };
+
 static const char *ALLOWED_FW_39[] __initconst = {
+	"16R7IMS1.104", // Thin GF63 12HW
 	"16R8IMS1.107", // Thin GF63 12VE
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
+	"16R8IMS2.112", // Thin 15 B12UCX / B12VE
+	"16R8IMS2.117",
 	NULL
 };
 
@@ -2810,9 +2815,9 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_ECO_NAME,     0xc2 }, // eco-silent + super battery
+			{ SM_COMFORT_NAME, 0xc1 }, // balanced
+			{ SM_TURBO_NAME,   0xc4 }, // perf
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2823,13 +2828,13 @@ static struct msi_ec_conf CONF39 __initdata = {
 	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
-			{ FM_AUTO_NAME,      0x0d},
-			{ FM_SILENT_NAME,    0x1d},
-			{ FM_ADVANCED_NAME,  0x8d},
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d }, // not used in Eco-silent
+			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
 		},
 	},
-	.cpu = {
+	.cpu = { // single fan
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
 	},
@@ -3565,7 +3570,7 @@ static struct msi_ec_conf CONF49 __initdata = {
 };
 
 static const char *ALLOWED_FW_50[] __initconst = {
-	"1584EMS1.104",	// Katana GF66 12UD
+	"1584EMS1.104",// Katana GF66 12UD
 	"1584EMS1.112", // Katana GF66 12UC
 	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
 	NULL
@@ -3708,7 +3713,6 @@ static const char *ALLOWED_FW_52[] __initconst = {
 	"16V1EMS1.109", // GS66 Stealth 10SFS
 	"16V1EMS1.116",
 	"16V1EMS1.118", // GS66 Stealth 10SE
-	"16V2EMS1.104", // Creator 15 A10SD
 	"16V3EMS1.106", // GS66 Stealth 10UE
 	NULL
 };
