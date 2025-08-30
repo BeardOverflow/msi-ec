@@ -691,6 +691,8 @@ static const char *ALLOWED_FW_9[] __initconst = {
 	"14JKEMS1.104",
 	"14JKEMS1.300", // Modern 14 C7M
 	"14JKEMS1.600",
+	"1551EMS1.106", // Modern 15 A10M
+	"1551EMS1.107",
 	NULL
 };
 
@@ -716,12 +718,12 @@ static struct msi_ec_conf CONF9 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // unsupported or enabled by ECO shift
+		.address = MSI_EC_ADDR_UNSUPP,
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -2502,6 +2504,8 @@ static struct msi_ec_conf CONF34 __initdata = {
 static const char *ALLOWED_FW_35[] __initconst = {
 	"15M2IMS1.110", // Raider GE68HX 13VG
 	"15M2IMS1.113",
+	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
+	"15FKIMS1.109",
 	NULL
 };
 
