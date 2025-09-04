@@ -1084,10 +1084,24 @@ static struct msi_ec_conf CONF14 __initdata = {
 	.cpu = {
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
+
+		.fan_curve = {
+			.speed_start_address = 0x72,
+			.temperature_start_address = 0x6a,
+			.entries_count = 7,
+			.apply_strategy = CURVE_APPLY_STRATEGY_RESET_ON_AUTO
+		}
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
+
+		.fan_curve = {
+			.speed_start_address = 0x8a,
+			.temperature_start_address = 0x82,
+			.entries_count = 7,
+			.apply_strategy = CURVE_APPLY_STRATEGY_RESET_ON_AUTO
+		},
 	},
 	.leds = {
 		.micmute_led_address = 0x2c, // states: 0x00 || 0x02
@@ -4829,8 +4843,7 @@ static ssize_t available_fan_modes_show(struct device *device,
 	return count;
 }
 
-static ssize_t fan_mode_show(struct device *device,
-			     struct device_attribute *attr, char *buf)
+static int fan_mode_get(const char **const dst)
 {
 	u8 rdata;
 	int result;
@@ -4843,12 +4856,30 @@ static ssize_t fan_mode_show(struct device *device,
 		// NULL entries have NULL name
 
 		if (rdata == conf.fan_mode.modes[i].value) {
-			return sysfs_emit(buf, "%s\n", conf.fan_mode.modes[i].name);
+			*dst = conf.fan_mode.modes[i].name;
+			return 0;
 		}
 	}
 
-	return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
+	if (rdata == 0) return MSI_EC_ADDR_UNSUPP;
+	return rdata;
 }
+
+static ssize_t fan_mode_show(struct device *device,
+			     struct device_attribute *attr, char *buf)
+{
+	const char *attr_name;
+	int status = fan_mode_get(&attr_name);
+
+	if (status < 0) return status;
+	else if (status == 0) return sysfs_emit(buf, "%s\n", attr_name);
+	else return sysfs_emit(buf, "%s (%i)\n", "unknown", status);
+}
+
+/**
+ * A callback function. Used to notify the fan curve system when the fan mode changes.
+ */
+static int curve_fan_mode_change(const char *mode);
 
 static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 			      const char *buf, size_t count)
@@ -4859,6 +4890,11 @@ static ssize_t fan_mode_store(struct device *dev, struct device_attribute *attr,
 		// NULL entries have NULL name
 
 		if (sysfs_streq(conf.fan_mode.modes[i].name, buf)) {
+			const char *mode = conf.fan_mode.modes[i].name;
+
+			result = curve_fan_mode_change(mode);
+			if (result < 0) return result;
+
 			result = ec_write(conf.fan_mode.address,
 					  conf.fan_mode.modes[i].value);
 			if (result < 0)
@@ -4949,6 +4985,441 @@ static struct attribute *msi_root_attrs[] = {
 };
 
 // ============================================================ //
+// Sysfs platform device attributes (cpu and gpu curve)
+// ============================================================ //
+
+struct curve_pack {
+	struct msi_ec_fan_curve *curve;
+	
+	/**
+	 * User custom curve storage
+	 */
+	u8 curve_temp[CURVE_MAX_ENTRIES];
+	u8 curve_fan_speed[CURVE_MAX_ENTRIES];
+
+	/**
+	 * Default curve storage (for CURVE_APPLY_STRATEGY_RESET_ON_AUTO mode)
+	 */
+	u8 curve_temp_default[CURVE_MAX_ENTRIES];
+	u8 curve_fan_speed_default[CURVE_MAX_ENTRIES];
+};
+
+static inline int is_curve_initialized(struct curve_pack *cp)
+{
+	return cp != NULL && cp->curve != NULL;
+}
+
+struct curve_pack cpu_curve_package = {0};
+struct curve_pack gpu_curve_package = {0};
+
+const struct {
+	struct curve_pack *cpu_curve;	
+	struct curve_pack *gpu_curve;	
+} all_curves = {
+	.cpu_curve = &cpu_curve_package,
+	.gpu_curve = &gpu_curve_package,
+};
+#define ALL_CURVES_COUNT 2
+
+static int is_curve_allowed(struct msi_ec_fan_curve *curve)
+{
+	if (
+		curve == NULL ||
+		curve->speed_start_address == MSI_EC_ADDR_UNSUPP || 
+		curve->speed_start_address == 0 || 
+		curve->temperature_start_address == MSI_EC_ADDR_UNSUPP || 
+		curve->temperature_start_address == 0 || 
+		curve->entries_count <= 0 || 
+		curve->entries_count > CURVE_MAX_ENTRIES 
+	) {
+		return 0;
+	}
+
+	return 1;
+}
+
+static int is_advanced_fan_mode(void)
+{
+	const char *fan_mode;
+	
+	if (fan_mode_get(&fan_mode)) return -ENODATA;
+	if (!strcmp(fan_mode, FM_ADVANCED_NAME))
+		return 1;
+	else 
+		return 0;
+}
+
+/**
+ * Pulls the curve from ec to the local in-memory buffers.
+ */
+static int pull_ec_curve(struct msi_ec_fan_curve *curve, 
+			 u8 fan_speed_buf[CURVE_MAX_ENTRIES], 
+			 u8 temperature_buf[CURVE_MAX_ENTRIES])
+{
+	if (!is_curve_allowed(curve)) return -EINVAL;
+
+	for (int i = 0, j = curve->speed_start_address; 
+		i < curve->entries_count; i++, j++) {
+		if (ec_read(j, &fan_speed_buf[i])) return -EIO;
+	}
+	for (int i = 0, j = curve->temperature_start_address; 
+		i < curve->entries_count - 1; i++, j++) {
+		if (ec_read(j, &temperature_buf[i])) return -EIO;
+	}
+
+	return 0;
+}
+
+/**
+ * Writes the curve from buffers to ec.
+ */
+static int write_ec_curve(struct msi_ec_fan_curve *curve, 
+			 const u8 fan_speed_buf[CURVE_MAX_ENTRIES], 
+			 const u8 temperature_buf[CURVE_MAX_ENTRIES])
+{
+	if (!is_curve_allowed(curve)) return -EINVAL;
+
+	for (int i = 0, j = curve->speed_start_address; 
+		i < curve->entries_count; i++, j++) {
+		if (ec_write(j, fan_speed_buf[i])) return -EIO;
+	}
+	for (int i = 0, j = curve->temperature_start_address; 
+		i < curve->entries_count - 1; i++, j++) {
+		if (ec_write(j, temperature_buf[i])) return -EIO;
+	}
+
+	return 0;
+}
+
+/**
+ * A safe wrapper for pull_ec_curve. 
+ * Checks the ability and safety to overwrite curve buffers.
+ */
+static int pull_ec_curve_safe(
+	struct msi_ec_fan_curve *curve, 
+	u8 fan_speed_buf[CURVE_MAX_ENTRIES], 
+	u8 temperature_buf[CURVE_MAX_ENTRIES])
+{
+
+	int result = is_advanced_fan_mode();
+	if (result < 0) 
+		return result;
+	if (!result && curve->apply_strategy == 
+		CURVE_APPLY_STRATEGY_RESET_ON_AUTO) {
+		return 0;
+	}
+
+	return pull_ec_curve(curve, fan_speed_buf, temperature_buf);
+}
+
+/**
+ * A safe wrapper for write_ec_curve. 
+ * Checks the ability and safety to write down the ec curve.
+ */
+static int write_ec_curve_safe(
+	struct msi_ec_fan_curve *curve, 
+	const u8 fan_speed_buf[CURVE_MAX_ENTRIES], 
+	const u8 temperature_buf[CURVE_MAX_ENTRIES])
+{
+
+	int result = is_advanced_fan_mode();
+	if (result < 0) 
+		return result;
+	if (!result && curve->apply_strategy == 
+		CURVE_APPLY_STRATEGY_RESET_ON_AUTO) {
+		return 0;
+	}
+
+	return write_ec_curve(curve, fan_speed_buf, temperature_buf);
+}
+
+#define PRINT_CURVE_BUFSIZE 256
+
+/**
+ * Curve is represented in format:
+ * s0 t1 s1 t2 s2 t3 s3 ... t(n-1) s(n-1) t(n) s(n)
+ *
+ * Notice that here is no leading temperature as it represents `less_than_t1`
+ */
+static ssize_t print_curve(
+	const u8 fan_speed_buf[CURVE_MAX_ENTRIES], 
+	const u8 temperature_buf[CURVE_MAX_ENTRIES], 
+	int entries, char *buf)
+{
+	char str[PRINT_CURVE_BUFSIZE];
+	int i = 0;
+
+	int sz = 2 * entries - 1;
+	for (int j = 0, sc = 0, tc = 0; j < sz; j++) {
+		if (j % 2 == 0) {
+			i += snprintf(str + i, PRINT_CURVE_BUFSIZE - i, 
+				"%d ", fan_speed_buf[sc++]);
+		} else {
+			i += snprintf(str + i, PRINT_CURVE_BUFSIZE - i,
+				"%d ", temperature_buf[tc++]);
+		}
+		
+		if (i >= PRINT_CURVE_BUFSIZE) {
+			return -ENOMEM;
+		}
+	}
+	str[i - 1] = '\0';
+
+	return sysfs_emit(buf, "%s\n", str);
+}
+
+static ssize_t read_curve(
+	u8 fan_speed_buf[CURVE_MAX_ENTRIES], 
+	u8 temperature_buf[CURVE_MAX_ENTRIES], 
+	int entries, const char *buf, size_t count)
+{
+	int sz = 2 * entries - 1;
+	int data[2 * CURVE_MAX_ENTRIES];
+
+	const char *sdata = buf;
+	int offset;
+	for (int i = 0; i < sz; i++) {
+		if (sdata >= buf + count) return -EINVAL;
+		if (sscanf(sdata, "%u%n", &data[i], &offset) != 1)
+			return -EINVAL;
+
+		if (data[i] >= 256) return -EINVAL;
+		sdata += offset;
+	}
+	if (sdata < buf + count && *sdata == '\n') sdata++;
+	if (sdata != buf + count) return -EINVAL;
+
+	u8 temp_speed_buf[CURVE_MAX_ENTRIES];
+	u8 temp_temperature_buf[CURVE_MAX_ENTRIES];
+
+	for (int j = 0, sc = 0, tc = 0; j < sz; j++) {
+		if (j % 2 == 0) {
+			temp_speed_buf[sc++] = (u8)data[j];
+		} else {
+			temp_temperature_buf[tc++] = (u8)data[j];
+		}
+	}
+
+	int late_temp = 0;
+
+	// Validate parsed buffers
+	for (int i = 0; i < entries - 1; i++) {
+		if (late_temp >= temp_temperature_buf[i] || temp_temperature_buf[i] > 100) 
+			return -EINVAL;
+		late_temp = temp_temperature_buf[i];
+	}
+	for (int i = 0; i < entries; i++) {
+		if (temp_speed_buf[i] > 150) return -EINVAL;
+	}
+
+	for (int i = 0; i < entries; i++) {
+		fan_speed_buf[i] = temp_speed_buf[i];
+		temperature_buf[i] = temp_temperature_buf[i];
+	}
+
+	return count;
+}
+
+static ssize_t curve_show(struct curve_pack *curve_data, char *buf)
+{
+	int status = pull_ec_curve_safe(
+		curve_data->curve, 
+		curve_data->curve_fan_speed, 
+		curve_data->curve_temp
+	);
+	if (status < 0) return status;
+
+	return print_curve(
+		curve_data->curve_fan_speed, 
+		curve_data->curve_temp, 
+		curve_data->curve->entries_count, 
+		buf 
+	);
+}
+
+static ssize_t curve_store(struct curve_pack *curve_data, const char *buf, size_t count)
+{
+
+	ssize_t scount = read_curve(
+		curve_data->curve_fan_speed, 
+		curve_data->curve_temp, 
+		curve_data->curve->entries_count, 
+		buf, count
+	);
+	if (scount < 0) return scount;
+
+	int result = write_ec_curve_safe(
+		curve_data->curve, 
+		curve_data->curve_fan_speed, 
+		curve_data->curve_temp
+	);
+	if (result < 0) return result;
+
+	return scount;
+}
+
+static int curve_init(struct curve_pack *curve_data, 
+		      struct msi_ec_fan_curve *curve)
+{
+	if (!is_curve_allowed(curve)) {
+		return -EINVAL;
+	}
+	curve_data->curve = curve;
+
+	int result = pull_ec_curve(curve_data->curve, 
+		    curve_data->curve_fan_speed_default, 
+		    curve_data->curve_temp_default
+	);
+	if (result < 0) return result;
+
+	for (int i = 0; i < CURVE_MAX_ENTRIES; i++) {
+		curve_data->curve_fan_speed[i] = 
+			curve_data->curve_fan_speed_default[i];
+		curve_data->curve_temp[i] = curve_data->curve_temp_default[i];
+	}
+
+	return 0;
+}
+
+static void curve_destroy(struct curve_pack *curve_data)
+{
+	if (!is_curve_allowed(curve_data->curve)) {
+		return;
+	}
+
+	int result = write_ec_curve(curve_data->curve,
+		curve_data->curve_fan_speed_default, 
+		curve_data->curve_temp_default
+	);
+	if (result < 0) return;
+
+	for (int i = 0; i < CURVE_MAX_ENTRIES; i++) {
+		curve_data->curve_fan_speed[i] = 
+			curve_data->curve_fan_speed_default[i];
+		curve_data->curve_temp[i] = curve_data->curve_temp_default[i];
+	}
+
+	curve_data->curve = NULL;
+}
+
+static int cpu_curve_init(void)
+{
+	return curve_init(&cpu_curve_package, &conf.cpu.fan_curve);
+}
+
+static void cpu_curve_destroy(void)
+{
+	curve_destroy(&cpu_curve_package);
+}
+
+static int gpu_curve_init(void)
+{
+	return curve_init(&gpu_curve_package, &conf.gpu.fan_curve);
+}
+
+static void gpu_curve_destroy(void)
+{
+	curve_destroy(&gpu_curve_package);
+}
+
+static ssize_t dev_attr_cpu_curve_show(struct device *dev, 
+				       struct device_attribute *attr, char *buf)
+{
+	if (!is_curve_initialized(&cpu_curve_package))
+		return -EINVAL;
+	return curve_show(&cpu_curve_package, buf);
+}
+static ssize_t dev_attr_cpu_curve_store(struct device *dev, struct device_attribute *attr,
+					const char *buf, size_t count)
+{
+	if (!is_curve_initialized(&cpu_curve_package)) 
+		return -EINVAL;
+	return curve_store(&cpu_curve_package, buf, count);
+}
+
+static ssize_t dev_attr_gpu_curve_show(struct device *dev, 
+				       struct device_attribute *attr, char *buf)
+{
+	if (!is_curve_initialized(&gpu_curve_package)) 
+		return -EINVAL;
+	return curve_show(&gpu_curve_package, buf);
+}
+
+static ssize_t dev_attr_gpu_curve_store(struct device *dev, struct device_attribute *attr,
+					const char *buf, size_t count)
+{
+	if (!is_curve_initialized(&gpu_curve_package)) 
+		return -EINVAL;
+	return curve_store(&gpu_curve_package, buf, count);
+}
+
+static struct device_attribute dev_attr_cpu_curve = {
+	.attr = {
+		.name = "curve",
+		.mode = 0644,
+	},
+	.show = dev_attr_cpu_curve_show,
+	.store = dev_attr_cpu_curve_store,
+};
+
+static struct device_attribute dev_attr_gpu_curve = {
+	.attr = {
+		.name = "curve",
+		.mode = 0644,
+	},
+	.show = dev_attr_gpu_curve_show,
+	.store = dev_attr_gpu_curve_store,
+};
+
+/**
+ * A callback function. Called when the fan mode has changed.
+ */
+static int curve_fan_mode_change(const char *mode)
+{
+	struct curve_pack *all_curves_list[ALL_CURVES_COUNT]= {
+		all_curves.cpu_curve,
+		all_curves.gpu_curve
+	};
+
+	int fm_adv_mode = !strcmp(mode, FM_ADVANCED_NAME);
+
+	for (int i = 0; i < ALL_CURVES_COUNT; i++) {
+		struct curve_pack *curve_data = all_curves_list[i];
+		
+		if (!is_curve_initialized(curve_data))
+			continue;
+
+		if (curve_data->curve->apply_strategy == 
+			CURVE_APPLY_STRATEGY_RESET_ON_AUTO) {
+			int result;
+
+			if (fm_adv_mode) {
+				result = write_ec_curve(curve_data->curve, 
+					curve_data->curve_fan_speed, 
+					curve_data->curve_temp
+				);
+			} else {
+				result = pull_ec_curve_safe(curve_data->curve,
+					curve_data->curve_fan_speed,
+					curve_data->curve_temp
+				);
+				result = write_ec_curve(curve_data->curve, 
+					curve_data->curve_fan_speed_default, 
+					curve_data->curve_temp_default
+				);
+			}
+
+			if (result < 0) {
+				return result;
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+// ============================================================ //
 // Sysfs platform device attributes (cpu)
 // ============================================================ //
 
@@ -4999,6 +5470,7 @@ static struct device_attribute dev_attr_cpu_realtime_fan_speed = {
 static struct attribute *msi_cpu_attrs[] = {
 	&dev_attr_cpu_realtime_temperature.attr,
 	&dev_attr_cpu_realtime_fan_speed.attr,
+	&dev_attr_cpu_curve.attr,
 	NULL
 };
 
@@ -5053,6 +5525,7 @@ static struct device_attribute dev_attr_gpu_realtime_fan_speed = {
 static struct attribute *msi_gpu_attrs[] = {
 	&dev_attr_gpu_realtime_temperature.attr,
 	&dev_attr_gpu_realtime_fan_speed.attr,
+	&dev_attr_gpu_curve.attr,
 	NULL
 };
 
@@ -5303,12 +5776,27 @@ static umode_t msi_ec_is_visible(struct kobject *kobj,
 	else if (attr == &dev_attr_cpu_realtime_fan_speed.attr)
 		address = conf.cpu.rt_fan_speed_address;
 
+	else if (attr == &dev_attr_cpu_curve.attr) {
+		if (is_curve_allowed(&conf.cpu.fan_curve))
+			address = conf.cpu.fan_curve.speed_start_address;
+		else
+			address = MSI_EC_ADDR_UNSUPP;
+	}
+
 	/* gpu group */
 	else if (attr == &dev_attr_gpu_realtime_temperature.attr)
 		address = conf.gpu.rt_temp_address;
 
 	else if (attr == &dev_attr_gpu_realtime_fan_speed.attr)
 		address = conf.gpu.rt_fan_speed_address;
+
+	else if (attr == &dev_attr_gpu_curve.attr) {
+		if (is_curve_allowed(&conf.gpu.fan_curve))
+			address = conf.gpu.fan_curve.speed_start_address;
+		else
+			address = MSI_EC_ADDR_UNSUPP;
+	}
+	
 
 	/* default */
 	else
@@ -5471,6 +5959,10 @@ static int __init msi_ec_init(void)
 		led_classdev_register(&msi_platform_device->dev,
 				      &msiacpi_led_kbdlight);
 
+	cpu_curve_init();
+	gpu_curve_init();
+	
+
 	return 0;
 }
 
@@ -5493,6 +5985,9 @@ static void __exit msi_ec_exit(void)
 
 	platform_device_unregister(msi_platform_device);
 	platform_driver_unregister(&msi_platform_driver);
+
+	cpu_curve_destroy();
+	gpu_curve_destroy();
 
 	pr_info("module_exit\n");
 }
