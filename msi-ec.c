@@ -226,7 +226,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -294,7 +294,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -364,7 +364,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -646,7 +646,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -852,7 +852,7 @@ static struct msi_ec_conf CONF11 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1201,7 +1201,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1344,7 +1344,7 @@ static struct msi_ec_conf CONF18 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1622,8 +1622,7 @@ static struct msi_ec_conf CONF22 __initdata = {
 		.address = 0xf2,
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super_battery = 0xa5
-			{ SM_COMFORT_NAME, 0xc1 }, // super_battery = 0xa4
-			{ SM_SPORT_NAME,   0xc1 }, // super_battery = 0xa1
+			{ SM_COMFORT_NAME, 0xc1 }, // silent: super_battery = 0xa4 / balanced: super_battery = 0xa1
 			{ SM_TURBO_NAME,   0xc4 }, // super_battery = 0xa0
 			MSI_EC_MODE_NULL
 		},
@@ -1690,8 +1689,8 @@ static struct msi_ec_conf CONF23 __initdata = {
 		.address = 0xf2,
 		.modes = {
 			// values can also be 0x81... when booting on Linux
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -1764,7 +1763,7 @@ static struct msi_ec_conf CONF24 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xC2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xC1 }, // + Silent
-			{ SM_SPORT_NAME,   0xC0 },
+			{ SM_TURBO_NAME,   0xC0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1900,7 +1899,7 @@ static struct msi_ec_conf CONF26 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_SPORT_NAME,   0xc0 }, // Performance
+			{ SM_TURBO_NAME,   0xc0 }, // Performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2255,8 +2254,8 @@ static struct msi_ec_conf CONF31 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super battery
 			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			{ SM_SPORT_NAME,   0xc0 }, // sport
+			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2392,7 +2391,7 @@ static struct msi_ec_conf CONF33 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2460,7 +2459,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super battery
 			{ SM_COMFORT_NAME, 0xc1 }, // silent / balanced
-			{ SM_SPORT_NAME,   0xc0 }, // high performance
+			{ SM_TURBO_NAME,   0xc0 }, // high performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -3097,7 +3096,7 @@ static struct msi_ec_conf CONF43 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_SPORT_NAME,   0xc0 }, // Performance
+			{ SM_TURBO_NAME,   0xc0 }, // Performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -3243,8 +3242,8 @@ static struct msi_ec_conf CONF45 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -3941,9 +3940,9 @@ static struct msi_ec_conf CONF55 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -4146,7 +4145,7 @@ static struct msi_ec_conf CONF58 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Balanced + Silent
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
