@@ -226,7 +226,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -294,7 +294,7 @@ static struct msi_ec_conf CONF3 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -364,7 +364,7 @@ static struct msi_ec_conf CONF4 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -646,7 +646,7 @@ static struct msi_ec_conf CONF8 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -691,6 +691,8 @@ static const char *ALLOWED_FW_9[] __initconst = {
 	"14JKEMS1.104",
 	"14JKEMS1.300", // Modern 14 C7M
 	"14JKEMS1.600",
+	"1551EMS1.106", // Modern 15 A10M
+	"1551EMS1.107",
 	NULL
 };
 
@@ -716,12 +718,12 @@ static struct msi_ec_conf CONF9 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // unsupported or enabled by ECO shift
+		.address = MSI_EC_ADDR_UNSUPP,
 		.mask    = 0x0f,
 	},
 	.fan_mode = {
@@ -852,7 +854,7 @@ static struct msi_ec_conf CONF11 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1029,6 +1031,7 @@ static struct msi_ec_conf CONF13 __initdata = {
 };
 
 static const char *ALLOWED_FW_14[] __initconst = {
+	"17L1EMS1.105", // Crosshair 17 A11UEK
 	"17L1EMS1.106", // Katana GF76 11UG
 	"17L1EMS1.107", // Katana GF76 11UE
 	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
@@ -1200,7 +1203,7 @@ static struct msi_ec_conf CONF16 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1343,7 +1346,7 @@ static struct msi_ec_conf CONF18 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1621,8 +1624,7 @@ static struct msi_ec_conf CONF22 __initdata = {
 		.address = 0xf2,
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super_battery = 0xa5
-			{ SM_COMFORT_NAME, 0xc1 }, // super_battery = 0xa4
-			{ SM_SPORT_NAME,   0xc1 }, // super_battery = 0xa1
+			{ SM_COMFORT_NAME, 0xc1 }, // silent: super_battery = 0xa4 / balanced: super_battery = 0xa1
 			{ SM_TURBO_NAME,   0xc4 }, // super_battery = 0xa0
 			MSI_EC_MODE_NULL
 		},
@@ -1689,8 +1691,8 @@ static struct msi_ec_conf CONF23 __initdata = {
 		.address = 0xf2,
 		.modes = {
 			// values can also be 0x81... when booting on Linux
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -1736,7 +1738,8 @@ static struct msi_ec_conf CONF23 __initdata = {
 };
 
 static const char *ALLOWED_FW_24[] __initconst = {
-	"14D1EMS1.103", // Modern 14 B10MW (#100)
+	"14D1EMS1.102", // Modern 14 B10MW
+	"14D1EMS1.103",
 	NULL
 };
 
@@ -1762,7 +1765,7 @@ static struct msi_ec_conf CONF24 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xC2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xC1 }, // + Silent
-			{ SM_SPORT_NAME,   0xC0 },
+			{ SM_TURBO_NAME,   0xC0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1898,7 +1901,7 @@ static struct msi_ec_conf CONF26 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_SPORT_NAME,   0xc0 }, // Performance
+			{ SM_TURBO_NAME,   0xc0 }, // Performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2253,8 +2256,8 @@ static struct msi_ec_conf CONF31 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super battery
 			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			{ SM_SPORT_NAME,   0xc0 }, // sport
+			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2390,7 +2393,7 @@ static struct msi_ec_conf CONF33 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2458,7 +2461,7 @@ static struct msi_ec_conf CONF34 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // super battery
 			{ SM_COMFORT_NAME, 0xc1 }, // silent / balanced
-			{ SM_SPORT_NAME,   0xc0 }, // high performance
+			{ SM_TURBO_NAME,   0xc0 }, // high performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -2501,6 +2504,8 @@ static struct msi_ec_conf CONF34 __initdata = {
 static const char *ALLOWED_FW_35[] __initconst = {
 	"15M2IMS1.110", // Raider GE68HX 13VG
 	"15M2IMS1.113",
+	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
+	"15FKIMS1.109",
 	NULL
 };
 
@@ -2647,6 +2652,8 @@ static const char *ALLOWED_FW_37[] __initconst = {
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
 	"15M3EMS1.107",
+	"15M3EMS1.109",
+	"15M3EMS1.110",
 	NULL
 };
 
@@ -2784,7 +2791,8 @@ static struct msi_ec_conf CONF38 __initdata = {
 
 static const char *ALLOWED_FW_39[] __initconst = {
 	"16R7IMS1.104", // Thin GF63 12HW
-	"16R8IMS1.107", // Thin GF63 12VE
+	"16R8IMS1.101", // Thin GF63 12VE
+	"16R8IMS1.107",
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
@@ -3092,7 +3100,7 @@ static struct msi_ec_conf CONF43 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_SPORT_NAME,   0xc0 }, // Performance
+			{ SM_TURBO_NAME,   0xc0 }, // Performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -3134,6 +3142,7 @@ static struct msi_ec_conf CONF43 __initdata = {
 
 static const char *ALLOWED_FW_44[] __initconst = {
 	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS1.115",
 	"17L5EMS2.115", // Katana 17 B12VEK
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
@@ -3237,8 +3246,8 @@ static struct msi_ec_conf CONF45 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
+			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
@@ -3935,9 +3944,9 @@ static struct msi_ec_conf CONF55 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_SPORT_NAME,   0xc0 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -4140,7 +4149,7 @@ static struct msi_ec_conf CONF58 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Balanced + Silent
-			{ SM_SPORT_NAME,   0xc0 },
+			{ SM_TURBO_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
