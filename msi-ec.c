@@ -4182,7 +4182,6 @@ static struct msi_ec_conf CONF58 __initdata = {
 
 static const char *ALLOWED_FW_59[] __initconst = {
 	"1563EMS1.115", // MSI Stealth 15M A11UEK
-	"1563EMS1.1150105", //Same but complete Firmware
 	NULL
 };
 
@@ -4197,7 +4196,7 @@ static struct msi_ec_conf CONF59 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -4208,7 +4207,6 @@ static struct msi_ec_conf CONF59 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
-			{ SM_SPORT_NAME,   0xc0 }, // Silent (mas usa nome "sport" internamente)
 			{ SM_TURBO_NAME,   0xc4 }, // High Performance
 			MSI_EC_MODE_NULL
 		},
@@ -4236,14 +4234,14 @@ static struct msi_ec_conf CONF59 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d, // 0x2d is the write address but i dont know why is not working
+		.mute_led_address    = 0x2d,
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, //0x2c
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, //0xd3
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
