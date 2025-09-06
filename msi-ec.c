@@ -478,6 +478,10 @@ static const char *ALLOWED_FW_6[] __initconst = {
 	"1541EMS1.113", // GE66 Raider 10SF
 	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
 	"1542EMS1.104",
+	"16V1EMS1.109", // GS66 Stealth 10SFS
+	"16V1EMS1.116",
+	"16V1EMS1.118", // GS66 Stealth 10SE
+	"16V3EMS1.106", // GS66 Stealth 10UE
 	NULL
 };
 
@@ -3320,76 +3324,6 @@ static struct msi_ec_conf CONF51 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_52[] __initconst = {
-	"16V1EMS1.109", // GS66 Stealth 10SFS
-	"16V1EMS1.116",
-	"16V1EMS1.118", // GS66 Stealth 10SE
-	"16V3EMS1.106", // GS66 Stealth 10UE
-	NULL
-};
-
-static struct msi_ec_conf CONF52 __initdata = {
-	.allowed_fw = ALLOWED_FW_52, // WMI1 based
-	.charge_control_address = 0xef,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xbf,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xf2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // super battery
-			{ SM_COMFORT_NAME, 0xc1 }, // silent-balanced
-			{ SM_TURBO_NAME,   0xc4 }, // extreme
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN,
-		.mask    = 0x0f
-	},
-	.fan_mode = {
-		.address = 0xf4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
-		.bit                 = 2,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x01 },
-		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
 static const char *ALLOWED_FW_53[] __initconst = {
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG, Prestige A16 AI+ A3HMG
 	NULL
@@ -3907,7 +3841,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF49,
 	&CONF50,
 	&CONF51,
-	&CONF52,
 	&CONF53,
 	&CONF54,
 	&CONF55,
