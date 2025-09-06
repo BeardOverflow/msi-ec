@@ -62,7 +62,7 @@ static const char *ALLOWED_FW_0[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF0 __initdata = {
+static struct msi_ec_conf CONF_G1_0 __initdata = {
 	.allowed_fw = ALLOWED_FW_0, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -135,7 +135,7 @@ static const char *ALLOWED_FW_1[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF1 __initdata = {
+static struct msi_ec_conf CONF_G1_1 __initdata = {
 	.allowed_fw = ALLOWED_FW_1, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -205,7 +205,7 @@ static const char *ALLOWED_FW_2[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF2 __initdata = {
+static struct msi_ec_conf CONF_G2_0 __initdata = {
 	.allowed_fw = ALLOWED_FW_2, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -223,7 +223,7 @@ static struct msi_ec_conf CONF2 __initdata = {
 		.bit     = 7,
 	},
 	.shift_mode = {
-		.address = 0xD2, // because WMI2 device
+		.address = 0xD2,
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
@@ -274,7 +274,7 @@ static const char *ALLOWED_FW_3[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF3 __initdata = {
+static struct msi_ec_conf CONF_G2_1 __initdata = {
 	.allowed_fw = ALLOWED_FW_3, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -352,7 +352,7 @@ static const char *ALLOWED_FW_4[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF4 __initdata = {
+static struct msi_ec_conf CONF_G2_2 __initdata = {
 	.allowed_fw = ALLOWED_FW_4, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -423,7 +423,7 @@ static const char *ALLOWED_FW_5[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF5 __initdata = {
+static struct msi_ec_conf CONF_G1_2 __initdata = {
 	.allowed_fw = ALLOWED_FW_5, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -496,7 +496,7 @@ static const char *ALLOWED_FW_6[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF6 __initdata = {
+static struct msi_ec_conf CONF_G1_3 __initdata = {
 	.allowed_fw = ALLOWED_FW_6, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -566,7 +566,7 @@ static const char *ALLOWED_FW_7[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF7 __initdata = {
+static struct msi_ec_conf CONF_G1_4 __initdata = {
 	.allowed_fw = ALLOWED_FW_7, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -640,7 +640,7 @@ static const char *ALLOWED_FW_8[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF8 __initdata = {
+static struct msi_ec_conf CONF_G2_3 __initdata = {
 	.allowed_fw = ALLOWED_FW_8, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -712,7 +712,7 @@ static const char *ALLOWED_FW_9[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF9 __initdata = {
+static struct msi_ec_conf CONF_G1_5 __initdata = {
 	.allowed_fw = ALLOWED_FW_9, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -786,7 +786,7 @@ static const char *ALLOWED_FW_10[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF10 __initdata = {
+static struct msi_ec_conf CONF_G2_4 __initdata = {
 	.allowed_fw = ALLOWED_FW_10, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -854,7 +854,7 @@ static const char *ALLOWED_FW_11[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF11 __initdata = {
+static struct msi_ec_conf CONF_G2_5 __initdata = {
 	.allowed_fw = ALLOWED_FW_11, // WMI2 based
 	.charge_control_address = 0xD7,
 	.webcam = {
@@ -932,7 +932,7 @@ static const char *ALLOWED_FW_12[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF12 __initdata = {
+static struct msi_ec_conf CONF_G2_6 __initdata = {
 	.allowed_fw = ALLOWED_FW_12, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -1010,7 +1010,7 @@ static const char *ALLOWED_FW_14[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF14 __initdata = {
+static struct msi_ec_conf CONF_G2_7 __initdata = {
 	.allowed_fw = ALLOWED_FW_14, // WMI2 based
 	.charge_control_address = 0xd7,
 	// .usb_share = {
@@ -1089,7 +1089,7 @@ static const char *ALLOWED_FW_16[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF16 __initdata = {
+static struct msi_ec_conf CONF_G1_6 __initdata = {
 	.allowed_fw = ALLOWED_FW_16, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -1159,7 +1159,7 @@ static const char *ALLOWED_FW_17[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF17 __initdata = {
+static struct msi_ec_conf CONF_G2_8 __initdata = {
 	.allowed_fw = ALLOWED_FW_17, // WMI2 based
 	.charge_control_address = 0xd7,
 	// .usb_share  {
@@ -1239,7 +1239,7 @@ static const char *ALLOWED_FW_21[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF21 __initdata = {
+static struct msi_ec_conf CONF_G1_7 __initdata = {
 	.allowed_fw = ALLOWED_FW_21, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -1308,7 +1308,7 @@ static const char *ALLOWED_FW_23[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF23 __initdata = {
+static struct msi_ec_conf CONF_G1_8 __initdata = {
 	.allowed_fw = ALLOWED_FW_23, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -1382,7 +1382,7 @@ static const char *ALLOWED_FW_25[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF25 __initdata = {
+static struct msi_ec_conf CONF_G2_9 __initdata = {
 	.allowed_fw = ALLOWED_FW_25, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -1452,7 +1452,7 @@ static const char *ALLOWED_FW_27[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF27 __initdata = {
+static struct msi_ec_conf CONF_G2_10 __initdata = {
 	.allowed_fw = ALLOWED_FW_27, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -1527,8 +1527,8 @@ static const char *ALLOWED_FW_28[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF28 __initdata = {
-	.allowed_fw = ALLOWED_FW_28,
+static struct msi_ec_conf CONF_G2_11 __initdata = {
+	.allowed_fw = ALLOWED_FW_28, // WMI2 based
 	.charge_control_address = 0xd7,
 	// .usb_share  {
 	// 	.address      = 0xbf, // states: 0x08 || 0x28
@@ -1600,8 +1600,8 @@ static const char *ALLOWED_FW_31[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF31 __initdata = {
-	.allowed_fw = ALLOWED_FW_31,
+static struct msi_ec_conf CONF_G1_9 __initdata = {
+	.allowed_fw = ALLOWED_FW_31, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
@@ -1675,7 +1675,7 @@ static const char *ALLOWED_FW_32[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF32 __initdata = {
+static struct msi_ec_conf CONF_G2_12 __initdata = {
 	.allowed_fw = ALLOWED_FW_32, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -1742,8 +1742,8 @@ static const char *ALLOWED_FW_33[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF33 __initdata = {
-	.allowed_fw = ALLOWED_FW_33,
+static struct msi_ec_conf CONF_G2_13 __initdata = {
+	.allowed_fw = ALLOWED_FW_33, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1810,8 +1810,8 @@ static const char *ALLOWED_FW_34[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF34 __initdata = {
-	.allowed_fw = ALLOWED_FW_34,
+static struct msi_ec_conf CONF_G2_14 __initdata = {
+	.allowed_fw = ALLOWED_FW_34, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1880,7 +1880,7 @@ static const char *ALLOWED_FW_35[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF35 __initdata = {
+static struct msi_ec_conf CONF_G2_15 __initdata = {
 	.allowed_fw = ALLOWED_FW_35, // WMI2 based
 	.charge_control_address = 0xd7,
 	// .usb_share = {
@@ -1960,7 +1960,7 @@ static const char *ALLOWED_FW_37[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF37 __initdata = {
+static struct msi_ec_conf CONF_G2_16 __initdata = {
 	.allowed_fw = ALLOWED_FW_37, // WMI2 based
 	.charge_control_address = 0xd7,
 	// .usb_share  {
@@ -2032,7 +2032,7 @@ static const char *ALLOWED_FW_42[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF42 __initdata = {
+static struct msi_ec_conf CONF_G2_17 __initdata = {
 	.allowed_fw = ALLOWED_FW_42, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -2103,7 +2103,7 @@ static const char *ALLOWED_FW_46[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF46 __initdata = {
+static struct msi_ec_conf CONF_G1_10 __initdata = {
 	.allowed_fw = ALLOWED_FW_46, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -2174,7 +2174,7 @@ static const char *ALLOWED_FW_47[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF47 __initdata = {
+static struct msi_ec_conf CONF_G2_18 __initdata = {
 	.allowed_fw = ALLOWED_FW_47, // WMI2 based
 	.charge_control_address = 0xd7,
 	// .usb_share = {
@@ -2248,7 +2248,7 @@ static const char *ALLOWED_FW_51[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF51 __initdata = {
+static struct msi_ec_conf CONF_G1_11 __initdata = {
 	.allowed_fw = ALLOWED_FW_51, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -2315,7 +2315,7 @@ static const char *ALLOWED_FW_53[] __initconst = {
 	NULL
 }; // lid position sensor requires 0xD9 bit 0 being set to work
 
-static struct msi_ec_conf CONF53 __initdata = {
+static struct msi_ec_conf CONF_G2_19 __initdata = {
 	.allowed_fw = ALLOWED_FW_53, // WMI2 based, Center S app
 	.charge_control_address = 0xd7,
 	.webcam = { // have no ability to power off camera module, just plastic cover
@@ -2381,7 +2381,7 @@ static const char *ALLOWED_FW_55[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF55 __initdata = {
+static struct msi_ec_conf CONF_G1_12 __initdata = {
 	.allowed_fw = ALLOWED_FW_55, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
@@ -2448,8 +2448,8 @@ static const char *ALLOWED_FW_56[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF56 __initdata = {
-	.allowed_fw = ALLOWED_FW_56,
+static struct msi_ec_conf CONF_G2_20 __initdata = {
+	.allowed_fw = ALLOWED_FW_56, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = MSI_EC_ADDR_UNSUPP,
@@ -2511,8 +2511,8 @@ static const char *ALLOWED_FW_58[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF58 __initdata = {
-	.allowed_fw = ALLOWED_FW_58, // WMI1 based?
+static struct msi_ec_conf CONF_G1_13 __initdata = {
+	.allowed_fw = ALLOWED_FW_58, // WMI1 based
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
@@ -2578,7 +2578,7 @@ static const char *ALLOWED_FW_59[] __initconst = {
 	NULL
 };
 
-static struct msi_ec_conf CONF59 __initdata = {
+static struct msi_ec_conf CONF_G2_21 __initdata = {
 	.allowed_fw = ALLOWED_FW_59, // WMI2 based
 	.charge_control_address = 0xd7,
 	.webcam = {
@@ -2641,42 +2641,43 @@ static struct msi_ec_conf CONF59 __initdata = {
 };
 
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
-	&CONF0,
-	&CONF1,
-	&CONF2,
-	&CONF3,
-	&CONF4,
-	&CONF5,
-	&CONF6,
-	&CONF7,
-	&CONF8,
-	&CONF9,
-	&CONF10,
-	&CONF11,
-	&CONF12,
-	&CONF14,
-	&CONF16,
-	&CONF17,
-	&CONF21,
-	&CONF23,
-	&CONF25,
-	&CONF27,
-	&CONF28,
-	&CONF31,
-	&CONF32,
-	&CONF33,
-	&CONF34,
-	&CONF35,
-	&CONF37,
-	&CONF42,
-	&CONF46,
-	&CONF47,
-	&CONF51,
-	&CONF53,
-	&CONF55,
-	&CONF56,
-	&CONF58,
-	&CONF59,
+	&CONF_G1_0,
+	&CONF_G1_1,
+	&CONF_G1_2,
+	&CONF_G1_3,
+	&CONF_G1_4,
+	&CONF_G1_5,
+	&CONF_G1_6,
+	&CONF_G1_7,
+	&CONF_G1_8,
+	&CONF_G1_9,
+	&CONF_G1_10,
+	&CONF_G1_11,
+	&CONF_G1_12,
+	&CONF_G1_13,
+
+	&CONF_G2_0,
+	&CONF_G2_1,
+	&CONF_G2_2,
+	&CONF_G2_3,
+	&CONF_G2_4,
+	&CONF_G2_5,
+	&CONF_G2_6,
+	&CONF_G2_7,
+	&CONF_G2_8,
+	&CONF_G2_9,
+	&CONF_G2_10,
+	&CONF_G2_11,
+	&CONF_G2_12,
+	&CONF_G2_13,
+	&CONF_G2_14,
+	&CONF_G2_15,
+	&CONF_G2_16,
+	&CONF_G2_17,
+	&CONF_G2_18,
+	&CONF_G2_19,
+	&CONF_G2_20,
+	&CONF_G2_21,
 	NULL
 };
 
