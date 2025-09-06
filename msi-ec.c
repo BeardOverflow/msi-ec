@@ -2133,6 +2133,7 @@ static struct msi_ec_conf CONF35 __initdata = {
 static const char *ALLOWED_FW_37[] __initconst = {
 	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
+	"15M1IMS2.111", // MSI Vector 16 HX A14VHG
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
 	"15M3EMS1.107",
@@ -2340,72 +2341,6 @@ static struct msi_ec_conf CONF40 __initdata = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
 		// Fan rpm is 480000 / value at combined: ca..cb
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_41[] __initconst = {
-	"15M1IMS2.111", // MSI Vector 16 HX A14VHG
-	NULL
-};
-
-static struct msi_ec_conf CONF41 __initdata = {
-	.allowed_fw = ALLOWED_FW_41, // WMI2 based
-	.charge_control_address = 0xd7,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = false,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // Silent / Eco
-			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
-			{ SM_TURBO_NAME,   0xc4 }, // Performance
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // Function not shown in dragon center
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
@@ -3429,7 +3364,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF37,
 	&CONF39,
 	&CONF40,
-	&CONF41,
 	&CONF42,
 	&CONF44,
 	&CONF45,
