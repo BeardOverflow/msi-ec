@@ -1110,8 +1110,15 @@ static struct msi_ec_conf CONF15 __initdata = {
 };
 
 static const char *ALLOWED_FW_16[] __initconst = {
+	"14D1EMS1.102", // Modern 14 B10MW
+	"14D1EMS1.103",
+	"14DKEMS1.104", // Modern 14 B4MW
+	"14DKEMS1.105",
+	"14DLEMS1.105", // Modern 14 B5M
 	"155LEMS1.105", // Modern 15 A5M
 	"155LEMS1.106",
+	"15HKEMS1.102", // Modern 15 B7M
+	"15HKEMS1.104",
 	NULL
 };
 
@@ -1159,8 +1166,8 @@ static struct msi_ec_conf CONF16 __initdata = {
 		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
 	},
 	.leds = {
 		.micmute_led_address = 0x2b,
@@ -1247,74 +1254,6 @@ static struct msi_ec_conf CONF17 __initdata = {
 		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_18[] __initconst = {
-	"15HKEMS1.102", // Modern 15 B7M
-	"15HKEMS1.104",
-	NULL
-};
-
-static struct msi_ec_conf CONF18 __initdata = {
-	.allowed_fw = ALLOWED_FW_18, // WMI1 based
-	.charge_control_address = 0xef,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xbf,
-		.bit     = 4,
-		.invert  = false,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xf2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc0 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // unsupported or enabled by ECO shift
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xf4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
-	},
-	.leds = {
-		.micmute_led_address = 0x2b,
-		.mute_led_address    = 0x2c,
-		.bit                 = 2,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not presented in MSI app
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -1671,74 +1610,6 @@ static struct msi_ec_conf CONF23 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_24[] __initconst = {
-	"14D1EMS1.102", // Modern 14 B10MW
-	"14D1EMS1.103",
-	NULL
-};
-
-static struct msi_ec_conf CONF24 __initdata = {
-	.allowed_fw = ALLOWED_FW_24, // WMI1 based
-	.charge_control_address = 0xef,
-	.webcam = {
-		.address       = 0x2E,
-		.block_address = 0x2F,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xBF,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xf2,
-		.modes = {
-			{ SM_ECO_NAME,     0xC2 }, // Super Battery
-			{ SM_COMFORT_NAME, 0xC1 }, // + Silent
-			{ SM_TURBO_NAME,   0xC0 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // not 0xD5, tested
-		.mask    = 0x0f,
-	},
-	.fan_mode = { // Creator Center sets 0x?0 instead of 0x?D
-		.address = 0xf4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
-	},
-	.leds = {
-		.micmute_led_address = 0x2B,
-		.mute_led_address    = 0x2C,
-		.bit                 = 2,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xF3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
 static const char *ALLOWED_FW_25[] __initconst = {
 	"14F1EMS1.207", // Prestige 14 Evo B13M
 	"14F1EMS1.209", // Summit E14 Flip Evo A13MT
@@ -1803,73 +1674,6 @@ static struct msi_ec_conf CONF25 __initdata = {
 		.bl_modes         = { 0x00, 0x08 }, // 00 - on, 08 - 10 sec auto off
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_26[] __initconst = {
-	"14DLEMS1.105", // Modern 14 B5M
-	NULL
-};
-
-static struct msi_ec_conf CONF26 __initdata = {
-	.allowed_fw = ALLOWED_FW_26, // WMI1 based
-	.charge_control_address = 0xef,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xbf,
-		.bit     = 4,
-		.invert  = false,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xf2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // Super Battery
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_TURBO_NAME,   0xc0 }, // Performance
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // 0x33 switches between 0x0D and 0x05
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
-	},
-	.leds = {
-		.micmute_led_address = 0x2b,
-		.mute_led_address    = 0x2c,
-		.bit                 = 2,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not presented in MSI app
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -2935,74 +2739,6 @@ static struct msi_ec_conf CONF42 __initdata = {
 		.bl_modes         = { 0x00, 0x08 }, // 00 - on, 08 - 10 sec auto off
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_43[] __initconst = {
-	"14DKEMS1.104", // Modern 14 B4MW
-	"14DKEMS1.105",
-	NULL
-};
-
-static struct msi_ec_conf CONF43 __initdata = {
-	.allowed_fw = ALLOWED_FW_43, // WMI1 based
-	.charge_control_address = 0xef,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xbf,
-		.bit     = 4,
-		.invert  = false,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xf2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // Super Battery
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_TURBO_NAME,   0xc0 }, // Performance
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // 0x33 switches between 0x0D and 0x05
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
-	},
-	.leds = {
-		.micmute_led_address = 0x2b,
-		.mute_led_address    = 0x2c,
-		.bit                 = 2,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not presented in MSI app
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -4142,15 +3878,12 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF15,
 	&CONF16,
 	&CONF17,
-	&CONF18,
 	&CONF19,
 	&CONF20,
 	&CONF21,
 	&CONF22,
 	&CONF23,
-	&CONF24,
 	&CONF25,
-	&CONF26,
 	&CONF27,
 	&CONF28,
 	&CONF29,
@@ -4166,7 +3899,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF40,
 	&CONF41,
 	&CONF42,
-	&CONF43,
 	&CONF44,
 	&CONF45,
 	&CONF46,
