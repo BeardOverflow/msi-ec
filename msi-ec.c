@@ -1563,12 +1563,15 @@ static struct msi_ec_conf CONF27 __initdata = {
 };
 
 static const char *ALLOWED_FW_28[] __initconst = {
+	"17Q2IMS1.107", // Titan GT77HX 13VH
+	"17Q2IMS1.10D",
 	"1822EMS1.105", // Titan 18 HX A14V
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
 	"1822EMS1.112",
 	"1822EMS1.114",
 	"1822EMS1.115",
+	"1824EMS1.107", // Titan 18 HX Dragon Edition
 	NULL
 };
 
@@ -1580,14 +1583,14 @@ static struct msi_ec_conf CONF28 __initdata = {
 	// 	.bit          = 5,
 	// }, // Like Katana 17 B11UCX
 	.webcam = {
-		.address       = MSI_EC_ADDR_UNSUPP,
+		.address       = 0x2e,
 		.block_address = MSI_EC_ADDR_UNSUPP,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
 		.address = 0xe8,
-		.bit     = 4, // 0x01-0x11
-		.invert  = false,
+		.bit     = 4,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1618,7 +1621,6 @@ static struct msi_ec_conf CONF28 __initdata = {
 	.cpu = {
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
-		// n/rpm register is C9
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1706,75 +1708,6 @@ static struct msi_ec_conf CONF29 __initdata = {
 		.bl_modes         = { },
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_30[] __initconst = {
-	"17Q2IMS1.107", // Titan GT77HX 13VH
-	"17Q2IMS1.10D",
-	NULL
-};
-
-static struct msi_ec_conf CONF30 __initdata = {
-	.allowed_fw = ALLOWED_FW_30, // WMI2 based
-	.charge_control_address = 0xd7,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = false,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // eco works as expected (much slower, uses less power and lower fan speeds)
-			{ SM_COMFORT_NAME, 0xc1 }, // comfort, sport, and turbo all seem to be the same
-			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNKNOWN,
-		.mute_led_address    = MSI_EC_ADDR_UNKNOWN,
-		.bit = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-		.bl_modes         = {},
-		.max_mode         = 1,
-		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -3124,79 +3057,6 @@ static struct msi_ec_conf CONF56 __initdata = {
 	},
 };
 
-
-
-static const char *ALLOWED_FW_57[] __initconst = {
-	"1824EMS1.107", // Titan 18 HX Dragon Edition
-	NULL
-};
-
-static struct msi_ec_conf CONF57 __initdata = {
-	.allowed_fw = ALLOWED_FW_57,
-	.charge_control_address = 0xd7,
-	// .usb_share  {
-	// 	.address      = 0xbf, // states: 0x08 || 0x28
-	// 	.bit          = 5,
-	// }, // Like Katana 17 B11UCX
-	.webcam = {
-		.address       = MSI_EC_ADDR_UNSUPP, // Manually slide-able cover
-		.block_address = MSI_EC_ADDR_UNSUPP,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4, // 0x00 (not flipped) or 0x10 (flipped)
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7, // 0x02 (off) or 0x82 (on)
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // Eco (Super Battery)
-			{ SM_COMFORT_NAME, 0xc1 }, // Balanced
-			{ SM_TURBO_NAME,   0xc4 }, // Extreme Performance
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb, // 0x0f ( on ) or 0x00 ( off )
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68, // Temp in Hex
-		.rt_fan_speed_address = 0x71, // Fan Speed in %
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80, // Temp in Hex
-		.rt_fan_speed_address = 0x89, // Fan Speed in %
-	},
-	.leds = {
-		.micmute_led_address = 0x2c, // off (0x00) or on (0x02)
-		.mute_led_address    = 0x2d, // off (0x24) or on (0x26)
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // Technically 0xd3, but its bugged
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
 static const char *ALLOWED_FW_58[] __initconst = {
 	"16V2EMS1.104", // Creator 15 A10SD-276ES
 	NULL
@@ -3355,7 +3215,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF27,
 	&CONF28,
 	&CONF29,
-	&CONF30,
 	&CONF31,
 	&CONF32,
 	&CONF33,
@@ -3375,7 +3234,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF54,
 	&CONF55,
 	&CONF56,
-	&CONF57,
 	&CONF58,
 	&CONF59,
 	NULL
