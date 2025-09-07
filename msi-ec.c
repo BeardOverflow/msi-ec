@@ -133,6 +133,8 @@ static const char *ALLOWED_FW_G1_1[] __initconst = {
 	"17F2EMS1.107",
 	"17F3EMS2.103", // GF75 Thin 10SER
 	"17F4EMS2.100", // GF75 Thin 9SCSR
+	"17F5EMS1.102", // GF75 Thin 10UEK
+	"17F6EMS1.103", // GF75 Thin 10UC / 10UD
 	"17E8EMS1.101", // GL75 Leopard 10SCXR
 	NULL
 };
@@ -1069,6 +1071,9 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"1552EMS1.118",
 	"1552EMS1.119",
 	"1552EMS1.120",
+	"15H1IMS1.214", // Modern 15 B13M
+	"14D2EMS1.116", // Modern 14 B11M
+	"14D3EMS1.116", // Modern 14 B11MOU
 	NULL
 };
 
@@ -1083,7 +1088,7 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 	.fn_win_swap = {
 		.address = 0xe8,
 		.bit     = 4,
-		.invert  = false,
+		.invert  = true,
 	},
 	.cooler_boost = {
 		.address = 0x98,
@@ -1117,8 +1122,8 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
@@ -1138,6 +1143,7 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
 	"1594EMS1.109", // Prestige 16 Studio A13VE
+	"1596EMS1.105", // Summit E16 AI Studio A1VETG
 	NULL
 };
 
@@ -1206,6 +1212,7 @@ static struct msi_ec_conf CONF_G2_1 __initdata = {
 static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"1543EMS1.113", // GP66 Leopard 11UG / GE66 Raider 11UE
 	"1543EMS1.115",
+	"1544EMS1.112", // Vector GP66 12UGS
 	"1545IMS1.109", // Raider GE67 HX 12U
 	"16V4EMS1.114", // GS66 Stealth 11UE / 11UG
 	"16V4EMS1.115",
@@ -1216,6 +1223,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"17K3EMS1.115", // GP76 Leopard 11UG
 	"17K4EMS1.108", // Raider GE76 12UE
 	"17K4EMS1.112", // Raider GE76 12UGS / Vector GP76 12UH
+	"17K5IMS1.107", // Raider GE77 HX 12UGS
 	NULL
 };
 
@@ -2315,6 +2323,9 @@ static struct msi_ec_conf CONF_G2_16 __initdata = {
 static const char *ALLOWED_FW_G2_17[] __initconst = {
 	"14L1EMS1.307", // Modern 14 H D13M
 	"14L1EMS1.308",
+	"14J1IMS1.109", // Modern 14 C12M
+	"14J1IMS1.205",
+	"14J1IMS1.215",
 	NULL
 };
 
@@ -2322,7 +2333,7 @@ static struct msi_ec_conf CONF_G2_17 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_17, // legacy fw_42
 	.charge_control_address = 0xd7,
 	.webcam = {
-		.address       = MSI_EC_ADDR_UNSUPP,
+		.address       = 0x2e,
 		.block_address = 0x2f,
 		.bit           = 1,
 	},
@@ -2367,7 +2378,7 @@ static struct msi_ec_conf CONF_G2_17 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = 0x2d, // not present on 14L1
 		.bit                 = 1,
 	},
 	.kbd_bl = {
