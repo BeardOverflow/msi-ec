@@ -1,4 +1,4 @@
-VERSION         := 0.11
+VERSION         := 0.12
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 KERNELRELEASE ?= $(shell uname -r)
 
