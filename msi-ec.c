@@ -263,7 +263,7 @@ static struct msi_ec_conf CONF_G1_2 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
@@ -337,10 +337,10 @@ static struct msi_ec_conf CONF_G1_3 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // not functional (RGB)
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -358,7 +358,7 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -387,7 +387,7 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
-			{ FM_AUTO_NAME,     0x0d }, // d may not be relevant
+			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
 			{ FM_ADVANCED_NAME, 0x8d },
 			MSI_EC_MODE_NULL
@@ -398,8 +398,8 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
@@ -479,7 +479,7 @@ static struct msi_ec_conf CONF_G1_5 __initdata = {
 		.bit                 = 2,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not presented in MSI app
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
@@ -631,7 +631,7 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // Only mode is solid red
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
@@ -641,7 +641,7 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_8[] __initconst = {
-	"16WKEMS1.105", // MSI Bravo 15 A4DDR (issue #134)
+	"16WKEMS1.105", // Bravo 15 A4DDR
 	NULL
 };
 
@@ -650,7 +650,7 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -665,7 +665,6 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			// values can also be 0x81... when booting on Linux
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			{ SM_TURBO_NAME,   0xc4 }, // Performance
@@ -673,12 +672,11 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 		},
 	},
 	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // enabled by "Super Battery" shift mode?
+		.address = MSI_EC_ADDR_UNSUPP, // enabled by "Super Battery" shift mode
 	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
-			// 'd' is not relevant, values can also be 0x00... or 0x03...
 			{ FM_AUTO_NAME,     0x0d },
 			{ FM_SILENT_NAME,   0x1d },
 			{ FM_ADVANCED_NAME, 0x8d },
@@ -687,23 +685,18 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	},
 	.cpu = {
 		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71, // target speed
-		// current RPM speed is 480000/x
-		// with x 2 bytes at 0xcc and 0xcd
+		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
-		// current RPM speed is 480000/x
-		// with x 2 bytes at 0xca and 0xcb
 	},
 	.leds = {
-		// No LED indicator
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // not in MSI Center
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
@@ -729,7 +722,7 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 	},
 	.fn_win_swap = {
 		.address = 0xbf,
-		.bit     = 4, // 0x00-0x10
+		.bit     = 4,
 		.invert  = false,
 	},
 	.cooler_boost = {
@@ -761,7 +754,6 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 	.cpu = {
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
-		// n/rpm register is C9
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -773,11 +765,11 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // KB auto turn off
-		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x81,
+		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
 };
@@ -846,7 +838,7 @@ static struct msi_ec_conf CONF_G1_10 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // Only mode is solid red
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
@@ -938,7 +930,7 @@ static struct msi_ec_conf CONF_G1_12 __initdata = {
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -996,7 +988,7 @@ static struct msi_ec_conf CONF_G1_12 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_13[] __initconst = {
-	"16V2EMS1.104", // Creator 15 A10SD-276ES
+	"16V2EMS1.104", // Creator 15 A10SD
 	NULL
 };
 
@@ -1030,7 +1022,7 @@ static struct msi_ec_conf CONF_G1_13 __initdata = {
 		.address = 0xd5,
 		.mask    = 0x0f,
 	},
-	.fan_mode = { // Creator Center sets 0x?0 instead of 0x?D
+	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
 			{ FM_AUTO_NAME,     0x0d },
@@ -1095,7 +1087,7 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 		.bit     = 7,
 	},
 	.shift_mode = {
-		.address = 0xD2,
+		.address = 0xd2,
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
@@ -1131,9 +1123,9 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = 0x2c, // ?
-		.bl_modes         = { 0x00, 0x08 }, // ?
-		.max_mode         = 1, // ?
+		.bl_mode_address  = 0x2c,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -1447,7 +1439,7 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 	.charge_control_address = 0xD7,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNKNOWN,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -1486,8 +1478,8 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
@@ -1495,7 +1487,7 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = {},
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
@@ -1656,8 +1648,8 @@ static struct msi_ec_conf CONF_G2_7 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 }, // ? always on; off after 10 sec
-		.max_mode         = 1, // ?
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
 		.bl_state_address = 0xd3, // mixed single color and RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
@@ -1686,7 +1678,7 @@ static struct msi_ec_conf CONF_G2_8 __initdata = {
 	},
 	.fn_win_swap = {
 		.address = 0xe8,
-		.bit     = 4, // 0x01-0x11
+		.bit     = 4,
 		.invert  = true,
 	},
 	.cooler_boost = {
@@ -1704,7 +1696,7 @@ static struct msi_ec_conf CONF_G2_8 __initdata = {
 	},
 	.super_battery = {
 		.address = 0xeb, // 0x0F ( on ) or 0x00 ( off ) on 0xEB
-		.mask    = 0x0f, // 00, 0f
+		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1718,7 +1710,6 @@ static struct msi_ec_conf CONF_G2_8 __initdata = {
 	.cpu = {
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
-		// n/rpm register is C9
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
@@ -1900,7 +1891,7 @@ static struct msi_ec_conf CONF_G2_11 __initdata = {
 	// }, // Like Katana 17 B11UCX
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -1948,10 +1939,10 @@ static struct msi_ec_conf CONF_G2_11 __initdata = {
 		.bit                 = 1,
 	},
 	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP, // KB auto turn off
-		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP, // bugged RGB
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -1974,7 +1965,7 @@ static struct msi_ec_conf CONF_G2_12 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2032,7 +2023,7 @@ static struct msi_ec_conf CONF_G2_12 __initdata = {
 };
 
 static const char *ALLOWED_FW_G2_13[] __initconst = {
-	"17N1EMS1.109", // MSI Creator Z17 A12UGST
+	"17N1EMS1.109", // Creator Z17 A12UGST
 	NULL
 };
 
@@ -2041,7 +2032,7 @@ static struct msi_ec_conf CONF_G2_13 __initdata = {
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2148,8 +2139,8 @@ static struct msi_ec_conf CONF_G2_14 __initdata = {
 		.rt_fan_speed_address = 0x71,
 	},
 	.gpu = {
-		.rt_temp_address      = MSI_EC_ADDR_UNKNOWN,
-		.rt_fan_speed_address = MSI_EC_ADDR_UNKNOWN,
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
@@ -2183,7 +2174,7 @@ static struct msi_ec_conf CONF_G2_15 __initdata = {
 	// },
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP, // not in MSI app
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2220,12 +2211,10 @@ static struct msi_ec_conf CONF_G2_15 __initdata = {
 	.cpu = {
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
-		// Fan rpm is 480000 / value at combined: c8..c9
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
-		// Fan rpm is 480000 / value at combined: ca..cb
 	},
 	.leds = {
 		.micmute_led_address = 0x2c,
@@ -2245,7 +2234,7 @@ static struct msi_ec_conf CONF_G2_15 __initdata = {
 static const char *ALLOWED_FW_G2_16[] __initconst = {
 	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
-	"15M1IMS2.111", // MSI Vector 16 HX A14VHG
+	"15M1IMS2.111", // Vector 16 HX A14VHG
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
 	"15M3EMS1.107",
@@ -2284,7 +2273,7 @@ static struct msi_ec_conf CONF_G2_16 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = { // also on address 0x91 (?) = 0x5f - normal, 0x50 - silent
+	.super_battery = {
 		.address = 0xeb,
 		.mask    = 0x0f,
 	},
@@ -2407,7 +2396,7 @@ static struct msi_ec_conf CONF_G2_18 __initdata = {
 	// },
 	.webcam = {
 		.address       = 0x2e,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2536,8 +2525,8 @@ static struct msi_ec_conf CONF_G2_20 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_20, // legacy fw_56
 	.charge_control_address = 0xd7,
 	.webcam = {
-		.address       = MSI_EC_ADDR_UNSUPP,
-		.block_address = MSI_EC_ADDR_UNSUPP,
+		.address       = 0x2e,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
@@ -2584,14 +2573,14 @@ static struct msi_ec_conf CONF_G2_20 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP,	// Can see 0xd3's value was changed, but not effected
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,	// RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
 };
 
 static const char *ALLOWED_FW_G2_21[] __initconst = {
-	"1563EMS1.115", // MSI Stealth 15M A11UEK
+	"1563EMS1.115", // Stealth 15M A11UEK
 	NULL
 };
 
