@@ -2168,6 +2168,7 @@ static struct msi_ec_conf CONF_G2_15 __initdata = {
 static const char *ALLOWED_FW_G2_16[] __initconst = {
 	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
+	"15M1IMS2.105", // Vector 16 HX A13V
 	"15M1IMS2.111", // Vector 16 HX A14VHG
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
@@ -2388,6 +2389,7 @@ static struct msi_ec_conf CONF_G2_18 __initdata = {
 
 static const char *ALLOWED_FW_G2_19[] __initconst = {
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG, Prestige A16 AI+ A3HMG
+	"159KIMS1.110",
 	NULL
 }; // lid position sensor requires 0xD9 bit 0 being set to work
 
