@@ -1134,14 +1134,50 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 };
 
 static const char *ALLOWED_FW_G2_1[] __initconst = {
+	"14C4EMS1.120", // Prestige 14 A11SCX
+	"14C6EMS1.109", // Prestige 14 Evo A12M
+	"1581EMS1.107", // Katana GF66 11UE / 11UG
+	"1582EMS1.107", // Katana GF66 11UC / 11UD
+	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
+	"1584EMS1.104", // Katana GF66 12UD
+	"1584EMS1.112", // Katana GF66 12UC
+	"1585EMS1.112", // Katana 15 B13VGK
+	"1585EMS1.115", // Pulse 15 B13VGK
+	"1585EMS2.115", // Katana 15 B12VFK
+	"158NIMS1.109", // Bravo 15 C7V
+	"158NIMS1.10D", // Bravo 15 C7UCX
+	"158NIMS1.10E",
+	"158NIMS1.30C", // Bravo 15 C7VFKP
+	"158NIMS1.505", // Katana A15 AI B8VF
+	"158PIMS1.207", // Bravo 15 B7E
+	"158PIMS1.112", // Bravo 15 B7ED
+	"158PIMS1.114",
 	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
 	"1594EMS1.109", // Prestige 16 Studio A13VE
 	"1596EMS1.105", // Summit E16 AI Studio A1VETG
+	"15K1IMS1.110", // Cyborg 15 A12VF
+	"15K1IMS1.111", // Cyborg 15 A13VF
+	"15K1IMS1.112", // Cyborg 15 A13VFK
+	"15K1IMS1.113", // Cyborg 15 A13VF
+	"16S6EMS1.111", // Prestige 15 A11SCX
+	"16S6EMS1.114",
+	"17L1EMS1.105", // Crosshair 17 A11UEK
+	"17L1EMS1.106", // Katana GF76 11UG
+	"17L1EMS1.107", // Katana GF76 11UE
+	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
+	"17L3EMS1.106", // Crosshair 17 B12UGZ
+	"17L3EMS1.109", // Katana GF76 12UG
+	"17L4EMS1.112", // Katana GF76 12UC
+	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS1.115",
+	"17L5EMS2.115", // Katana 17 B12VEK
+	"17LNIMS1.10E", // Bravo 17 C7VE
+	"17LNIMS1.505", // Katana A17 AI B8VF
 	NULL
 };
 
 static struct msi_ec_conf CONF_G2_1 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_1, // legacy fw_3
+	.allowed_fw = ALLOWED_FW_G2_1, // legacy fw_3, fw_10 (G2_4), fw_11 (G2_5), fw_14 (G2_7), fw_17 (G2_8), fw_32 (G2_12), fw_34 (G2_14)
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1196,7 +1232,7 @@ static struct msi_ec_conf CONF_G2_1 __initdata = {
 		.bl_mode_address  = 0x2c,
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
-		.bl_state_address = 0xd3,
+		.bl_state_address = 0xd3, // mix of single and RGB
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -1358,148 +1394,6 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_G2_4[] __initconst = {
-	"1581EMS1.107", // Katana GF66 11UE / 11UG
-	"1582EMS1.107", // Katana GF66 11UC / 11UD
-	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
-	"1584EMS1.104", // Katana GF66 12UD
-	"1584EMS1.112", // Katana GF66 12UC
-	"1585EMS1.112", // Katana 15 B13VGK
-	"1585EMS1.115", // Pulse 15 B13VGK
-	"1585EMS2.115", // Katana 15 B12VFK
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_4 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_4, // legacy fw_10
-	.charge_control_address = 0xd7,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xd3, // mix of single and RGB
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_G2_5[] __initconst = {
-	"16S6EMS1.111", // Prestige 15 A11SCX
-	"16S6EMS1.114",
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_5 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_5, // legacy fw_11
-	.charge_control_address = 0xD7,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = false,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc0 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x4d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = {},
-		.max_mode         = 1,
-		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
 static const char *ALLOWED_FW_G2_6[] __initconst = {
 	"16R6EMS1.104", // GF63 Thin 11UC / 11SC
 	"16R6EMS1.106",
@@ -1571,162 +1465,6 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
 		.bl_modes         = { },
-		.max_mode         = 1,
-		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_G2_7[] __initconst = {
-	"17L1EMS1.105", // Crosshair 17 A11UEK
-	"17L1EMS1.106", // Katana GF76 11UG
-	"17L1EMS1.107", // Katana GF76 11UE
-	"17L2EMS1.108", // Katana 17 B11UCX, Katana GF76 11UC
-	"17L3EMS1.106", // Crosshair 17 B12UGZ
-	"17L3EMS1.109", // Katana GF76 12UG
-	"17L4EMS1.112", // Katana GF76 12UC
-	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
-	"17L5EMS1.115",
-	"17L5EMS2.115", // Katana 17 B12VEK
-	"17LNIMS1.10E", // Bravo 17 C7VE
-	"17LNIMS1.505", // Katana A17 AI B8VF
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_7 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_7, // legacy fw_14
-	.charge_control_address = 0xd7,
-	// .usb_share = {
-	//  	.address      = 0xbf, // states: 0x08 || 0x28
-	//  	.bit          = 5,
-	// },
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // Super Battery
-			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_TURBO_NAME,   0xc4 }, // Performance
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xd3, // mixed single color and RGB
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_G2_8[] __initconst = {
-	"15K1IMS1.110", // Cyborg 15 A12VF
-	"15K1IMS1.111", // Cyborg 15 A13VF
-	"15K1IMS1.112", // Cyborg 15 A13VFK
-	"15K1IMS1.113", // Cyborg 15 A13VF
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_8 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_8, // legacy fw_17
-	.charge_control_address = 0xd7,
-	// .usb_share  {
-	// 	.address      = 0xbf, // states: 0x08 || 0x28
-	// 	.bit          = 5,
-	// }, // Like Katana 17 B11UCX
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // super battery
-			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-			{ SM_TURBO_NAME,   0xc4 }, // extreme
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb, // 0x0F ( on ) or 0x00 ( off ) on 0xEB
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = 0x2c, // KB auto turn off
-		.bl_modes         = { 0x00, 0x08 }, // always on; off after 10 sec
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
@@ -1883,80 +1621,6 @@ static struct msi_ec_conf CONF_G2_11 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_G2_12[] __initconst = {
-	"158NIMS1.109", // Bravo 15 C7V
-	"158NIMS1.10D", // Bravo 15 C7UCX
-	"158NIMS1.10E",
-	"158NIMS1.30C", // Bravo 15 C7VFKP
-	"158NIMS1.505", // Katana A15 AI B8VF
-	"158PIMS1.207", // Bravo 15 B7E
-	"158PIMS1.112", // Bravo 15 B7ED
-	"158PIMS1.114",
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_12 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_12, // legacy fw_32
-	.charge_control_address = 0xd7,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { },
-		.max_mode         = 1,
-		.bl_state_address = 0xd3,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
 static const char *ALLOWED_FW_G2_13[] __initconst = {
 	"17N1EMS1.109", // Creator Z17 A12UGST
 	NULL
@@ -2019,74 +1683,6 @@ static struct msi_ec_conf CONF_G2_13 __initdata = {
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_G2_14[] __initconst = {
-	"14C4EMS1.120", // Prestige 14 A11SCX
-	"14C6EMS1.109", // Prestige 14 Evo A12M
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_14 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_14, // legacy fw_34
-	.charge_control_address = 0xd7,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // super battery
-			{ SM_COMFORT_NAME, 0xc1 }, // silent / balanced
-			{ SM_TURBO_NAME,   0xc0 }, // high performance
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d }, // super battery, balanced and auto high performance modes
-			{ FM_SILENT_NAME,   0x1d }, // silent mode
-			{ FM_ADVANCED_NAME, 0x4d }, // advanced high performance mode
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = 0x2c,
-		.mute_led_address    = 0x2d,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 }, // always on / off after 10 sec
-		.max_mode         = 1,
-		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -2543,16 +2139,10 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G2_1,
 	&CONF_G2_2,
 	&CONF_G2_3,
-	&CONF_G2_4,
-	&CONF_G2_5,
 	&CONF_G2_6,
-	&CONF_G2_7,
-	&CONF_G2_8,
 	&CONF_G2_10,
 	&CONF_G2_11,
-	&CONF_G2_12,
 	&CONF_G2_13,
-	&CONF_G2_14,
 	&CONF_G2_15,
 	&CONF_G2_16,
 	&CONF_G2_17,
