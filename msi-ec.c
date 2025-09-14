@@ -1253,11 +1253,14 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"17K4EMS1.108", // Raider GE76 12UE
 	"17K4EMS1.112", // Raider GE76 12UGS / Vector GP76 12UH
 	"17K5IMS1.107", // Raider GE77 HX 12UGS
+	"17KKIMS1.108", // Alpha 17 C7VF / C7VG
+	"17KKIMS1.109",
+	"17KKIMS1.114",
 	NULL
 };
 
 static struct msi_ec_conf CONF_G2_2 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_2, // legacy fw_4
+	.allowed_fw = ALLOWED_FW_G2_2, // legacy fw_4, fw_47 (G2_18)
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1913,78 +1916,6 @@ static struct msi_ec_conf CONF_G2_17 __initdata = {
 	},
 };
 
-static const char *ALLOWED_FW_G2_18[] __initconst = {
-	"17KKIMS1.108", // Alpha 17 C7VF / C7VG
-	"17KKIMS1.109",
-	"17KKIMS1.114",
-	NULL
-};
-
-static struct msi_ec_conf CONF_G2_18 __initdata = {
-	.allowed_fw = ALLOWED_FW_G2_18, // legacy fw_47
-	.charge_control_address = 0xd7,
-	// .usb_share = {
-	//  	.address      = 0xbf, // states: 0x08 || 0x28
-	//  	.bit          = 5,
-	// },
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xe8,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xd2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // eco-silent
-			{ SM_COMFORT_NAME, 0xc1 }, // balanced
-			{ SM_TURBO_NAME,   0xc4 }, // extreme
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // 0xEB=0 unchanged
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xd4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d }, // auto, cooler boost, balanced, eco-silent
-			{ FM_ADVANCED_NAME, 0x8d }, // advanced
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
 static const char *ALLOWED_FW_G2_20[] __initconst = {
 	"182LIMS1.108", // Vector A18 HX A9WHG
 	NULL
@@ -2146,7 +2077,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G2_15,
 	&CONF_G2_16,
 	&CONF_G2_17,
-	&CONF_G2_18,
 	&CONF_G2_20,
 	&CONF_G2_21,
 	NULL
