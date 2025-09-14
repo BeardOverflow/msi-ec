@@ -573,11 +573,16 @@ static const char *ALLOWED_FW_G1_7[] __initconst = {
 	"16R4EMS2.102", // GF63 Thin 9SCSR
 	"16R5EMS1.101", // GF63 Thin 10U(C/D) / 10SC
 	"16R5EMS1.102",
+	"16W1EMS1.102", // GF65 Thin 9SE(X(R)) / 9SD
+	"16W1EMS1.103",
+	"16W1EMS1.104",
+	"16W1EMS2.103", // GF65 Thin 10SCSXR / 10SD(R) / 10SE(R)
+	"16W2EMS1.101", // GF65 Thin 10UE
 	NULL
 };
 
 static struct msi_ec_conf CONF_G1_7 __initdata = {
-	.allowed_fw = ALLOWED_FW_G1_7, // legacy fw_21
+	.allowed_fw = ALLOWED_FW_G1_7, // legacy fw_21, fw_46 (G1_10)
 	.charge_control_address = 0xef,
 	.webcam = {
 		.address       = 0x2e,
@@ -769,79 +774,6 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 		.bl_modes         = { 0x00, 0x08 },
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
-		.state_base_value = 0x80,
-		.max_state        = 3,
-	},
-};
-
-static const char *ALLOWED_FW_G1_10[] __initconst = {
-	"16W1EMS1.102", // GF65 Thin 9SE(X(R)) / 9SD
-	"16W1EMS1.103",
-	"16W1EMS1.104",
-	"16W1EMS2.103", // GF65 Thin 10SCSXR / 10SD(R) / 10SE(R)
-	"16W2EMS1.101", // GF65 Thin 10UE
-	NULL
-};
-
-static struct msi_ec_conf CONF_G1_10 __initdata = {
-	.allowed_fw = ALLOWED_FW_G1_10, // legacy fw_46
-	.charge_control_address = 0xef,
-	.webcam = {
-		.address       = 0x2e,
-		.block_address = 0x2f,
-		.bit           = 1,
-	},
-	.fn_win_swap = {
-		.address = 0xbf,
-		.bit     = 4,
-		.invert  = true,
-	},
-	.cooler_boost = {
-		.address = 0x98,
-		.bit     = 7,
-	},
-	.shift_mode = {
-		.address = 0xf2,
-		.modes = {
-			{ SM_ECO_NAME,     0xc2 },
-			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP,
-		.mask    = 0x0f,
-	},
-	.fan_mode = {
-		.address = 0xf4,
-		.modes = {
-			{ FM_AUTO_NAME,     0x0d },
-			{ FM_SILENT_NAME,   0x1d },
-			{ FM_BASIC_NAME,    0x4d },
-			{ FM_ADVANCED_NAME, 0x8d },
-			MSI_EC_MODE_NULL
-		},
-	},
-	.cpu = {
-		.rt_temp_address      = 0x68,
-		.rt_fan_speed_address = 0x71,
-	},
-	.gpu = {
-		.rt_temp_address      = 0x80,
-		.rt_fan_speed_address = 0x89,
-	},
-	.leds = {
-		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
-		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
-		.bit                 = 1,
-	},
-	.kbd_bl = {
-		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
-		.max_mode         = 1,
-		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
 		.max_state        = 3,
 	},
@@ -1590,7 +1522,6 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G1_7,
 	&CONF_G1_8,
 	&CONF_G1_9,
-	&CONF_G1_10,
 	&CONF_G1_11,
 	&CONF_G1_12,
 	&CONF_G1_13,
