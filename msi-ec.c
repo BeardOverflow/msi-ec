@@ -786,6 +786,7 @@ static const char *ALLOWED_FW_G1_11[] __initconst = {
 	"158MEMS1.100", // Bravo 15 B5ED
 	"158MEMS1.101",
 	"158KEMS1.104", // Bravo 15 B5DD
+	"158KEMS1.108",
 	"158KEMS1.106",
 	"158KEMS1.109",
 	NULL
@@ -1005,9 +1006,11 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"1581EMS1.107", // Katana GF66 11UE / 11UG
 	"1582EMS1.107", // Katana GF66 11UC / 11UD
 	"1583EMS1.110", // Pulse  GL66 12UGK / Crosshair 15 B12UEZ / Katana GF66-12UG
-	"1584EMS1.104", // Katana GF66 12UD
-	"1584EMS1.112", // Katana GF66 12UC
+	"1584EMS1.104", // Katana GF66 12U(C/D) (ENE)
+	"1584EMS1.112",
+	"1584IMS1.106", // Katana GF66 12UDO (ITE) (#467)
 	"1585EMS1.112", // Katana 15 B13VGK
+	"1585EMS1.113",
 	"1585EMS1.115", // Pulse 15 B13VGK
 	"1585EMS2.115", // Katana 15 B12VFK
 	"158NIMS1.109", // Bravo 15 C7V
@@ -1347,6 +1350,7 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 };
 
 static const char *ALLOWED_FW_G2_10[] __initconst = {
+	"1562EMS1.117", // Stealth 15M A11SEK
 	"1563EMS1.115", // Stealth 15M A11UEK
 	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
 	"15FKIMS1.109",
