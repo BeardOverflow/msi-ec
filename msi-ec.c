@@ -276,6 +276,10 @@ static const char *ALLOWED_FW_G1_3[] __initconst = {
 	"1541EMS1.113", // GE66 Raider 10SF
 	"1542EMS1.102", // GP66 Leopard 10UG / 10UE / 10UH
 	"1542EMS1.104",
+	"16Q2EMS1.107", // GS65 Stealth Thin 8RF
+	"16Q2EMS1.T40",
+	"16Q4EMS1.109", // GS65 Stealth 8S / 9S(D)
+	"16Q4EMS1.110",
 	"16V1EMS1.109", // GS66 Stealth 10SFS
 	"16V1EMS1.116",
 	"16V1EMS1.118", // GS66 Stealth 10SE
@@ -712,10 +716,6 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_9[] __initconst = {
-	"16Q2EMS1.107", // GS65 Stealth Thin 8RF
-	"16Q2EMS1.T40",
-	"16Q4EMS1.109", // GS65 Stealth 8S / 9S(D)
-	"16Q4EMS1.110",
 	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.107", // GS75 Stealth 9SF
 	"17G3EMS1.115", // GS75 Stealth 10SF
