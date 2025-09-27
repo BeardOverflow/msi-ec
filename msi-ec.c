@@ -1200,6 +1200,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14F1EMS1.211",
 	"14L1EMS1.307", // Modern 14 H D13M
 	"14L1EMS1.308",
+	"14L1EMS1.311",
 	"14J1IMS1.109", // Modern 14 C12M
 	"14J1IMS1.205",
 	"14J1IMS1.215",
