@@ -1097,6 +1097,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"158PIMS1.207", // Bravo 15 B7E
 	"158PIMS1.112", // Bravo 15 B7ED
 	"158PIMS1.114",
+	"1591EMS1.108", // Summit E16 Flip A11UCT
 	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
 	"1594EMS1.109", // Prestige 16 Studio A13VE
 	"1596EMS1.105", // Summit E16 AI Studio A1VETG
@@ -1115,11 +1116,9 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"17L3EMS1.106", // Crosshair 17 B12UGZ
 	"17L3EMS1.109", // Katana GF76 12UG
 	"17L4EMS1.112", // Katana GF76 12UC
-	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
-	"17L5EMS1.115",
-	"17L5EMS2.115", // Katana 17 B12VEK
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
+	"17M1EMS2.113", // Creator 17 B11UE
 	NULL
 };
 
@@ -1204,6 +1203,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"17KKIMS1.108", // Alpha 17 C7VF / C7VG
 	"17KKIMS1.109",
 	"17KKIMS1.114",
+	"17M1EMS1.113", // Stealth GS76 11UG
 	NULL
 };
 
@@ -1506,6 +1506,7 @@ static const char *ALLOWED_FW_G2_6[] __initconst = {
 	"16R8IMS2.117",
 	"16RKIMS1.110", // Thin A15 B7VF
 	"16RKIMS1.111",
+	"16RKIMS2.108",
 	NULL
 };
 
@@ -1574,8 +1575,12 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1562EMS1.117", // Stealth 15M A11SEK
 	"1563EMS1.115", // Stealth 15M A11UEK
+	"1587EMS1.102", // Katana 15 HX B14WEK
+	"15F2EMS1.109", // Stealth 16 Studio A13VG
+	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
 	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
 	"15FKIMS1.109",
+	"15K2EMS1.106", // Cyborg 15 AI A1VFK
 	"15M1IMS1.110", // Vector GP68 HX 13V
 	"15M1IMS1.113", // Vector GP68 HX 12V
 	"15M1IMS2.104", // Raider GE68 HX 14VIG
@@ -1591,13 +1596,21 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15M3EMS1.110",
 	"15P2EMS1.108", // Sword 16 HX B13V / B14V
 	"15P2EMS1.110",
+	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS1.115",
+	"17L5EMS2.115", // Katana 17 B12VEK
+	"17L7EMS1.102", // Katana 17 HX B14WGK
 	"17N1EMS1.109", // Creator Z17 A12UGST
+	"17P1EMS1.104", // Stealth GS77 12U(E/GS)
+	"17P1EMS1.106",
+	"17P2EMS1.111", // Stealth 17 Studio A13VI
 	"17Q2IMS1.107", // Titan GT77HX 13VH
 	"17Q2IMS1.10D",
 	"17S1IMS1.105", // Raider GE78HX 13VI
 	"17S1IMS1.113",
 	"17S1IMS2.107", // Vector 17 HX  A14V
 	"17S2IMS1.113", // Raider GE78 HX Smart Touchpad 13V
+	"17S3EMS1.104", // Vector 17 HX AI A2XWHG
 	"1822EMS1.105", // Titan 18 HX A14V
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
