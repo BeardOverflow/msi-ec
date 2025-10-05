@@ -278,7 +278,8 @@ static const char *ALLOWED_FW_G1_3[] __initconst = {
 	"1542EMS1.104",
 	"16Q2EMS1.107", // GS65 Stealth Thin 8RF
 	"16Q2EMS1.T40",
-	"16Q4EMS1.109", // GS65 Stealth 8S / 9S(D)
+	"16Q4EMS1.108", // GS65 Stealth 8S / 9S(D/F)
+	"16Q4EMS1.109",
 	"16Q4EMS1.110",
 	"16V1EMS1.109", // GS66 Stealth 10SFS
 	"16V1EMS1.116",
@@ -575,7 +576,8 @@ static const char *ALLOWED_FW_G1_7[] __initconst = {
 	"16R3EMS1.104",
 	"16R4EMS1.101", // GF63 Thin 10SCX(R) / 10SCS(R)
 	"16R4EMS1.102",
-	"16R4EMS2.102", // GF63 Thin 9SCSR
+	"16R4EMS2.101", // GF63 Thin 9SCSR
+	"16R4EMS2.102",
 	"16R5EMS1.101", // GF63 Thin 10U(C/D) / 10SC
 	"16R5EMS1.102",
 	"16W1EMS1.102", // GF65 Thin 9SE(X(R)) / 9SD
