@@ -35,13 +35,28 @@ Eager to support the project? Your help is always welcome to keep the project al
 > 
 > Check version with `uname -r`
 
-1. Install the following packages using the terminal:
+1. Disable `secure boot` from the bios
+<details>
+	
+   1. Turn off the laptop
+   2. Turn on the laptop
+   3. Immediately start pressing the `delete` key
+   4. Keep clicking the `delete` button until bios shows up
+   5. Go to `Security` page
+   6. Select `secure boot support` -> `Disabled`
+   7. Go to `Save and Exit` page
+   8. Save settings and restart
+
+</details>
+
+2. Install the following packages using the terminal:
    - For Debian: `sudo apt install build-essential linux-headers-amd64`
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
    - For Arch:   `sudo pacman -S --needed base-devel linux-headers`
-2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
-3. Choose one of the following installation methods
+
+3. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
+4. Choose one of the following installation methods
 
 #### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
 
