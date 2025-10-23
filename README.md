@@ -35,7 +35,7 @@ Eager to support the project? Your help is always welcome to keep the project al
 > 
 > Check version with `uname -r`
 
-1. Disable `secure boot` from the bios
+1. Disable `secure boot` from the bios (**or** [sign the module](https://github.com/BeardOverflow/msi-ec/issues/464))
 <details>
 	
    1. Turn off the laptop
