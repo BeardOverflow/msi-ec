@@ -131,6 +131,7 @@ static const char *ALLOWED_FW_G1_1[] __initconst = {
 	"17F2EMS1.104",
 	"17F2EMS1.106",
 	"17F2EMS1.107",
+	"17F3EMS1.103", // GF75 Thin 9SD
 	"17F3EMS2.103", // GF75 Thin 10SER
 	"17F4EMS2.100", // GF75 Thin 9SCSR
 	"17F5EMS1.102", // GF75 Thin 10UEK
