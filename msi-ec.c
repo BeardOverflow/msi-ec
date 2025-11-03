@@ -855,8 +855,9 @@ static const char *ALLOWED_FW_G1_11[] __initconst = {
 	"158MEMS1.100", // Bravo 15 B5ED
 	"158MEMS1.101",
 	"158KEMS1.104", // Bravo 15 B5DD
-	"158KEMS1.108",
 	"158KEMS1.106",
+	"158KEMS1.107",
+	"158KEMS1.108",
 	"158KEMS1.109",
 	NULL
 };
