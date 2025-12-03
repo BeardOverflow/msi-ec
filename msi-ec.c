@@ -1102,9 +1102,10 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"158NIMS1.30C", // Bravo 15 C7VFKP
 	"158NIMS1.502", // Katana A15 AI B8V(F)
 	"158NIMS1.505",
-	"158PIMS1.207", // Bravo 15 B7E
-	"158PIMS1.112", // Bravo 15 B7ED
+	"158PIMS1.106", // Bravo 15 B7ED
+	"158PIMS1.112",
 	"158PIMS1.114",
+	"158PIMS1.207", // Bravo 15 B7E
 	"1591EMS1.108", // Summit E16 Flip A11UCT
 	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
 	"1594EMS1.109", // Prestige 16 Studio A13VE
@@ -1606,6 +1607,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15M3EMS1.107",
 	"15M3EMS1.109",
 	"15M3EMS1.110",
+	"15M3EMS1.112",
 	"15P2EMS1.108", // Sword 16 HX B13V / B14V
 	"15P2EMS1.110",
 	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
