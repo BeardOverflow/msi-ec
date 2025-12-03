@@ -1586,7 +1586,8 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 
 static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1562EMS1.117", // Stealth 15M A11SEK
-	"1563EMS1.115", // Stealth 15M A11UEK
+	"1563EMS1.106", // Stealth 15M A11UEK
+	"1563EMS1.115",
 	"1587EMS1.102", // Katana 15 HX B14WEK
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
