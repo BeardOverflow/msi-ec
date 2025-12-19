@@ -129,6 +129,13 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
     - on: cooler boost function is enabled
     - off: cooler boost function is disabled
 
+- `/sys/devices/platform/msi-ec/usb_powershare`
+  - Description: This entry allows enabling the usb powershare function. It provides power to charge devices via USB ports while device is suspended.
+  - Access: Read, Write
+  - Valid values:
+    - on: usb powershare function is enabled
+    - off: usb powershare function is disabled
+
 - `/sys/devices/platform/msi-ec/available_shift_modes`
   - Description: This entry reports all supported shift modes.
   - Access: Read
