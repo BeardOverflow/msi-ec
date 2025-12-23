@@ -1,4 +1,4 @@
-VERSION         := 0.12
+VERSION         := 0.13
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 KERNELRELEASE ?= $(shell uname -r)
 
@@ -29,15 +29,15 @@ reload: unload load
 reload-debug: unload load-debug
 
 install:
-	mkdir -p /lib/modules/$(KERNELRELEASE)/extra
-	cp msi-ec.ko /lib/modules/$(KERNELRELEASE)/extra
+	mkdir -p /lib/modules/$(KERNELRELEASE)/updates
+	cp msi-ec.ko /lib/modules/$(KERNELRELEASE)/updates
 	depmod -a
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
 	modprobe -v msi-ec
 
 uninstall:
 	-modprobe -rv msi-ec
-	rm -f /lib/modules/$(KERNELRELEASE)/extra/msi-ec.ko
+	rm -f /lib/modules/$(KERNELRELEASE)/updates/msi-ec.ko
 	depmod -a
 	rm -f /etc/modules-load.d/msi-ec.conf
 
