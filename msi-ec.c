@@ -127,6 +127,9 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_1[] __initconst = {
+	"16U7EMS1.105", // GP65 / GL65 Leopard 10S
+	"16U7EMS1.106",
+	"16U7EMS1.504", // GL65 Leopard 9SD
 	"17F2EMS1.103", // GF75 Thin 9SC
 	"17F2EMS1.104",
 	"17F2EMS1.106",
@@ -135,7 +138,8 @@ static const char *ALLOWED_FW_G1_1[] __initconst = {
 	"17F3EMS2.103", // GF75 Thin 10SER
 	"17F4EMS2.100", // GF75 Thin 9SCSR
 	"17F5EMS1.102", // GF75 Thin 10UEK
-	"17F6EMS1.103", // GF75 Thin 10UC / 10UD
+	"17F6EMS1.101", // GF75 Thin 10UC / 10UD / 10SC
+	"17F6EMS1.103",
 	"17E8EMS1.101", // GL75 Leopard 10SCXR
 	NULL
 };
@@ -285,6 +289,7 @@ static const char *ALLOWED_FW_G1_3[] __initconst = {
 	"16Q4EMS1.109",
 	"16Q4EMS1.110",
 	"16V1EMS1.109", // GS66 Stealth 10SFS
+	"16V1EMS1.109",
 	"16V1EMS1.116",
 	"16V1EMS1.118", // GS66 Stealth 10SE
 	"16V3EMS1.106", // GS66 Stealth 10UE
@@ -723,6 +728,7 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 
 static const char *ALLOWED_FW_G1_9[] __initconst = {
 	"17G1EMS2.106", // P75  CREATOR 9SG
+	"17G1EMS1.100", // GS75 Stealth 8SF
 	"17G1EMS1.102", // GS75 Stealth 9SF
 	"17G1EMS1.107",
 	"17G3EMS1.113", // GS75 Stealth 10SF
@@ -934,6 +940,7 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 
 static const char *ALLOWED_FW_G1_13[] __initconst = {
 	"16V2EMS1.104", // Creator 15 A10SD
+	"16V2EMS1.106",
 	NULL
 };
 
@@ -1091,6 +1098,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"1584EMS1.104", // Katana GF66 12U(C/D) (ENE)
 	"1584EMS1.112",
 	"1584IMS1.106", // Katana GF66 12UDO (ITE) (#467)
+	"1585EMS1.111", // Creator M16 B13VF
 	"1585EMS1.112", // Katana 15 B13VGK
 	"1585EMS1.113",
 	"1585EMS1.115", // Pulse 15 B13VGK
@@ -1103,6 +1111,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"158NIMS1.502", // Katana A15 AI B8V(F)
 	"158NIMS1.505",
 	"158PIMS1.106", // Bravo 15 B7ED
+	"158PIMS1.111",
 	"158PIMS1.112",
 	"158PIMS1.114",
 	"158PIMS1.207", // Bravo 15 B7E
