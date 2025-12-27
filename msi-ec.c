@@ -1593,6 +1593,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
 	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
 	"15FKIMS1.109",
+	"15FKIMS1.110", // Stealth A16 AI+ A3XVGG
 	"15K2EMS1.106", // Cyborg 15 AI A1VFK
 	"15M1IMS1.109", // Vector GP68 HX 13V
 	"15M1IMS1.110",
