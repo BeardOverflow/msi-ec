@@ -127,6 +127,9 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_1[] __initconst = {
+	"16U7EMS1.105", // GP65 / GL65 Leopard 10S
+	"16U7EMS1.106",
+	"16U7EMS1.504", // GL65 Leopard 9SD
 	"17F2EMS1.103", // GF75 Thin 9SC
 	"17F2EMS1.104",
 	"17F2EMS1.106",
@@ -283,6 +286,7 @@ static const char *ALLOWED_FW_G1_3[] __initconst = {
 	"16Q2EMS1.106", // GS65 Stealth Thin 8RE
 	"16Q2EMS1.107", // GS65 Stealth Thin 8RF
 	"16Q2EMS1.T40",
+	"16Q3EMS1.104", // P65 Creator 8RE - single color kb bl, but 00 val
 	"16Q4EMS1.108", // GS65 Stealth 8S / 9S(D/F)
 	"16Q4EMS1.109",
 	"16Q4EMS1.110",
@@ -660,6 +664,7 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 
 static const char *ALLOWED_FW_G1_8[] __initconst = {
 	"16WKEMS1.105", // Bravo 15 A4DDR
+	"16S1EMS1.104", // PS63 MODERN 8RD
 	NULL
 };
 
@@ -795,6 +800,7 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_10[] __initconst = {
+	"16P5EMS1.103", // GE63 Raider 8RE
 	"1782EMS1.109", // GT72 6QE Dominator Pro
 	NULL
 };
@@ -1114,6 +1120,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
 	"1594EMS1.109", // Prestige 16 Studio A13VE
 	"1596EMS1.105", // Summit E16 AI Studio A1VETG
+	"15H2IMS1.105", // Modern 15 B12HW
 	"15K1IMS1.110", // Cyborg 15 A12VF
 	"15K1IMS1.111", // Cyborg 15 A13VF
 	"15K1IMS1.112", // Cyborg 15 A13VFK
@@ -1308,6 +1315,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"13P5EMS1.106", // Summit 13 AI+ Evo A2VM
 	"13Q2EMS1.110", // Prestige 13 AI Evo A1MG
 	"13Q3EMS1.111", // Prestige 13 AI+ Evo A2VMG
+	"14QKIMS1.108", // Venture A14 AI+ A3HMG
 	NULL
 };
 
@@ -1360,7 +1368,7 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = 0x2c, // not present on `14F1`
-		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`. May require udev rule to have ALSA drive LED state on 13P5.
+		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`, `14QK`. May require udev rule to have ALSA drive LED state on 13P5.
 		.bit                 = 1,
 	},
 	.kbd_bl = {
@@ -1376,6 +1384,7 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 static const char *ALLOWED_FW_G2_4[] __initconst = {
 	"14N2EMS1.102", // Prestige 14 AI Studio C1UDXG
 	"14N2EMS1.103",
+	"14P1IMS1.106", // Cyborg 14 A13VF
 	NULL
 };
 
@@ -1596,6 +1605,9 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1562EMS1.117", // Stealth 15M A11SEK
 	"1563EMS1.106", // Stealth 15M A11UEK
 	"1563EMS1.115",
+	"1571EMS1.106", // Creator Z16 A11UE
+	"1572EMS1.106", // Creator Z16 A12U
+	"1572EMS1.107",
 	"1587EMS1.102", // Katana 15 HX B14WEK
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
@@ -1624,6 +1636,11 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15M3EMS1.112",
 	"15P2EMS1.108", // Sword 16 HX B13V / B14V
 	"15P2EMS1.110",
+	"15P3EMS1.103", // Pulse 16 AI C1VGKG/C1VFKG
+	"15P3EMS1.106",
+	"15P3EMS1.107",
+	"15P4EMS1.105", // Crosshair 16 HX AI D2XW(GKG)
+	"15P4EMS1.107",
 	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
 	"17L5EMS1.115",
 	"17L5EMS2.115", // Katana 17 B12VEK
@@ -1640,6 +1657,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"17S1IMS2.107", // Vector 17 HX  A14V
 	"17S2IMS1.113", // Raider GE78 HX Smart Touchpad 13V
 	"17S3EMS1.104", // Vector 17 HX AI A2XWHG
+	"17T2EMS1.110", // Sword 17 HX B14VGKG
 	"1822EMS1.105", // Titan 18 HX A14V
 	"1822EMS1.109", // WMI 2.8
 	"1822EMS1.111",
