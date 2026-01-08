@@ -1602,6 +1602,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15M1IMS2.111",
 	"15M1IMS2.112",
 	"15M2IMS1.110", // Raider GE68HX 13V(F/G)
+	"15M2IMS1.114", // New Raider GE68HX bios firmwareversion
 	"15M2IMS1.112", // Vector GP68HX 13VF
 	"15M2IMS1.113",
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
