@@ -1605,6 +1605,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15M2IMS1.110", // Raider GE68HX 13V(F/G)
 	"15M2IMS1.112", // Vector GP68HX 13VF
 	"15M2IMS1.113",
+	"15M2IMS1.114",
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
 	"15M3EMS1.107",
