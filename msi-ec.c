@@ -1206,6 +1206,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"16V4EMS1.116",
 	"16V5EMS1.107", // Stealth GS66 12UE / 12UGS
 	"16V5EMS1.108",
+	"17K3EMS1.113", // GE76 Raider 11UE
 	"17K3EMS1.114", // GE76 Raider 11U
 	"17K3EMS1.115", // GP76 Leopard 11UG
 	"17K4EMS1.108", // Raider GE76 12UE
