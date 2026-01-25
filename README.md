@@ -45,7 +45,7 @@ Eager to support the project? Your help is always welcome to keep the project al
 
 #### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
 
-1. Verify that dkms is available: `which dkms`
+1. Verify that dkms is available: `sudo which dkms`
 2. Install the msi-ec kernel module: `sudo make dkms-install`
 3. **REBOOT**
 4. (Optional) To uninstall: `sudo make dkms-uninstall`
