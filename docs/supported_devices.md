@@ -6,3 +6,5 @@
 > Use `Control + F` to search by name and EC version.
 > 
 > Different devices can have same EC name, or device with almost identical name might have different EC version.
+
+Placeholder
