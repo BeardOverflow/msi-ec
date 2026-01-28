@@ -1302,13 +1302,14 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14J1IMS1.215",
 	"14N1EMS1.104", // Prestige 14 AI Evo C1MG
 	"14N1EMS1.307", // Prestige 14 AI Evo C2HMG
+	"13P5EMS1.106", // Summit 13 AI+ Evo A2VM
 	NULL
 };
 
 static struct msi_ec_conf CONF_G2_3 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_3, // legacy fw_8, fw_25, fw_42 (G2_17)
 	.charge_control_address = 0xd7,
-	.webcam = {
+	.webcam = {          // Has no hardware webcam control: 13P5
 		.address       = 0x2e,
 		.block_address = 0x2f,
 		.bit           = 1,
@@ -1354,7 +1355,7 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = 0x2c, // not present on `14F1`
-		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`
+		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`. May require udev rule to have ALSA drive LED state on 13P5.
 		.bit                 = 1,
 	},
 	.kbd_bl = {
@@ -2994,7 +2995,7 @@ MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_AUTHOR("Aakash Singh <mail@singhaakash.dev>");
 MODULE_AUTHOR("Nikita Kravets <teackot@gmail.com>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.12");
+MODULE_VERSION("0.13");
 
 module_init(msi_ec_init);
 module_exit(msi_ec_exit);
