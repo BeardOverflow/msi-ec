@@ -934,6 +934,7 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 
 static const char *ALLOWED_FW_G1_13[] __initconst = {
 	"16V2EMS1.104", // Creator 15 A10SD
+	"16V2EMS1.106", // Creator 15 A10SET
 	NULL
 };
 
@@ -1205,6 +1206,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"16V4EMS1.116",
 	"16V5EMS1.107", // Stealth GS66 12UE / 12UGS
 	"16V5EMS1.108",
+	"17K3EMS1.113", // GE76 Raider 11UE
 	"17K3EMS1.114", // GE76 Raider 11U
 	"17K3EMS1.115", // GP76 Leopard 11UG
 	"17K4EMS1.108", // Raider GE76 12UE
@@ -1300,13 +1302,14 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14J1IMS1.215",
 	"14N1EMS1.104", // Prestige 14 AI Evo C1MG
 	"14N1EMS1.307", // Prestige 14 AI Evo C2HMG
+	"13P5EMS1.106", // Summit 13 AI+ Evo A2VM
 	NULL
 };
 
 static struct msi_ec_conf CONF_G2_3 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_3, // legacy fw_8, fw_25, fw_42 (G2_17)
 	.charge_control_address = 0xd7,
-	.webcam = {
+	.webcam = {          // Has no hardware webcam control: 13P5
 		.address       = 0x2e,
 		.block_address = 0x2f,
 		.bit           = 1,
@@ -1352,7 +1355,7 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	},
 	.leds = {
 		.micmute_led_address = 0x2c, // not present on `14F1`
-		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`
+		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`. May require udev rule to have ALSA drive LED state on 13P5.
 		.bit                 = 1,
 	},
 	.kbd_bl = {
@@ -1594,6 +1597,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
 	"15FKIMS1.109",
 	"15FKIMS1.110", // Stealth A16 AI+ A3XVGG
+	"15FLIMS1.107", // Stealth A16 AI+ A3XWHG
 	"15K2EMS1.106", // Cyborg 15 AI A1VFK
 	"15M1IMS1.109", // Vector GP68 HX 13V
 	"15M1IMS1.110",
@@ -1602,9 +1606,11 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15M1IMS2.105", // Vector 16 HX A13V* / A14V*
 	"15M1IMS2.111",
 	"15M1IMS2.112",
+	"15M2IMS2.112", // Raider GE68 HX 14VGG
 	"15M2IMS1.110", // Raider GE68HX 13V(F/G)
 	"15M2IMS1.112", // Vector GP68HX 13VF
 	"15M2IMS1.113",
+	"15M2IMS1.114",
 	"15M3EMS1.105", // Vector 16 HX AI A2XWHG
 	"15M3EMS1.106",
 	"15M3EMS1.107",
@@ -2992,7 +2998,7 @@ MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_AUTHOR("Aakash Singh <mail@singhaakash.dev>");
 MODULE_AUTHOR("Nikita Kravets <teackot@gmail.com>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.12");
+MODULE_VERSION("0.13");
 
 module_init(msi_ec_init);
 module_exit(msi_ec_exit);
