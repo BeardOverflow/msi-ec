@@ -1014,13 +1014,14 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG
 	"159KIMS1.110",
 	"15H1IMS1.214", // Modern 15 B13M
+	"15H5EMS1.111", // Modern 15 H AI C1MG
 	NULL
 };
 
 static struct msi_ec_conf CONF_G2_0 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_0, // legacy fw_2, fw_53 (G2_19), 159K - Center S app
 	.charge_control_address = 0xd7,
-	.webcam = { // 159K have no webcam control
+	.webcam = { // 159K, 15H5 have no webcam control
 		.address       = 0x2e,
 		.block_address = 0x2f,
 		.bit           = 1,
@@ -1300,7 +1301,6 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14J1IMS1.215",
 	"14N1EMS1.104", // Prestige 14 AI Evo C1MG
 	"14N1EMS1.307", // Prestige 14 AI Evo C2HMG
-	"15H5EMS1.111", // Modern 15 H AI C1MG
 	NULL
 };
 
@@ -1308,8 +1308,8 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_3, // legacy fw_8, fw_25, fw_42 (G2_17)
 	.charge_control_address = 0xd7,
 	.webcam = {
-		.address       = 0x2e, // not present on '15H5'
-		.block_address = 0x2f, // not present on '15H5'
+		.address       = 0x2e,
+		.block_address = 0x2f,
 		.bit           = 1,
 	},
 	.fn_win_swap = {
