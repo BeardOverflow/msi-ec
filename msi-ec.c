@@ -1303,6 +1303,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14N1EMS1.104", // Prestige 14 AI Evo C1MG
 	"14N1EMS1.307", // Prestige 14 AI Evo C2HMG
 	"13P5EMS1.106", // Summit 13 AI+ Evo A2VM
+	"13Q2EMS1.110", // Prestige 13 AI Evo A1MG
 	NULL
 };
 
