@@ -136,8 +136,9 @@ static const char *ALLOWED_FW_G1_1[] __initconst = {
 	"17F4EMS2.100", // GF75 Thin 9SCSR
 	"17F5EMS1.102", // GF75 Thin 10UEK
 	"17F6EMS1.103", // GF75 Thin 10UC / 10UD
+	"17E7EMS1.103", // GP75 Leopard 10SEK
+	"17E7EMS1.106", // GL75 Leopard 10SFR
 	"17E8EMS1.101", // GL75 Leopard 10SCXR
-        "17E7EMS1.103", // GP75 Leopard 10SEK
 	NULL
 };
 
