@@ -1104,8 +1104,6 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"158NIMS1.10D", // Bravo 15 C7UCX
 	"158NIMS1.10E",
 	"158NIMS1.30C", // Bravo 15 C7VFKP
-	"158NIMS1.502", // Katana A15 AI B8V(F)
-	"158NIMS1.505",
 	"158PIMS1.106", // Bravo 15 B7ED
 	"158PIMS1.112",
 	"158PIMS1.114",
@@ -1597,6 +1595,9 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1563EMS1.106", // Stealth 15M A11UEK
 	"1563EMS1.115",
 	"1587EMS1.102", // Katana 15 HX B14WEK
+	"158NIMS1.502", // Katana A15 AI B8V(F)
+	"158NIMS1.505", // Katana A15 AI B8V(F)
+	"158NIMS1.506", // Katana A15 AI B8V(F)
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
 	"15FKIMS1.106", // Stealth A16 AI+ A3XVFG / A3XVGG
