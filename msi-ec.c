@@ -1236,6 +1236,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"17KKIMS1.108", // Alpha 17 C7VF / C7VG
 	"17KKIMS1.109",
 	"17KKIMS1.114",
+	"17KKIMS1.115",
 	"17M1EMS1.113", // Stealth GS76 11UG
 	NULL
 };
