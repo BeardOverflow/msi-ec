@@ -1,18 +1,101 @@
 # Intro
-There are two main methods to get your MSI laptop supported: the recommended method requires Windows to be installed, and the other works directly on Linux.
+There are two main methods to get your MSI laptop supported: the fastest method can be done on Linux, and the other requires windows to be installed.
 
 > [!IMPORTANT]
 > If there are any BIOS/firmware updates available for your laptop, follow this guide for your current firmware before installing any of them. Then repeat the process for each new firmware version you install from the official MSI website. This is required to obtain support for older firmware as the EC configuration may vary across the versions.
 
 > [!TIP]
 > Before you proceed, you should get familiar with resetting the BIOS and the EC. If you don't already know how to do it, now it's the time to learn.
+
 # Table of contents
 
-+ [Windows](#windows-method-recommended)
 + [Linux](#linux-method)
++ [Windows](#windows-method)
 + [Additional Info](#additional-info)
 
-# Windows method (recommended):
+# Linux method
+
+Your laptop will most likely share similar addresses with other models
+that are already supported by the driver, usually this happens on some
+models of the same WMI generation, providing the EC dump is enough in these cases.
+
+Remember to disable `secure boot` in the bios (or signing the module) before proceeding 
+
+On Linux, you can do the EC dump in several ways.
+
++ `msi-ec` built-in debug mode (git version only)
++ `ec-sys` kernel module
++ By reading the memory that is virtually mapped to EC
+
+To request support for your device model, make the EC dump in text form
+and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/new?assignees=&labels=New+firmware&projects=&template=support_request.yml).
+
+## `MSI-EC` debug mode
+
+Install the latest version of the module: follow the installation guide in the [Readme](../README.md#Installation) file.
+
+Once done, follow the next steps:
+
+Unload the module if it was previously loaded:
+
++ `sudo modprobe -r msi-ec`
+
+Load the module with the debug mode enabled:
+
++ `sudo modprobe msi-ec debug=true`
+
+Make a dump by reading the module's pseudo file:
+
++ `cat /sys/devices/platform/msi-ec/debug/ec_dump`
+
+Or save it to a file:
+
++ `cat /sys/devices/platform/msi-ec/debug/ec_dump > ec_dump.txt`
+
+> [!IMPORTANT]
+> If you see the following error, then your module is not loaded in the debug mode:
+> 
+> `cat: /sys/devices/platform/msi-ec/debug/ec_dump: No such file or directory`
+
+## `EC-SYS` method
+
+> [!NOTE]
+> The `ec-sys` module may not be included in some distros, such as Fedora.
+
+To start, you need to load a module called `ec_sys`:
+
+* `sudo modprobe ec_sys`
+
+After that you can extract the EC table and print it to the terminal in text form:
+
+* `hexdump -C /sys/kernel/debug/ec/ec0/io`
+
+Or save it to a file:
+
++ `hexdump -C /sys/kernel/debug/ec/ec0/io > ec_dump.txt`
+
+## Reading the EC RAM mapped to the system memory
+
+> [!CAUTION]
+> NOT RECOMMENDED! Use only if the other methods did not work! Never write directly to the system memory.
+> 
+> Reading random parts of the system memory can reveal sensitive data, so check the dump before you post it to Github.
+
+> [!NOTE]
+> `/dev/mem` may not be supported on some distros. For details, read `man mem`.
+
+Some devices have the EC memory mapped to the system memory address `0x0xFC000800`,
+so you can read it from the `/dev/mem` pseudo file with `dd`.
+
+To read the EC memory in text form run:
+
++ `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C`
+
+Or save it to a file:
+
++ `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C > ec_dump.txt`
+
+# Windows method:
 
 1. Install Windows 10/11 normally, booting directly from a live usb or
 any other trick won't work, however windows activation is not
@@ -91,85 +174,6 @@ corresponding to *each* user scenario so you can report them, also don't forget 
 
 12. Once you have made a list of the addresses and their values, you can go ahead and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/new?assignees=&labels=New+firmware&projects=&template=support_request.yml) (a github account is required) so we can add support for your device.
 
-# Linux method
-
-This method is very limited compared to the Windows method, because most
-MSI laptop features are tied to software toggles that can only be found in the official Windows apps.
-
-If you are lucky, your laptop model will have similar addresses to another laptop
-that is already supported by the driver, but usually this only happens on some
-features like cooler boost and battery charge limit.
-
-On Linux, you can do the EC dump in several ways.
-+ `msi-ec` built-in debug mode (git version only)
-+ `ec-sys` kernel module
-+ By reading the memory that is virtually mapped to EC
-
-To request support for your device model, make the EC dump in text form
-and open the [Issue on Github](https://github.com/BeardOverflow/msi-ec/issues/new?assignees=&labels=New+firmware&projects=&template=support_request.yml).
-
-## `MSI-EC` debug mode
-
-Install the latest version of the module: follow the installation guide in the [Readme](../README.md#Installation) file.
-
-Unload the module if it was previously loaded:
-
-+ `sudo modprobe -r msi-ec`
-
-Load the module with the debug mode enabled:
-
-+ `sudo modprobe msi-ec debug=true`
-
-Make a dump by reading the module's pseudo file:
-
-+ `cat /sys/devices/platform/msi-ec/debug/ec_dump`
-
-Or save it to a file:
-
-+ `cat /sys/devices/platform/msi-ec/debug/ec_dump > ec_dump.txt`
-
-> [!IMPORTANT]
-> If you see the following error, then your module is not loaded in the debug mode:
-> 
-> `cat: /sys/devices/platform/msi-ec/debug/ec_dump: No such file or directory`
-
-## `EC-SYS` method
-
-> [!NOTE]
-> The `ec-sys` module may not be included in some distros, such as Fedora.
-
-To start, you need to load a module called `ec_sys`:
-
-* `sudo modprobe ec_sys`
-
-After that you can extract the EC table and print it to the terminal in text form:
-
-* `hexdump -C /sys/kernel/debug/ec/ec0/io`
-
-Or save it to a file:
-
-+ `hexdump -C /sys/kernel/debug/ec/ec0/io > ec_dump.txt`
-
-## Reading the EC RAM mapped to the system memory
-
-> [!CAUTION]
-> NOT RECOMMENDED! Use only if the other methods did not work! Never write directly to the system memory.
-> 
-> Reading random parts of the system memory can reveal sensitive data, so check the dump before you post it to Github.
-
-> [!NOTE]
-> `/dev/mem` may not be supported on some distros. For details, read `man mem`.
-
-Some devices have the EC memory mapped to the system memory address `0x0xFC000800`,
-so you can read it from the `/dev/mem` pseudo file with `dd`.
-
-To read the EC memory in text form run:
-
-+ `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C`
-
-Or save it to a file:
-
-+ `sudo dd if=/dev/mem bs=1 skip=4227860480 count=256 | hexdump -C > ec_dump.txt`
 
 # Additional Info
 If you want to understand what the numbers and letters mean in BIOS/EC version names, here is what we know so far:
