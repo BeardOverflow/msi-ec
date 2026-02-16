@@ -46,6 +46,8 @@ https://rweverything.com/download/ ![download RWEverything](pics/support_guide/d
 >
 > + Disable "Memory Integrity" in the settings.
 >
+> + Disable "Smart App Control" in the settings.
+>
 > + Then open the registry editor (Windows key + R and type `regedit`) after that set to zero this key in the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Config\VulnerableDriverBlocklistEnable`
 >
 > And the app should open **after** restating Windows 11.
