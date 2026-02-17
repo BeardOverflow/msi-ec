@@ -1118,7 +1118,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"158NIMS1.10E",
 	"158NIMS1.30C", // Bravo 15 C7VFKP
 	"158NIMS1.502", // Katana A15 AI B8V(F)
-	"158NIMS1.505",
+	"158NIMS1.505", // Katana A15 AI B8VG
 	"158PIMS1.106", // Bravo 15 B7ED
 	"158PIMS1.111",
 	"158PIMS1.112",
