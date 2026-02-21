@@ -142,6 +142,7 @@ static const char *ALLOWED_FW_G1_1[] __initconst = {
 	"17F6EMS1.103",
 	"17E7EMS1.103", // GP75 Leopard 10SEK
 	"17E7EMS1.106", // GL75 Leopard 10SFR
+	"17E7EMS1.107", // GL75 Leopard 10SDR
 	"17E8EMS1.101", // GL75 Leopard 10SCXR
 	NULL
 };
@@ -1148,6 +1149,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"17L4EMS1.112", // Katana GF76 12UC
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
+	"17LNIMS1.506",
 	"17M1EMS2.113", // Creator 17 B11UE
 	NULL
 };
@@ -1322,6 +1324,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14J1IMS1.205",
 	"14J1IMS1.209",
 	"14J1IMS1.215",
+	"14J1IMS1.218",
 	"14N1EMS1.104", // Prestige 14 AI Evo C1MG
 	"14N1EMS1.307", // Prestige 14 AI Evo C2HMG
 	"13P5EMS1.106", // Summit 13 AI+ Evo A2VM
