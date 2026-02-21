@@ -1135,6 +1135,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"15K1IMS1.113", // Cyborg 15 A13VF
 	"16S6EMS1.111", // Prestige 15 A11SCX
 	"16S6EMS1.114",
+	"16S8EMS1.107", // Prestige 15 A12SC / A12UC
 	"16V6EMS1.103", // Stealth 15 A13V
 	"17L1EMS1.103", // Katana GF76 11UE
 	"17L1EMS1.105", // Crosshair 17 A11UEK
