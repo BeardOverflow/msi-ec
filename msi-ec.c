@@ -713,10 +713,12 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	.cpu = {
 		.rt_temp_address      = 0x68,
 		.rt_fan_speed_address = 0x71,
+		.fan_speed_rpm_address_0 = 0xcc,
 	},
 	.gpu = {
 		.rt_temp_address      = 0x80,
 		.rt_fan_speed_address = 0x89,
+		.fan_speed_rpm_address_0 = 0xca,
 	},
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
@@ -2520,6 +2522,23 @@ static ssize_t cpu_realtime_fan_speed_show(struct device *device,
 	return sysfs_emit(buf, "%i\n", rdata);
 }
 
+static ssize_t cpu_fan_speed_rpm_show(struct device *device,
+					       struct device_attribute *attr,
+					       char *buf)
+{
+	u8 rdata[2];
+	int result;
+
+	result = ec_read_seq(conf.cpu.fan_speed_rpm_address_0, rdata, 2);
+	if (result < 0)
+		return result;
+
+	int value = (rdata[0] << 8) | rdata[1];
+	int rpm = value != 0 ? 480000 / value : 0;
+
+	return sysfs_emit(buf, "%i\n", rpm);
+}
+
 static struct device_attribute dev_attr_cpu_realtime_temperature = {
 	.attr = {
 		.name = "realtime_temperature",
@@ -2536,9 +2555,18 @@ static struct device_attribute dev_attr_cpu_realtime_fan_speed = {
 	.show = cpu_realtime_fan_speed_show,
 };
 
+static struct device_attribute dev_attr_cpu_fan_speed_rpm = {
+	.attr = {
+		.name = "fan_speed_rpm",
+		.mode = 0444,
+	},
+	.show = cpu_fan_speed_rpm_show,
+};
+
 static struct attribute *msi_cpu_attrs[] = {
 	&dev_attr_cpu_realtime_temperature.attr,
 	&dev_attr_cpu_realtime_fan_speed.attr,
+	&dev_attr_cpu_fan_speed_rpm.attr,
 	NULL
 };
 
@@ -2574,6 +2602,23 @@ static ssize_t gpu_realtime_fan_speed_show(struct device *device,
 	return sysfs_emit(buf, "%i\n", rdata);
 }
 
+static ssize_t gpu_fan_speed_rpm_show(struct device *device,
+					       struct device_attribute *attr,
+					       char *buf)
+{
+	u8 rdata[2];
+	int result;
+
+	result = ec_read_seq(conf.gpu.fan_speed_rpm_address_0, rdata, 2);
+	if (result < 0)
+		return result;
+
+	int value = (rdata[0] << 8) | rdata[1];
+	int rpm = value != 0 ? 480000 / value : 0;
+
+	return sysfs_emit(buf, "%i\n", rpm);
+}
+
 static struct device_attribute dev_attr_gpu_realtime_temperature = {
 	.attr = {
 		.name = "realtime_temperature",
@@ -2590,9 +2635,18 @@ static struct device_attribute dev_attr_gpu_realtime_fan_speed = {
 	.show = gpu_realtime_fan_speed_show,
 };
 
+static struct device_attribute dev_attr_gpu_fan_speed_rpm = {
+	.attr = {
+		.name = "fan_speed_rpm",
+		.mode = 0444,
+	},
+	.show = gpu_fan_speed_rpm_show,
+};
+
 static struct attribute *msi_gpu_attrs[] = {
 	&dev_attr_gpu_realtime_temperature.attr,
 	&dev_attr_gpu_realtime_fan_speed.attr,
+	&dev_attr_gpu_fan_speed_rpm.attr,
 	NULL
 };
 
@@ -2843,12 +2897,18 @@ static umode_t msi_ec_is_visible(struct kobject *kobj,
 	else if (attr == &dev_attr_cpu_realtime_fan_speed.attr)
 		address = conf.cpu.rt_fan_speed_address;
 
+	else if (attr == &dev_attr_cpu_fan_speed_rpm.attr)
+		address = conf.cpu.fan_speed_rpm_address_0;
+
 	/* gpu group */
 	else if (attr == &dev_attr_gpu_realtime_temperature.attr)
 		address = conf.gpu.rt_temp_address;
 
 	else if (attr == &dev_attr_gpu_realtime_fan_speed.attr)
 		address = conf.gpu.rt_fan_speed_address;
+
+	else if (attr == &dev_attr_gpu_fan_speed_rpm.attr)
+		address = conf.gpu.fan_speed_rpm_address_0;
 
 	/* default */
 	else
