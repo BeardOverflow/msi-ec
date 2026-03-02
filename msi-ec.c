@@ -1543,6 +1543,7 @@ static const char *ALLOWED_FW_G2_6[] __initconst = {
 	"16R8IMS1.107",
 	"16R8IMS1.108", // Thin GF63 12UCX
 	"16R8IMS1.111", // Thin GF63 12V(E/F)
+	"E16R8IMS.117", // Thin GF63 12V(E/F)
 	"16R8IMS1.117", // Thin GF63 12UC
 	"16R8IMS2.111", // Thin 15 B12UCX / B12VE
 	"16R8IMS2.112",
