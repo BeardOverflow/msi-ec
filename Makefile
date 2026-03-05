@@ -2,7 +2,10 @@ VERSION         := 0.13
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 KERNELRELEASE   ?= $(shell uname -r)
 KMOD_DIR        := /lib/modules/$(KERNELRELEASE)/updates/drivers/platform/x86
+MODNAME         := msi-ec
 
+# Variables for RPM and Akmod
+RPM_ROOT        := $(PWD)/rpmbuild
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
@@ -12,10 +15,10 @@ obj-m += msi-ec.o
 all: modules
 
 modules:
-	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(CURDIR) modules
+	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(PWD) modules
 
 clean:
-	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(CURDIR) clean
+	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(PWD) clean
 
 load:
 	insmod msi-ec.ko
@@ -47,10 +50,10 @@ uninstall:
 dkms-install:
 	@dkms --version
 	mkdir -p $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/dkms.conf $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
-	cp $(CURDIR)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
+	cp $(PWD)/dkms.conf $(DKMS_ROOT_PATH)
+	cp $(PWD)/Makefile $(DKMS_ROOT_PATH)
+	cp $(PWD)/msi-ec.c $(DKMS_ROOT_PATH)
+	cp $(PWD)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
 
 	sed -e "s/@VERSION@/$(VERSION)/" \
 	    -i $(DKMS_ROOT_PATH)/dkms.conf
@@ -66,3 +69,18 @@ dkms-uninstall:
 	rm -f /etc/modules-load.d/msi-ec.conf
 
 dev: modules unload load
+
+# ------------- RPM + AKMOD Packaging --------------
+
+rpm-local:
+	@$(MAKE) -C packaging/rpm-akmod rpm-local
+
+rpm-dist:
+	@$(MAKE) -C packaging/rpm-akmod rpm-dist
+
+rpm-clean:
+	@$(MAKE) -C packaging/rpm-akmod clean
+
+.PHONY: all clean rpm-local rpm-dist rpm-clean
+
+# --------------------- END ------------------------
