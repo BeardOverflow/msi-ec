@@ -15,7 +15,7 @@ Source1:        %{modname}.conf
 BuildRequires:  gcc, make, kernel-devel, akmods
 Requires:       akmods, kmodtool
 
-%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--%{kernels}} 2>/dev/null)}
+%{expand:%(kmodtool --target %{_target_cpu} --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--%{kernels}} 2>/dev/null)}
 
 %description
 This package provides the akmod (kernel module source) for the MSI EC driver.
