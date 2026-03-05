@@ -1,0 +1,53 @@
+%global debug_package %{nil}
+
+%define modname @MODNAME@
+
+Name:           akmod-%{modname}
+Version:        @VERSION@
+Release:        1%{?dist}
+Summary:        Akmod package for %{modname} kernel module
+Group:          System Environment/Kernel
+License:        GPLv2
+Source0:        %{modname}-%{version}.tar.gz
+
+BuildRequires:  gcc make kernel-devel kmodtool
+Requires:       akmods
+Requires:       %{modname}-kmod-common >= %{version}
+
+%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{kernels}"} 2>/dev/null)}
+
+%description
+This package provides the MSI-EC kernel module through AKMOD for Fedora/Fedora Silverblue.
+
+%package -n %{modname}-kmod-common
+Summary:        Common files for the %{modname} kernel module
+BuildArch:      noarch
+
+%description -n %{modname}-kmod-common
+This package contains the license and configuration files for the 
+%{modname} kernel module, shared across all kernel variants.
+
+%prep
+%setup -q -c -T -a 0
+kmodtool --target %{_target_cpu} --repo %{?kmod_repo}%{!?kmod_repo:rpmfusion} --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{kernels}"} > %{_builddir}/kmod-main.spec 2>/dev/null || echo "%%global debug_package %%{nil}" > %{_builddir}/kmod-main.spec
+
+%build
+%if 0%{?akmod_install}
+    echo "Skipping build phase for local akmod packaging"
+%else
+    for kernel_version in %{?kernel_versions} ; do
+        make -C "${kernel_version%%___*}" %{?_smp_mflags}
+    done
+%endif
+
+%install
+install -D -m 0644 %{SOURCE0} %{buildroot}%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
+
+install -D -m 0644 /dev/null %{buildroot}%{_sysconfdir}/modules-load.d/%{modname}.conf
+echo %{modname} > %{buildroot}%{_sysconfdir}/modules-load.d/%{modname}.conf
+
+%files
+%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
+
+%files -n %{modname}-kmod-common
+%{_sysconfdir}/modules-load.d/%{modname}.conf
