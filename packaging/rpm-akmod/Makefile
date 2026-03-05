@@ -15,7 +15,9 @@ rpm-local: clean
 	
 	@echo "--- Creating sources tarball ---"
 	tar --exclude='../../packaging' --exclude='../../.git' \
-		--transform 's|^\.\./\.\./|$(MODNAME)-$(VERSION)/|' \
+		--exclude='../../.github' --exclude='../../docs' \
+		--transform 's|^.*/|$(MODNAME)-$(VERSION)/|' \
+		--transform 's|^\.|$(MODNAME)-$(VERSION)|' \
 		-czf $(RPM_ROOT)/SOURCES/$(MODNAME)-$(VERSION).tar.gz ../../
 	
 	@echo "--- Generating spec file ---"
