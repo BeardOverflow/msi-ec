@@ -12,12 +12,12 @@ all:
 rpm-local: clean
 	@echo "--- Preparing local build for Fedora (Hacked) ---"
 	mkdir -p $(RPM_ROOT)/{SOURCES,SPECS,RPMS,SRPMS}
-	
+	cp msi-ec.conf $(RPM_ROOT)/SOURCES
+
 	@echo "--- Creating sources tarball ---"
 	tar --exclude='../../packaging' --exclude='../../.git' \
 		--exclude='../../.github' --exclude='../../docs' \
 		--transform 's|^.*/|$(MODNAME)-$(VERSION)/|' \
-		--transform 's|^\.|$(MODNAME)-$(VERSION)|' \
 		-czf $(RPM_ROOT)/SOURCES/$(MODNAME)-$(VERSION).tar.gz ../../
 	
 	@echo "--- Generating spec file ---"
