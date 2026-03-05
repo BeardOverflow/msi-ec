@@ -45,9 +45,6 @@ install -p -m 0644 %{_specdir}/akmod-%{name}.spec %{buildroot}%{_usrsrc}/akmods/
 mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
 install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/%{modname}.conf
 
-%post
-%{_bindir}/akmods --force --akmod %{name} >/dev/null 2>&1 || :
-
 %files
 %{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
 %{_usrsrc}/akmods/akmod-%{modname}.spec
