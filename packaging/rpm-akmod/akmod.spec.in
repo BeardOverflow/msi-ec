@@ -1,5 +1,4 @@
-%define modname @MODNAME@
-
+%define modname msi-ec
 %global debug_package %{nil}
 
 %global buildforkernels akmod
@@ -8,7 +7,6 @@ Name:           %{modname}
 Version:        @VERSION@
 Release:        1%{?dist}
 Summary:        Akmod package for %{modname} kernel module
-Group:          System Environment/Kernel
 License:        GPLv2
 URL:            https://github.com/BeardOverflow/msi-ec
 Source0:        %{modname}-%{version}.tar.gz
@@ -16,40 +14,33 @@ Source1:        %{modname}.conf
 
 BuildRequires:  gcc, make, kernel-devel, akmods
 Requires:       akmods, kmodtool
-Requires:       (fedora-kmodhelper if fedora-release-common)
 
-%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--%{kernels}} 2>/dev/null)}
+%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--%{kernels}} 2>/dev/null)}
 
 %description
 This package provides the akmod (kernel module source) for the MSI EC driver.
-It will automatically build and sign the kernel module for each new kernel update.
+It handles automatic compilation for new kernel updates.
 
 %prep
-%setup -q -c -n %{modname}-%{version} -a 0
+%setup -q -n %{modname}-%{version}
 
 %build
-# Compiling only when for akmod
 %if "%{buildforkernels}" != "akmod"
-  cd %{modname}-%{version}
   make %{?_smp_mflags} KERNELRELEASE=%{kverrel} modules
-%else
-  echo "Not triggered by akmod. Not compiling anything."
 %endif
 
 %install
 mkdir -p %{buildroot}%{_usrsrc}/akmods/
 install -p -m 0644 %{SOURCE0} %{buildroot}%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
 
-install -p -m 0644 %{_specdir}/akmod-%{name}.spec %{buildroot}%{_usrsrc}/akmods/akmod-%{modname}.spec
-
 mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
 install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/%{modname}.conf
 
 %files
+%doc
 %{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
-%{_usrsrc}/akmods/akmod-%{modname}.spec
 %{_sysconfdir}/modules-load.d/%{modname}.conf
 
 %changelog
 * @DATE@ - @USER@@@EMAIL@
-- Initial RPM Fusion styled akmod release
+- Standardized Akmod release for COPR/RPM Fusion

@@ -1,13 +1,10 @@
-VERSION         := 0.13
+include Makefile.vars
+
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 
 KERNELRELEASE := $(shell uname -r)
 
 KMOD_DIR        := /lib/modules/$(KERNELRELEASE)/updates/drivers/platform/x86
-MODNAME         := msi-ec
-
-# Variables for RPM and Akmod
-RPM_ROOT        := $(PWD)/rpmbuild
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
@@ -72,17 +69,5 @@ dkms-uninstall:
 
 dev: modules unload load
 
-# ------------- RPM + AKMOD Packaging --------------
-
-rpm-local:
-	@$(MAKE) -C packaging/rpm-akmod rpm-local
-
-rpm-dist:
-	@$(MAKE) -C packaging/rpm-akmod rpm-dist
-
-rpm-clean:
-	@$(MAKE) -C packaging/rpm-akmod clean
-
-.PHONY: all clean rpm-local rpm-dist rpm-clean
-
-# --------------------- END ------------------------
+rpm:
+	$(MAKE) -C packaging/rpm-akmod/ srpm

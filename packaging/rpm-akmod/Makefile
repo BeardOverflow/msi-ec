@@ -1,58 +1,33 @@
-MODNAME := msi-ec
-VERSION := $(shell grep "^VERSION" ../../Makefile | head -1 | cut -d'=' -f2 | xargs)
-RPM_ROOT := $(shell pwd)/rpmbuild
+include ../../Makefile.vars
 
-USER_NAME  := MSI-EC Project
-USER_EMAIL := https://github.com/BeardOverflow/msi-ec
-DATE_SPEC  := $(shell date "+%a %b %d %Y")
+PWD        := $(shell pwd)
+RPM_ROOT   := $(PWD)/rpmbuild
+DIST_DIR   := $(MODNAME)-$(VERSION)
 
-all:
-	@echo "Usage: make rpm-local | make rpm-dist | make clean"
+USER_NAME  := $(shell git config user.name || echo "MSI-EC maintainers")
+USER_EMAIL := $(shell git config user.email || echo "no-reply@msiecmaintainers.lan")
+DATE       := $(shell date +'%a %b %d %Y')
 
-rpm-local: clean
-	@echo "--- Preparing local build for Fedora (Hacked) ---"
-	mkdir -p $(RPM_ROOT)/{SOURCES,SPECS,RPMS,SRPMS}
-	cp msi-ec.conf $(RPM_ROOT)/SOURCES
-
-	@echo "--- Creating sources tarball ---"
-	tar --exclude='../../packaging' --exclude='../../.git' \
-		--exclude='../../.github' --exclude='../../docs' \
-		--transform 's|^.*/|$(MODNAME)-$(VERSION)/|' \
-		-czf $(RPM_ROOT)/SOURCES/$(MODNAME)-$(VERSION).tar.gz ../../
-	
-	@echo "--- Generating spec file ---"
-	sed -e "s|@MODNAME@|$(MODNAME)|g" \
-	    -e "s|@VERSION@|$(VERSION)|g" \
-	    -e "s|@DATE@|$(DATE_SPEC)|g" \
-	    -e "s|@USER@|$(MAINTAINER_NAME)|g" \
-	    -e "s|@EMAIL@|$(MAINTAINER_EMAIL)|g" \
-	    akmod.spec.in > $(RPM_ROOT)/SPECS/akmod-$(MODNAME).spec
-	
-	@echo "--- Building RPM with Local Hacks ---"
-	rpmbuild --define "_topdir $(RPM_ROOT)" \
-		--define "kmod_repo fedora" \
-		--define "akmod_install 1" \
-		--define "build_kernels akmod" \
-		-ba $(RPM_ROOT)/SPECS/akmod-$(MODNAME).spec
-
-rpm-dist: clean
-	@echo "--- Preparing clean SRPM for RPM Fusion ---"
-	mkdir -p $(RPM_ROOT)/{SOURCES,SPECS,RPMS,SRPMS}
-	
-	tar --exclude='../../packaging' --exclude='../../.git' \
-		--transform 's|^\.\./\.\./|$(MODNAME)-$(VERSION)/|' \
-		-czf $(RPM_ROOT)/SOURCES/$(MODNAME)-$(VERSION).tar.gz ../../
-	
-	sed -e "s|@MODNAME@|$(MODNAME)|g" \
-	    -e "s|@VERSION@|$(VERSION)|g" \
-	    -e "s|@DATE@|$(DATE_SPEC)|g" \
-	    -e "s|@USER@|$(MAINTAINER_NAME)|g" \
-	    -e "s|@EMAIL@|$(MAINTAINER_EMAIL)|g" \
-	    akmod.spec.in > $(RPM_ROOT)/SPECS/akmod-$(MODNAME).spec
-	
-	rpmbuild --define "_topdir $(RPM_ROOT)" -ba $(RPM_ROOT)/SPECS/akmod-$(MODNAME).spec
+.PHONY: srpm clean dist
 
 clean:
-	rm -rf $(RPM_ROOT)
+	rm -rf $(RPM_ROOT) $(DIST_DIR).tar.gz
 
-.PHONY: all rpm-local rpm-dist clean
+dist: clean
+	mkdir -p $(DIST_DIR)
+	cp ../../{*.c,*.h,Makefile} $(DIST_DIR)/
+	tar -czf $(DIST_DIR).tar.gz $(DIST_DIR)
+	rm -rf $(DIST_DIR)
+
+srpm: dist
+	mkdir -p $(RPM_ROOT)/{SOURCES,SPECS,SRPMS}
+	mv $(DIST_DIR).tar.gz $(RPM_ROOT)/SOURCES/
+	cp msi-ec.conf $(RPM_ROOT)/SOURCES/
+	sed -e "s|@MODNAME@|$(MODNAME)|g" \
+	    -e "s|@VERSION@|$(VERSION)|g" \
+	    -e "s|@DATE@|$(DATE)|g" \
+	    -e "s|@USER@|$(USER_NAME)|g" \
+	    -e "s|@EMAIL@|$(USER_EMAIL)|g" \
+	    akmod.spec.in > $(RPM_ROOT)/SPECS/$(MODNAME).spec
+	rpmbuild --define "_topdir $(RPM_ROOT)" -bs $(RPM_ROOT)/SPECS/$(MODNAME).spec
+	@if [ -n "$(outdir)" ]; then cp $(RPM_ROOT)/SRPMS/*.src.rpm $(outdir)/; fi
