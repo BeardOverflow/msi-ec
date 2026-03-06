@@ -1,0 +1,46 @@
+%define modname msi-ec
+%global debug_package %{nil}
+
+%global buildforkernels akmod
+
+Name:           %{modname}
+Version:        @VERSION@
+Release:        1%{?dist}
+Summary:        Akmod package for %{modname} kernel module
+License:        GPLv2
+URL:            https://github.com/BeardOverflow/msi-ec
+Source0:        %{modname}-%{version}.tar.gz
+Source1:        %{modname}.conf
+
+BuildRequires:  gcc, make, kernel-devel, akmods
+Requires:       akmods, kmodtool
+
+%{expand:%(kmodtool --target %{_target_cpu} --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--%{kernels}} 2>/dev/null)}
+
+%description
+This package provides the akmod (kernel module source) for the MSI EC driver.
+It handles automatic compilation for new kernel updates.
+
+%prep
+%setup -q -n %{modname}-%{version}
+
+%build
+%if "%{buildforkernels}" != "akmod"
+  make %{?_smp_mflags} KERNELRELEASE=%{kverrel} modules
+%endif
+
+%install
+mkdir -p %{buildroot}%{_usrsrc}/akmods/
+install -p -m 0644 %{SOURCE0} %{buildroot}%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
+
+mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
+install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/%{modname}.conf
+
+%files
+%doc
+%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
+%{_sysconfdir}/modules-load.d/%{modname}.conf
+
+%changelog
+* @DATE@ - @USER@@@EMAIL@
+- Standardized Akmod release for COPR/RPM Fusion
