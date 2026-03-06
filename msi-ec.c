@@ -143,6 +143,7 @@ static const char *ALLOWED_FW_G1_1[] __initconst = {
 	"17F6EMS1.103",
 	"17E7EMS1.103", // GP75 Leopard 10SEK
 	"17E7EMS1.106", // GL75 Leopard 10SFR
+	"17E7EMS1.107", // GL75 Leopard 10SDR
 	"17E8EMS1.101", // GL75 Leopard 10SCXR
 	NULL
 };
@@ -519,6 +520,7 @@ static const char *ALLOWED_FW_G1_6[] __initconst = {
 	"15HKEMS1.102", // Modern 15 B7M
 	"15HKEMS1.104",
 	"15HKEMS1.500",
+	"15HKEMS1.501",
 	NULL
 };
 
@@ -1150,6 +1152,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"17L4EMS1.112", // Katana GF76 12UC
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
+	"17LNIMS1.506",
 	"17M1EMS2.113", // Creator 17 B11UE
 	NULL
 };
@@ -1237,6 +1240,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"17K5IMS1.107", // Raider GE77 HX 12UGS
 	"17KKIMS1.108", // Alpha 17 C7VF / C7VG
 	"17KKIMS1.109",
+	"17KKIMS1.112",
 	"17KKIMS1.114",
 	"17KKIMS1.115",
 	"17M1EMS1.113", // Stealth GS76 11UG
@@ -1324,6 +1328,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"14J1IMS1.205",
 	"14J1IMS1.209",
 	"14J1IMS1.215",
+	"14J1IMS1.218",
 	"14N1EMS1.104", // Prestige 14 AI Evo C1MG
 	"14N1EMS1.307", // Prestige 14 AI Evo C2HMG
 	"13P5EMS1.106", // Summit 13 AI+ Evo A2VM
@@ -1540,7 +1545,8 @@ static const char *ALLOWED_FW_G2_6[] __initconst = {
 	"16R6EMS1.104",
 	"16R6EMS1.106",
 	"16R6EMS1.107",
-	"16R7IMS1.104", // Thin GF63 12HW
+	"16R7IMS1.005", // Thin GF63 12HW
+	"16R7IMS1.104",
 	"16R8IMS1.101", // Thin GF63 12VE
 	"16R8IMS1.107",
 	"16R8IMS1.108", // Thin GF63 12UCX
@@ -1626,6 +1632,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1572EMS1.106", // Creator Z16 A12U
 	"1572EMS1.107",
 	"1587EMS1.102", // Katana 15 HX B14WEK
+	"1587EMS1.106",
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
 	"15F4EMS1.106",
