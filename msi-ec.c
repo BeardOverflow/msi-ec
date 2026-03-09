@@ -1627,6 +1627,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"158NIMS1.502", // Katana A15 AI B8V(F)
 	"158NIMS1.505", // Katana A15 AI B8V(F)
 	"158NIMS1.506", // Katana A15 AI B8V(F)
+	"158NIMS1.507", // Katana A15 AI B8V(F)
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
 	"15F4EMS1.106",
