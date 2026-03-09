@@ -1467,6 +1467,7 @@ static const char *ALLOWED_FW_G2_5[] __initconst = {
 	"14K1EMS1.108",
 	"14K2EMS1.104", // Stealth 14 AI Studio A1VGG / A1VFG
 	"14K2EMS1.107",
+	"14K2EMS1.108",
 	NULL
 };
 
