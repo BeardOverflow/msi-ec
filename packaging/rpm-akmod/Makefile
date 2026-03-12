@@ -28,6 +28,6 @@ srpm: dist
 	    -e "s|@DATE@|$(DATE)|g" \
 	    -e "s|@USER@|$(USER_NAME)|g" \
 	    -e "s|@EMAIL@|$(USER_EMAIL)|g" \
-	    akmod.spec.in > $(RPM_ROOT)/SPECS/$(MODNAME).spec
-	rpmbuild --define "_topdir $(RPM_ROOT)" -bs $(RPM_ROOT)/SPECS/$(MODNAME).spec
+	    akmod.spec.in > $(RPM_ROOT)/SPECS/$(MODNAME)-kmod.spec
+	rpmbuild --define "_topdir $(RPM_ROOT)" -bs $(RPM_ROOT)/SPECS/$(MODNAME)-kmod.spec
 	@if [ -n "$(outdir)" ]; then cp $(RPM_ROOT)/SRPMS/*.src.rpm $(outdir)/; fi

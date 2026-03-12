@@ -1,6 +1,7 @@
 %define buildforkernels akmod
 %define modname @MODNAME@
 %define version @VERSION@
+%define spec_name msi-ec
 
 Name:           %{modname}-kmod
 
@@ -22,7 +23,7 @@ ExclusiveArch:  i686 x86_64
 BuildRequires:  %{_bindir}/kmodtool
 
 # Detecting if we are building on COPR
-%if 0%{?copr_username} || 0%{?fedora}
+%if "%{?copr_username}" != "" || 0%{?fedora}
 BuildRequires:  gcc, make, elfutils-libelf-devel
 BuildRequires:  kernel-devel
 BuildRequires:  kmodtool
@@ -74,3 +75,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Mar 13 2026 Xabi Vittorio GOITY <xabigoity@gmail.com> - 0.13-1
+- Fix spec naming and changelog for COPR build
