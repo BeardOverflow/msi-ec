@@ -1,3 +1,5 @@
+%global debug_package %{nil}
+
 %define buildforkernels akmod
 %define modname @MODNAME@
 %define version @VERSION@
@@ -68,6 +70,11 @@ for kernel_version in %{?kernel_versions}; do
     # install -D -m 755 _kmod_build_${kernel_version%%___*}/foo/foo.ko  ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/foo.ko
 done
 %{?akmod_install}
+
+
+
+# Stub
+%files
 
 
 %clean
