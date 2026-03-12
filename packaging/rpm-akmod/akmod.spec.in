@@ -1,46 +1,69 @@
-%define modname msi-ec
-%global debug_package %{nil}
+%define buildforkernels akmod
+%define modname @MODNAME@
+%define version @VERSION@
 
-%global buildforkernels akmod
+Name:           %{modname}-kmod
 
-Name:           %{modname}
-Version:        @VERSION@
-Release:        1%{?dist}
-Summary:        Akmod package for %{modname} kernel module
+Version:        %{version}
+Release:        1%{?dist}.1
+Summary:        Kernel module(s) for MSI-EC out of tree driver for MSI Laptops Embeded controllers.
+
+Group:          System Environment/Kernel
+
 License:        GPLv2
-URL:            https://github.com/BeardOverflow/msi-ec
+URL:            https://github.com/BeardOverflow/msi-ec/
 Source0:        %{modname}-%{version}.tar.gz
-Source1:        %{modname}.conf
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+  
+BuildRequires:  %{_bindir}/kmodtool
 
-BuildRequires:  gcc, make, kernel-devel, akmods
-Requires:       akmods, kmodtool
+ExclusiveArch:  i686 x86_64
 
-%{expand:%(kmodtool --target %{_target_cpu} --kmodname %{modname} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--%{kernels}} 2>/dev/null)}
+# get the proper build-sysbuild package from the repo, which
+# tracks in all the kernel-devel packages
+BuildRequires:  %{_bindir}/kmodtool
+
+%{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
+
+# kmodtool does its magic here
+%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
+
 
 %description
-This package provides the akmod (kernel module source) for the MSI EC driver.
-It handles automatic compilation for new kernel updates.
+
 
 %prep
-%setup -q -n %{modname}-%{version}
+# error out if there was something wrong with kmodtool
+%{?kmodtool_check}
+
+# print kmodtool output for debugging purposes:
+kmodtool  --target %{_target_cpu}  --repo %{repo} --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
+
+%setup -q -c -T -a 0
+
+for kernel_version in %{?kernel_versions} ; do
+    cp -a %{modname}-%{version} _kmod_build_${kernel_version%%___*}
+done
+
 
 %build
-%if "%{buildforkernels}" != "akmod"
-  make %{?_smp_mflags} KERNELRELEASE=%{kverrel} modules
-%endif
+for kernel_version in %{?kernel_versions}; do
+    make %{?_smp_mflags} -C "${kernel_version##*___}" M=${PWD}/_kmod_build_${kernel_version%%___*} modules
+done
+
 
 %install
-mkdir -p %{buildroot}%{_usrsrc}/akmods/
-install -p -m 0644 %{SOURCE0} %{buildroot}%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
+rm -rf ${RPM_BUILD_ROOT}
 
-mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
-install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/%{modname}.conf
+for kernel_version in %{?kernel_versions}; do
+    make install DESTDIR=${RPM_BUILD_ROOT} KMODPATH=%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}
+    # install -D -m 755 _kmod_build_${kernel_version%%___*}/foo/foo.ko  ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/foo.ko
+done
+%{?akmod_install}
 
-%files
-%doc
-%{_usrsrc}/akmods/%{modname}-%{version}.tar.gz
-%{_sysconfdir}/modules-load.d/%{modname}.conf
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 
 %changelog
-* @DATE@ - @USER@@@EMAIL@
-- Standardized Akmod release for COPR/RPM Fusion
