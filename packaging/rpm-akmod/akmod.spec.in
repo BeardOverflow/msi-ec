@@ -16,6 +16,7 @@ Group:          System Environment/Kernel
 License:        GPLv2
 URL:            https://github.com/BeardOverflow/msi-ec/
 Source0:        %{modname}-%{version}.tar.gz
+Source1:        %{modname}.conf
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  %{_bindir}/kmodtool
@@ -40,6 +41,16 @@ BuildRequires:  akmods
 
 
 %description
+
+%package       common
+Summary:       Common files for the %{modname} kernel module
+BuildArch:     noarch
+Provides:      %{modname}-kmod-common = %{version}-%{release}
+
+%description   common
+This package contains the license, documentation and common files 
+for the %{modname} kernel module.
+
 
 
 %prep
@@ -69,12 +80,19 @@ for kernel_version in %{?kernel_versions}; do
     make install DESTDIR=${RPM_BUILD_ROOT} KMODPATH=%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}
     # install -D -m 755 _kmod_build_${kernel_version%%___*}/foo/foo.ko  ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/foo.ko
 done
+
+mkdir -p %{buildroot}%{_sysconfdir}/modprobe.d/
+install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modprobe.d/msi-ec.conf
+
 %{?akmod_install}
 
 
 
 # Stub
 %files
+
+%files common
+%config(noreplace) %{_sysconfdir}/modprobe.d/msi-ec.conf
 
 
 %clean
