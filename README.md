@@ -76,7 +76,7 @@ boot.kernelModules = [ "msi-ec" ];
 
 [![Copr build status](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/package/msi-ec-kmod/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/package/msi-ec-kmod/)
 
-Please note that if you are on Fedora Workstation or Fedora Workstation KDE, the DKMS way is the recommended way to proceed over the COPR option.
+Please note that if you are on Fedora Workstation or Fedora Workstation KDE, DKMS remains the recommended way to proceed over the COPR option.
 You may find more information about installing from COPR here : [COPR Repo](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/)
 
 ## Current Support in the Kernel
