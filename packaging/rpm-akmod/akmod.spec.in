@@ -16,7 +16,8 @@ Group:          System Environment/Kernel
 License:        GPLv2
 URL:            https://github.com/BeardOverflow/msi-ec/
 Source0:        %{modname}-%{version}.tar.gz
-Source1:        %{modname}.conf
+Source1:        module-load.conf
+Source2:        depmod-override.conf
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  %{_bindir}/kmodtool
@@ -81,11 +82,14 @@ for kernel_version in %{?kernel_versions}; do
     
     
     mkdir -p ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
-    install -D -m 755 _kmod_build_${kernel_version%%___*}/%{modname}.ko  ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/foo.ko
+    install -D -m 755 _kmod_build_${kernel_version%%___*}/%{modname}.ko  ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/%{modname}.ko
 done
 
-mkdir -p %{buildroot}%{_sysconfdir}/modprobe.d/
-install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modprobe.d/msi-ec.conf
+mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
+install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/msi-ec.conf
+
+mkdir -p %{buildroot}%{_sysconfdir}/depmod.d/
+install -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/depmod.d/msi-ec.conf
 
 %{?akmod_install}
 
@@ -95,7 +99,8 @@ install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modprobe.d/msi-ec.conf
 %files
 
 %files common
-%config(noreplace) %{_sysconfdir}/modprobe.d/msi-ec.conf
+%config(noreplace) %{_sysconfdir}/modules-load.d/msi-ec.conf
+%config(noreplace) %{_sysconfdir}/depmod.d/msi-ec.conf
 
 
 %clean

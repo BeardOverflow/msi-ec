@@ -22,7 +22,7 @@ dist: clean
 srpm: dist
 	mkdir -p $(RPM_ROOT)/{SOURCES,SPECS,SRPMS}
 	mv $(DIST_DIR).tar.gz $(RPM_ROOT)/SOURCES/
-	cp msi-ec.conf $(RPM_ROOT)/SOURCES/
+	cp {module-load.conf,depmod-override.conf} $(RPM_ROOT)/SOURCES/
 	sed -e "s|@MODNAME@|$(MODNAME)|g" \
 	    -e "s|@VERSION@|$(VERSION)|g" \
 	    -e "s|@DATE@|$(DATE)|g" \
