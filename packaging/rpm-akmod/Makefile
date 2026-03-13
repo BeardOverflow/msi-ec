@@ -15,7 +15,7 @@ clean:
 
 dist: clean
 	mkdir -p $(DIST_DIR)
-	cp ../../{*.c,*.h,Makefile} $(DIST_DIR)/
+	cp ../../{*.c,*.h,Makefile,Makefile.vars} $(DIST_DIR)/
 	tar -czf $(DIST_DIR).tar.gz $(DIST_DIR)
 	rm -rf $(DIST_DIR)
 
