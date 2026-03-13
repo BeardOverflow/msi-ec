@@ -93,7 +93,10 @@ install -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/depmod.d/msi-ec.conf
 
 %{?akmod_install}
 
-
+%post
+if [ -x /usr/sbin/depmod ]; then
+    /usr/sbin/depmod -a > /dev/null 2>&1 || :
+fi
 
 # Stub
 %files
