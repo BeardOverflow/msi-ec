@@ -1661,6 +1661,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15P4EMS1.105", // Crosshair 16 HX AI D2XW(GKG)
 	"15P4EMS1.107",
 	"17L5EMS1.111", // Pulse/Katana 17 B13V/GK
+	"17L5EMS1.113",
 	"17L5EMS1.115",
 	"17L5EMS2.115", // Katana 17 B12VEK
 	"17L7EMS1.102", // Katana 17 HX B14WGK
