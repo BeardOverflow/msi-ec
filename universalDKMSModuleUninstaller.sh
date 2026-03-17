@@ -2,7 +2,7 @@
 
 FILTER="msi-ec|msi_ec"
 
-sudo dkms status | grep -E "$FILTER" | while read -r line; do
+dkms status | grep -E "$FILTER" | while read -r line; do
     
     module_info=$(echo "$line" | cut -d',' -f1)
     
@@ -10,6 +10,6 @@ sudo dkms status | grep -E "$FILTER" | while read -r line; do
     module_version=$(echo "$module_info" | cut -d'/' -f2)
 
     if [ -n "$module_name" ] && [ -n "$module_version" ] && sudo dkms status | grep -q "$module_name"; then
-        sudo dkms remove "$module_name/$module_version" --all
+        dkms remove "$module_name/$module_version" --all
     fi
 done
