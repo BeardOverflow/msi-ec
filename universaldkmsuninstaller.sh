@@ -9,7 +9,7 @@ sudo dkms status | grep -E "$FILTER" | while read -r line; do
     module_name=$(echo "$module_info" | cut -d'/' -f1)
     module_version=$(echo "$module_info" | cut -d'/' -f2)
 
-    if [ -n "$module_name" ] && [ -n "$module_version" ]; then
+    if [ -n "$module_name" ] && [ -n "$module_version" ] && sudo dkms status | grep -q "$module_name"; then
         sudo dkms remove "$module_name/$module_version" --all
     fi
 done
