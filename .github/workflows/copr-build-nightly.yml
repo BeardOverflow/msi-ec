@@ -43,4 +43,14 @@ jobs:
       - name: "Triggering COPR build"
         run: |
           CLEAN_URL=$(echo "${{ secrets.COPR_WEBHOOK_URL }}" | xargs)
+          
+          if [ -z "$CLEAN_URL" ]; then
+            echo "ERROR : secret is empty. Exiting..."
+            exit 1
+          fi
+          
+          # On affiche juste le début pour vérifier que ça ressemble à une URL
+          echo "URL detected and starting by : ${CLEAN_URL:0:8}..." 
+          
+          # Utilise des doubles quotes pour curl
           curl -X POST "$CLEAN_URL"
