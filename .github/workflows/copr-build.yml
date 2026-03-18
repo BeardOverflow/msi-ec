@@ -2,13 +2,11 @@ name: COPR Build - Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   deploy:
-    # On vérifie que le tag est bien sur la branche main
-    if: github.ref_type == 'tag' && github.event.base_ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: "Change version"
