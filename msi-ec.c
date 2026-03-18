@@ -1623,6 +1623,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1563EMS1.111",
 	"1563EMS1.115",
 	"1571EMS1.106", // Creator Z16 A11UE
+	"E1571IMS.109", // Creator Z16 A11UE
 	"1572EMS1.106", // Creator Z16 A12U
 	"1572EMS1.107",
 	"1587EMS1.102", // Katana 15 HX B14WEK
