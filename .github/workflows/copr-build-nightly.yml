@@ -42,4 +42,5 @@ jobs:
 
       - name: "Triggering COPR build"
         run: |
-          curl -X POST "${{ secrets.COPR_WEBHOOK_URL_NIGHTLY }}"
+          CLEAN_URL=$(echo "${{ secrets.COPR_WEBHOOK_URL }}" | xargs)
+          curl -X POST "$CLEAN_URL"
