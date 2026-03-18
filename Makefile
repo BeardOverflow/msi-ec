@@ -9,7 +9,8 @@ KMOD_DIR        := /lib/modules/$(KERNELRELEASE)/updates/drivers/platform/x86
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
-obj-m += msi-ec.o
+obj-m += $(MODNAME).o
+$(MODNAME)-y := msi-ec.o
 
 
 all: modules
