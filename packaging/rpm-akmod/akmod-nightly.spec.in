@@ -87,9 +87,6 @@ done
 mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
 install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/msi-ec.conf
 
-mkdir -p %{buildroot}%{_sysconfdir}/depmod.d/
-install -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/depmod.d/msi-ec.conf
-
 %{?akmod_install}
 
 %post
@@ -102,7 +99,6 @@ fi
 
 %files common
 %config(noreplace) %{_sysconfdir}/modules-load.d/msi-ec.conf
-%config(noreplace) %{_sysconfdir}/depmod.d/msi-ec.conf
 
 
 %clean
