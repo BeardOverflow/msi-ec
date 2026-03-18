@@ -31,4 +31,4 @@ jobs:
       
       - name: "Triggering COPR build"
         run: |
-          curl -X POST ${{ secrets.COPR_WEBHOOK_URL }}
+          curl -X POST "${{ secrets.COPR_WEBHOOK_URL }}"
