@@ -1,4 +1,5 @@
-include ../../Makefile.vars
+-include ../../Makefile.vars
+-include Makefile.vars
 
 PWD        := $(shell pwd)
 RPM_ROOT   := $(PWD)/rpmbuild
