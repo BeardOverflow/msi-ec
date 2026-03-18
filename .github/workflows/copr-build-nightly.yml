@@ -42,7 +42,7 @@ jobs:
 
       - name: "Triggering COPR build"
         run: |
-          CLEAN_URL=$(echo "${{ secrets.COPR_WEBHOOK_URL }}" | xargs)
+          CLEAN_URL=$(echo "${{ secrets.COPR_WEBHOOK_URL_NIGHTLY }}" | xargs)
           
           if [ -z "$CLEAN_URL" ]; then
             echo "ERROR : secret is empty. Exiting..."
