@@ -31,5 +31,11 @@ jobs:
       
       - name: "Triggering COPR build"
         run: |
-          CLEAN_URL=$(echo "${{ secrets.COPR_WEBHOOK_URL }}" | xargs)
-          curl -X POST "$CLEAN_URL"
+          PROJECT_ID="223651"
+          PKG_NAME="msi-ec-kmod"
+          UUID="${{ secrets.COPR_UUID }}"
+          
+          URL="https://copr.fedorainfracloud.org/webhooks/custom/${PROJECT_ID}/${UUID}/${PKG_NAME}/"
+          
+          echo "Starting build."
+          curl -Ssi -X POST "$URL"

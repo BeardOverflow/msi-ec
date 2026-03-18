@@ -42,15 +42,11 @@ jobs:
 
       - name: "Triggering COPR build"
         run: |
-          CLEAN_URL=$(echo "${{ secrets.COPR_WEBHOOK_URL_NIGHTLY }}" | xargs)
+          PROJECT_ID="223651"
+          PKG_NAME="msi-ec-nightly-kmod"
+          UUID="${{ secrets.COPR_UUID }}"
           
-          if [ -z "$CLEAN_URL" ]; then
-            echo "ERROR : secret is empty. Exiting..."
-            exit 1
-          fi
+          URL="https://copr.fedorainfracloud.org/webhooks/custom/${PROJECT_ID}/${UUID}/${PKG_NAME}/"
           
-          # On affiche juste le début pour vérifier que ça ressemble à une URL
-          echo "URL detected and starting by : ${CLEAN_URL:0:8}..." 
-          
-          # Utilise des doubles quotes pour curl
-          curl -X POST "$CLEAN_URL"
+          echo "Starting build."
+          curl -Ssi -X POST "$URL"
