@@ -1,0 +1,45 @@
+name: COPR Build - Nightly
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # UTC
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main 
+          fetch-depth: 0
+
+      - name: "Update Makefile.vars (Version & Name)"
+        run: |
+          CURRENT_DATE=$(date +'%Y%m%d')
+          echo "Updating version to current date : $CURRENT_DATE"
+          sed -i "s/^VERSION :=.*/VERSION := $CURRENT_DATE/" Makefile.vars
+          sed -i "s/^MODNAME :=.*/MODNAME := msi-ec-nightly/" Makefile.vars
+
+      - name: "Displaying Makefile.vars"
+        run: cat Makefile.vars
+
+      - name: "Committing to nightly branch"
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git checkout -B nightly-build
+          
+          git add Makefile.vars
+          git commit -m "chore: nightly build $CURRENT_DATE [skip ci]"
+          
+          git push --set-upstream origin nightly-build --force
+
+      - name: "Waiting for github indexing"
+        run: sleep 20
+
+      - name: "Triggering COPR build"
+        run: |
+          curl -X POST ${{ secrets.COPR_WEBHOOK_URL_NIGHTLY }}
