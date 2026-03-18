@@ -1,4 +1,5 @@
-include Makefile.vars
+_SRC := $(if $(src),$(src),.)
+include $(_SRC)/Makefile.vars # AKMOD can be annoying so preventing his silent context change
 
 DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 
