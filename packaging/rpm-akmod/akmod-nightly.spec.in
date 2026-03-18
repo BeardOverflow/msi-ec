@@ -1,0 +1,114 @@
+%global debug_package %{nil}
+
+%define buildforkernels akmod
+%define modname @MODNAME@
+%define version @VERSION@
+%define spec_name msi-ec
+
+Name:           %{modname}-kmod
+
+Version:        %{version}
+Release:        1%{?dist}.1
+Summary:        Kernel module(s) for MSI-EC out of tree driver for MSI Laptops Embeded controllers.
+
+Group:          System Environment/Kernel
+
+License:        GPLv2
+URL:            https://github.com/BeardOverflow/msi-ec/
+Source0:        %{modname}-%{version}.tar.gz
+Source1:        module-load.conf
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+BuildRequires:  %{_bindir}/kmodtool
+
+ExclusiveArch:  i686 x86_64
+
+BuildRequires:  %{_bindir}/kmodtool
+
+# Detecting if we are building on COPR
+%if "%{?copr_username}" != "" || 0%{?fedora}
+BuildRequires:  gcc, make, elfutils-libelf-devel
+BuildRequires:  kernel-devel
+BuildRequires:  kmodtool
+BuildRequires:  akmods
+%else
+# Or Else, we are using the RPM Fusion Macro
+%{!?kernels:BuildRequires: buildsys-build-rpmfusion-kerneldevpkgs-%{?buildforkernels:%{buildforkernels}}%{!?buildforkernels:current}-%{_target_cpu} }
+%endif
+
+# kmodtool does its magic here
+%{expand:%(kmodtool --target %{_target_cpu} --repo rpmfusion --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null) }
+
+
+%description
+
+%package       common
+Summary:       Common files for the %{modname} kernel module
+BuildArch:     noarch
+Provides:      %{modname}-kmod-common = %{version}-%{release}
+
+%description   common
+This package contains the license, documentation and common files 
+for the %{modname} kernel module.
+
+
+
+%prep
+# error out if there was something wrong with kmodtool
+%{?kmodtool_check}
+
+# print kmodtool output for debugging purposes:
+kmodtool  --target %{_target_cpu}  --repo %{repo} --kmodname %{name} %{?buildforkernels:--%{buildforkernels}} %{?kernels:--for-kernels "%{?kernels}"} 2>/dev/null
+
+%setup -q -c -T -a 0
+
+for kernel_version in %{?kernel_versions} ; do
+    cp -a %{modname}-%{version} _kmod_build_${kernel_version%%___*}
+done
+
+
+%build
+for kernel_version in %{?kernel_versions}; do
+    make %{?_smp_mflags} -C "${kernel_version##*___}" M=${PWD}/_kmod_build_${kernel_version%%___*} modules
+done
+
+
+%install
+rm -rf ${RPM_BUILD_ROOT}
+
+for kernel_version in %{?kernel_versions}; do
+    # make install DESTDIR=${RPM_BUILD_ROOT} KMODPATH=%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}
+    
+    
+    mkdir -p ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/
+    install -D -m 755 _kmod_build_${kernel_version%%___*}/%{modname}.ko  ${RPM_BUILD_ROOT}%{kmodinstdir_prefix}/${kernel_version%%___*}/%{kmodinstdir_postfix}/%{modname}.ko
+done
+
+mkdir -p %{buildroot}%{_sysconfdir}/modules-load.d/
+install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/modules-load.d/msi-ec.conf
+
+mkdir -p %{buildroot}%{_sysconfdir}/depmod.d/
+install -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/depmod.d/msi-ec.conf
+
+%{?akmod_install}
+
+%post
+if [ -x /usr/sbin/depmod ]; then
+    /usr/sbin/depmod -a > /dev/null 2>&1 || :
+fi
+
+# Stub
+%files
+
+%files common
+%config(noreplace) %{_sysconfdir}/modules-load.d/msi-ec.conf
+%config(noreplace) %{_sysconfdir}/depmod.d/msi-ec.conf
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%changelog
+* Fri Mar 13 2026 Xabi Vittorio GOITY <xabigoity@gmail.com> - 0.13-1
+- Fix spec naming and changelog for COPR build
