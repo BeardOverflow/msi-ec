@@ -5,6 +5,7 @@
 %define version @VERSION@
 %define spec_name msi-ec
 %define release @RELEASE@
+%global repo rpmfusion
 
 Name:           %{modname}-kmod
 
