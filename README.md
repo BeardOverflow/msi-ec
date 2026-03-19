@@ -72,6 +72,12 @@ boot.extraModulePackages = [ config.boot.kernelPackages.msi-ec ];
 boot.kernelModules = [ "msi-ec" ];
 ```
 
+### On Fedora 42+ / Fedora Silverblue 42+ / Fedora Kinoite 42+
+
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/package/msi-ec-kmod/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/package/msi-ec-kmod/)
+
+Please note that if you are on Fedora Workstation or Fedora Workstation KDE, DKMS remains the recommended way to proceed over the COPR option.
+You may find more information about installing from COPR here : [COPR Repo](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/)
 
 ## Current Support in the Kernel
 

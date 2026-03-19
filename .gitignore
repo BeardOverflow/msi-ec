@@ -12,3 +12,6 @@ compile_commands.json
 
 # NixOS outputs
 /result
+
+# RPM build dir
+**/rpmbuild
