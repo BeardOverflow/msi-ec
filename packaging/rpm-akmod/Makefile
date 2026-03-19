@@ -30,7 +30,7 @@ srpm: dist
 	
 	cp depmod-override.conf $(RPM_ROOT)/SOURCES/ ; \
 
-	cp ../LICENSE $(RPM_ROOT)/SOURCES/
+	cp ../../LICENSE $(RPM_ROOT)/SOURCES/
 	
 	sed -e "s|@MODNAME@|$(MODNAME)|g" \
 	    -e "s|@VERSION@|$(VERSION)|g" \
