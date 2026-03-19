@@ -102,7 +102,6 @@ fi
 
 
 %files common
-%license %{modname}/LICENSE
 %config(noreplace) %{_sysconfdir}/modules-load.d/msi-ec.conf
 %config(noreplace) %{_sysconfdir}/depmod.d/msi-ec.conf
 
