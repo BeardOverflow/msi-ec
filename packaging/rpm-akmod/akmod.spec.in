@@ -4,11 +4,12 @@
 %define modname @MODNAME@
 %define version @VERSION@
 %define spec_name msi-ec
+%define release @RELEASE@
 
 Name:           %{modname}-kmod
 
 Version:        %{version}
-Release:        1%{?dist}.1
+Release:        %{release}%{?dist}
 Summary:        Kernel module(s) for MSI-EC out of tree driver for MSI Laptops Embeded controllers.
 
 Group:          System Environment/Kernel
@@ -23,8 +24,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{_bindir}/kmodtool
 
 ExclusiveArch:  i686 x86_64
-
-BuildRequires:  %{_bindir}/kmodtool
 
 # Detecting if we are building on COPR
 %if "%{?copr_username}" != "" || 0%{?fedora}
@@ -98,10 +97,12 @@ if [ -x /usr/sbin/depmod ]; then
     /usr/sbin/depmod -a > /dev/null 2>&1 || :
 fi
 
-# Stub
+# To be filled by kmodtool
 %files
 
+
 %files common
+%license %{modname}/LICENSE
 %config(noreplace) %{_sysconfdir}/modules-load.d/msi-ec.conf
 %config(noreplace) %{_sysconfdir}/depmod.d/msi-ec.conf
 
@@ -110,6 +111,5 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 
+# Changelog will be injected by Makefile under here.
 %changelog
-* Fri Mar 13 2026 Xabi Vittorio GOITY <xabigoity@gmail.com> - 0.13-1
-- Fix spec naming and changelog for COPR build

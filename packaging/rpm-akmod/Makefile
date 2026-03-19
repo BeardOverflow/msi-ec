@@ -5,17 +5,11 @@ PWD        := $(shell pwd)
 RPM_ROOT   := $(PWD)/rpmbuild
 DIST_DIR   := $(MODNAME)-$(VERSION)
 
-USER_NAME  := $(shell git config user.name || echo "MSI-EC maintainers")
-USER_EMAIL := $(shell git config user.email || echo "no-reply@msiecmaintainers.lan")
-DATE       := $(shell date +'%a %b %d %Y')
+DATE_RPM=$(date +"%a %b %d %Y")
 
-ifeq ($(findstring nightly,$(MODNAME)),nightly)
-    SPEC_IN := akmod-nightly.spec.in
-	IS_NIGHTLY := 1
-else
-    SPEC_IN := akmod.spec.in
-	IS_NIGHTLY := 0
-endif
+GIT_SLUG=$(shell git rev-parse --short HEAD)
+TIMESTAMP=$(shell date +%Y%m%d%H%M)
+NEW_RELEASE="1.${TIMESTAMP}git${GIT_SLUG}"
 
 .PHONY: srpm clean dist
 
@@ -24,7 +18,7 @@ clean:
 
 dist: clean
 	mkdir -p $(DIST_DIR)
-	cp ../../{*.c,*.h,Makefile,Makefile.vars} $(DIST_DIR)/
+	cp ../../{*.c,*.h,Makefile,Makefile.vars,LICENSE} $(DIST_DIR)/
 	tar -czf $(DIST_DIR).tar.gz $(DIST_DIR)
 	rm -rf $(DIST_DIR)
 
@@ -34,19 +28,17 @@ srpm: dist
 	
 	echo "$(MODNAME)" > $(RPM_ROOT)/SOURCES/module-load.conf
 	
-	@if [ "$(IS_NIGHTLY)" = "0" ]; then \
-		cp depmod-override.conf $(RPM_ROOT)/SOURCES/ ; \
-	else \
-		touch $(RPM_ROOT)/SOURCES/depmod-override.conf ; \
-	fi
-
-	# Génération du SPEC
+	cp depmod-override.conf $(RPM_ROOT)/SOURCES/ ; \
+	
 	sed -e "s|@MODNAME@|$(MODNAME)|g" \
 	    -e "s|@VERSION@|$(VERSION)|g" \
 	    -e "s|@DATE@|$(DATE)|g" \
 	    -e "s|@USER@|$(USER_NAME)|g" \
 	    -e "s|@EMAIL@|$(USER_EMAIL)|g" \
-	    $(SPEC_IN) > $(RPM_ROOT)/SPECS/$(MODNAME)-kmod.spec
+		-e "s|@RELEASE@|${NEW_RELEASE}|g" \
+	    akmod.spec.in > $(RPM_ROOT)/SPECS/$(MODNAME)-kmod.spec
+
+	git log -n 7 --pretty=format:"* %ad GitHub Actions <no-reply@github.com> - ${VERSION}-${NEW_RELEASE}%n- %s (%h)%n" --date=format:"%a %b %d %Y" >> $(RPM_ROOT)/SPECS/$(MODNAME)-kmod.spec
 
 	rpmbuild --define "_topdir $(RPM_ROOT)" -bs $(RPM_ROOT)/SPECS/$(MODNAME)-kmod.spec
 	@if [ -n "$(outdir)" ]; then cp $(RPM_ROOT)/SRPMS/*.src.rpm $(outdir)/; fi
