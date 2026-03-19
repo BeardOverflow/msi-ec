@@ -29,8 +29,6 @@ srpm: dist
 	echo "$(MODNAME)" > $(RPM_ROOT)/SOURCES/module-load.conf
 	
 	cp depmod-override.conf $(RPM_ROOT)/SOURCES/ ; \
-
-	cp ../../LICENSE $(RPM_ROOT)/SOURCES/
 	
 	sed -e "s|@MODNAME@|$(MODNAME)|g" \
 	    -e "s|@VERSION@|$(VERSION)|g" \
