@@ -64,9 +64,11 @@ dkms-install:
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
 
 dkms-uninstall:
-	dkms remove msi_ec/$(VERSION) --all
+	bash universalDKMSModuleUninstaller.sh
 	rm -rf $(DKMS_ROOT_PATH)
 	rm -f /etc/modules-load.d/msi-ec.conf
+
+dkms-update: dkms-uninstall dkms-install
 
 dev: modules unload load
 
