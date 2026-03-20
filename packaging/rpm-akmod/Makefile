@@ -18,6 +18,7 @@ clean:
 
 dist: clean
 	mkdir -p $(DIST_DIR)
+	sed -i 's|PWD|CURDIR|g' ../../Makefile
 	cp ../../{*.c,*.h,Makefile,Makefile.vars,LICENSE} $(DIST_DIR)/
 	tar -czf $(DIST_DIR).tar.gz $(DIST_DIR)
 	rm -rf $(DIST_DIR)
