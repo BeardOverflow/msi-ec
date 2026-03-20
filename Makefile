@@ -14,10 +14,10 @@ obj-m += $(MODNAME).o
 all: modules
 
 modules:
-	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(PWD) modules
+	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(CURDIR) modules
 
 clean:
-	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(PWD) clean
+	@$(MAKE) -C /lib/modules/$(KERNELRELEASE)/build M=$(CURDIR) clean
 
 load:
 	insmod msi-ec.ko
@@ -49,11 +49,11 @@ uninstall:
 dkms-install:
 	@dkms --version
 	mkdir -p $(DKMS_ROOT_PATH)
-	cp $(PWD)/dkms.conf $(DKMS_ROOT_PATH)
-	cp $(PWD)/Makefile $(DKMS_ROOT_PATH)
-	cp $(PWD)/Makefile.vars $(DKMS_ROOT_PATH)
-	cp $(PWD)/msi-ec.c $(DKMS_ROOT_PATH)
-	cp $(PWD)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/dkms.conf $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/Makefile.vars $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
 
 	sed -e "s/@VERSION@/$(VERSION)/" \
 	    -i $(DKMS_ROOT_PATH)/dkms.conf
