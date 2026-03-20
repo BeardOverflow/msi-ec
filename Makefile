@@ -51,6 +51,7 @@ dkms-install:
 	mkdir -p $(DKMS_ROOT_PATH)
 	cp $(PWD)/dkms.conf $(DKMS_ROOT_PATH)
 	cp $(PWD)/Makefile $(DKMS_ROOT_PATH)
+	cp $(PWD)/Makefile.vars $(DKMS_ROOT_PATH)
 	cp $(PWD)/msi-ec.c $(DKMS_ROOT_PATH)
 	cp $(PWD)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
 
