@@ -23,6 +23,8 @@ Eager to support the project? Your help is always welcome to keep the project al
 - Get solutions for common MSI laptop problems (ACPI errors, slow charger detection,...) and submit fixes if you have any in this [discussion](https://github.com/BeardOverflow/msi-ec/discussions/130#).
 - If you want to go deeper: [read into this discussion regarding EC firmware naming patterns](https://github.com/BeardOverflow/msi-ec/discussions/98).
 
+You can also contribute by sharing your feedback on the installation process and problems encountered with it in this discussion: https://github.com/BeardOverflow/msi-ec/discussions/662
+
 
 ## Installation
 
@@ -78,6 +80,8 @@ boot.kernelModules = [ "msi-ec" ];
 
 Please note that if you are on Fedora Workstation or Fedora Workstation KDE, DKMS remains the recommended way to proceed over the COPR option.
 You may find more information about installing from COPR here : [COPR Repo](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/)
+
+You can share your feedback/issues with the COPR packages here: https://github.com/BeardOverflow/msi-ec/discussions/657
 
 ## Current Support in the Kernel
 
