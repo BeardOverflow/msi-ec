@@ -1,4 +1,4 @@
-name: msi-ec
+name: ${MODNAME}-dkms
 version: "${VERSION}"
 release: "${RELEASE}"
 arch: "all"
@@ -34,13 +34,8 @@ overrides:
     depends: [dkms, make, gcc, linux-headers-generic]
   apk:
     depends: [dkms, make, gcc, linux-lts-dev]
-  slackware:
+  
+  # Using the archlinux preset for slackware as they are really close and there is no official slackware support
+  archlinux:
     scripts:
-      postinstall: |
-        #!/bin/bash
-        # On slackware, we have to check manually for dkms
-        if command -v dkms >/dev/null 2>&1; then
-          cd /usr/src/msi-ec-${VERSION} && make dkms-install
-        else
-          echo "⚠️  DKMS not found. Driver source installed in /usr/src/ but not compiled."
-        fi
+      postinstall: "scripts/postinstall_slackware.sh"

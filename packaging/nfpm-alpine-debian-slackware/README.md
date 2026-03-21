@@ -4,6 +4,5 @@ This yaml file will allow dynamically building packages for:
  - Alpine based distro
  - Debian based distro
  - Arch based distro
- - Slackware linux
 
-This folder will contain general definitions for arch debian and alpine. Specific files for each distro will be stored under packaging/distro.
+The scripts folder contains scripts that will be embedded to packages.

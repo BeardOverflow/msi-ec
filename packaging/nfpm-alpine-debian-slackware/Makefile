@@ -1,5 +1,7 @@
 include ../../Makefile.vars
 
+export MODNAME
+
 DATE_SLUG := $(shell date +%Y%m%d%H%M)
 
 GIT_SLUG=$(shell git rev-parse --short HEAD)
@@ -12,19 +14,20 @@ CS_TARGET = $(CS_ORG)/$(CS_REPO)/any-distro/any-version
 
 .PHONY: package-all deb slackware alpine clean-pkg
 
-package-all: deb slackware alpine
+package-all: deb alpine slackware
 
 deb:
 	@echo "📦 Building Debian package v$(VERSION)-$(RELEASE)..."
-	nfpm pkg --target msi-ec_$(VERSION)-$(RELEASE).deb
+	nfpm pkg --target $(MODNAME)-dkms_$(VERSION)-$(RELEASE).deb
 
 alpine:
 	@echo "📦 Building Alpine package v$(VERSION)-$(RELEASE)..."
-	nfpm pkg --target msi-ec-$(VERSION)-$(RELEASE).apk
+	nfpm pkg --target $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
 
 slackware:
 	@echo "📦 Building Slackware (TXZ)..."
-	nfpm pkg --target msi-ec-$(VERSION)-$(RELEASE).txz
+	nfpm pkg --packager archlinux --target $(MODNAME)-dkms-$(VERSION)-$(RELEASE).tar.xz
+	mv $(MODNAME)-dkms-$(VERSION)-$(RELEASE).tar.xz $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
 
 clean-pkg:
 	@echo "🧹 Cleaning packages..."
@@ -36,6 +39,6 @@ publish: package-all
 		exit 1; \
 	fi
 	@echo "🚀 Pushing Cloudsmith..."
-	cloudsmith push deb $(CS_TARGET) msi-ec_$(VERSION)-$(RELEASE).deb
-	cloudsmith push alpine $(CS_TARGET) msi-ec-$(VERSION)-$(RELEASE).apk
-	cloudsmith push slackware $(CS_TARGET) msi-ec-$(VERSION)-$(RELEASE).txz
+	cloudsmith push deb $(CS_TARGET) $(MODNAME)-dkms_$(VERSION)-$(RELEASE).deb
+	cloudsmith push alpine $(CS_TARGET) $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
+	cloudsmith push slackware $(CS_TARGET) $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
