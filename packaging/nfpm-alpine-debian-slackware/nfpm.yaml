@@ -1,0 +1,46 @@
+name: msi-ec
+version: "${VERSION}"
+release: "${RELEASE}"
+arch: "all"
+platform: "linux"
+
+contents:
+  - src: "./*"
+    dst: "/usr/src/msi-ec-${VERSION}"
+    exclude:
+      - .github
+      - .copr
+      - packaging
+      - .editorconfig
+      - .gitignore
+      - .clang-format
+      - "*.deb"
+      - "*.rpm"
+      - "*.zst"
+      - "*.apk"
+
+scripts:
+  postinstall: |
+    #!/bin/bash
+    cd /usr/src/msi-ec-${VERSION}
+    make dkms-install
+  preremove: |
+    #!/bin/bash
+    cd /usr/src/msi-ec-${VERSION}
+    make dkms-uninstall
+
+overrides:
+  deb:
+    depends: [dkms, make, gcc, linux-headers-generic]
+  apk:
+    depends: [dkms, make, gcc, linux-lts-dev]
+  slackware:
+    scripts:
+      postinstall: |
+        #!/bin/bash
+        # On slackware, we have to check manually for dkms
+        if command -v dkms >/dev/null 2>&1; then
+          cd /usr/src/msi-ec-${VERSION} && make dkms-install
+        else
+          echo "⚠️  DKMS not found. Driver source installed in /usr/src/ but not compiled."
+        fi
