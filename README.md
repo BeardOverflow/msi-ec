@@ -79,6 +79,17 @@ boot.kernelModules = [ "msi-ec" ];
 Please note that if you are on Fedora Workstation or Fedora Workstation KDE, DKMS remains the recommended way to proceed over the COPR option.
 You may find more information about installing from COPR here : [COPR Repo](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/)
 
+### Debian / Alpine / Slackware
+
+Please check our brand new automatically built packages here: https://broadcasts.cloudsmith.com/msi-ec/msi-ec
+Instructions on how to install them are also available on this link by clicking on the name of the package you want to install.
+Updating is automatic for Debian and Alpine as this is our repository.
+
+You can share your experience with these packages here:
+ - Debian:  #664
+ - Alpine: #665
+ - Slackware: #666
+
 ## Current Support in the Kernel
 
 Features already merged in kernel 6.4 and up:
