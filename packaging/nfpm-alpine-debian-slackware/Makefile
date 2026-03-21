@@ -1,9 +1,9 @@
 include ../../Makefile.vars
 
-DATE_RPM=$(date +"%a %b %d %Y")
+DATE_SLUG := $(shell date +%Y%m%d%H%M)
 
 GIT_SLUG=$(shell git rev-parse --short HEAD)
-export RELEASE := $(DATE_SLUG)git$(GIT_HASH)
+export RELEASE := $(DATE_SLUG)git$(GIT_SLUG)
 
 CS_ORG = msi-ec
 CS_REPO = msi-ec

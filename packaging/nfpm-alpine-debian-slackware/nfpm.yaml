@@ -3,31 +3,31 @@ version: "${VERSION}"
 release: "${RELEASE}"
 arch: "all"
 platform: "linux"
+maintainer: "MSI-EC developpers"
 
 contents:
-  - src: "./*"
-    dst: "/usr/src/msi-ec-${VERSION}"
-    exclude:
-      - .github
-      - .copr
-      - packaging
-      - .editorconfig
-      - .gitignore
-      - .clang-format
-      - "*.deb"
-      - "*.rpm"
-      - "*.zst"
-      - "*.apk"
+  - src: "../../Makefile"
+    dst: "/usr/src/msi-ec-${VERSION}/Makefile"
+  - src: "../../Makefile.vars"
+    dst: "/usr/src/msi-ec-${VERSION}/Makefile.vars"
+  - src: "../../msi-ec.c"
+    dst: "/usr/src/msi-ec-${VERSION}/msi-ec.c"
+  - src: "../../ec_memory_configuration.h"
+    dst: "/usr/src/msi-ec-${VERSION}/ec_memory_configuration.h"
+  - src: "../../dkms.conf"
+    dst: "/usr/src/msi-ec-${VERSION}/dkms.conf"
+  - src: "../../LICENSE"
+    dst: "/usr/src/msi-ec-${VERSION}/LICENSE"
+  - src: "../../README.md"
+    dst: "/usr/src/msi-ec-${VERSION}/README.md"
+  - src: "../../universalDKMSModuleUninstaller.sh"
+    dst: "/usr/src/msi-ec-${VERSION}/universalDKMSModuleUninstaller.sh"
+  - src: "../../docs"
+    dst: "/usr/src/msi-ec-${VERSION}/docs"
 
 scripts:
-  postinstall: |
-    #!/bin/bash
-    cd /usr/src/msi-ec-${VERSION}
-    make dkms-install
-  preremove: |
-    #!/bin/bash
-    cd /usr/src/msi-ec-${VERSION}
-    make dkms-uninstall
+  postinstall: "scripts/postinstall.sh"
+  preremove: "scripts/preremove.sh"
 
 overrides:
   deb:
