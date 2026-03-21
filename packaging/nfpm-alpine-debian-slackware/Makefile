@@ -1,6 +1,7 @@
 include ../../Makefile.vars
 
 export MODNAME
+export VERSION
 
 DATE_SLUG := $(shell date +%Y%m%d%H%M)
 
@@ -40,5 +41,5 @@ publish: package-all
 	fi
 	@echo "🚀 Pushing Cloudsmith..."
 	cloudsmith push deb $(CS_TARGET) $(MODNAME)-dkms_$(VERSION)-$(RELEASE).deb
-	cloudsmith push alpine $(CS_TARGET) $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
-	cloudsmith push slackware $(CS_TARGET) $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
+	cloudsmith push alpine msi-ec/msi-ec/alpine/any-version $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
+	cloudsmith push raw $(CS_TARGET) $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
