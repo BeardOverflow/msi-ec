@@ -1335,6 +1335,8 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"13Q2EMS1.110", // Prestige 13 AI Evo A1MG
 	"13Q3EMS1.111", // Prestige 13 AI+ Evo A2VMG
 	"14QKIMS1.108", // Venture A14 AI+ A3HMG
+	"15A1EMS1.105", // Prestige 16 AI Evo B1MG
+	"15A3EMS1.104", // Prestige 16 AI+ Evo B2VMG
 	NULL
 };
 
@@ -1685,6 +1687,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"17P1EMS1.104", // Stealth GS77 12U(E/GS)
 	"17P1EMS1.106",
 	"17P2EMS1.111", // Stealth 17 Studio A13VI
+	"17Q1IMS1.10C", // Titan GT77 12UHS
 	"17Q2IMS1.107", // Titan GT77HX 13VH
 	"17Q2IMS1.10D",
 	"17S1IMS1.105", // Raider GE78HX 13VI
