@@ -40,7 +40,7 @@ Eager to support the project? Your help is always welcome to keep the project al
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
    - For Arch:   `sudo pacman -S --needed base-devel linux-headers`
-2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
+2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   (Not required if using COPR or Debian/Alpine/Slackware install way) 
 3. Choose one of the following installation methods
 
 #### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
