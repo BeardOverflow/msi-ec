@@ -42,4 +42,4 @@ publish: package-all
 	@echo "🚀 Pushing Cloudsmith..."
 	cloudsmith push deb $(CS_TARGET) $(MODNAME)-dkms_$(VERSION)-$(RELEASE).deb
 	cloudsmith push alpine msi-ec/msi-ec/alpine/any-version $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
-	cloudsmith push raw $(CS_TARGET) $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
+	cloudsmith push raw msi-ec/msi-ec $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz

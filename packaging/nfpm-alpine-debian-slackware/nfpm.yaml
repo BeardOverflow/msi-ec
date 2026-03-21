@@ -1,7 +1,7 @@
 name: ${MODNAME}-dkms
 version: "${VERSION}"
 release: "${RELEASE}"
-arch: "all"
+arch: "amd64"
 platform: "linux"
 maintainer: "MSI-EC developpers"
 
