@@ -22,4 +22,7 @@ compile_commands.json
 *.apk
 *.txz
 
-packaging/nfpm-alpine-debian-slackware/scripts/postinstall_slackware.sh packaging/nfpm-alpine-debian-slackware/scripts/postinstall.sh packaging/nfpm-alpine-debian-slackware/scripts/preremove.sh
+# Scripts for package building generated from templates
+packaging/nfpm-alpine-debian-slackware/scripts/postinstall_slackware.sh 
+packaging/nfpm-alpine-debian-slackware/scripts/postinstall.sh 
+packaging/nfpm-alpine-debian-slackware/scripts/preremove.sh
