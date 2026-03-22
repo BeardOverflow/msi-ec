@@ -90,9 +90,9 @@ Instructions on how to install them are also available on this link by clicking 
 Updating is automatic for Debian and Alpine as this is our repository.
 
 You can share your experience with these packages here:
- - Debian:  #664
- - Alpine: #665
- - Slackware: #666
+ - Debian:  https://github.com/BeardOverflow/msi-ec/discussions/664
+ - Alpine: https://github.com/BeardOverflow/msi-ec/discussions/665
+ - Slackware: https://github.com/BeardOverflow/msi-ec/discussions/666
 
 ## Current Support in the Kernel
 
