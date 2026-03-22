@@ -38,15 +38,15 @@ prepare-build:
 	
 	@chmod +x scripts/postinstall.sh scripts/preremove.sh scripts/postinstall_slackware.sh
 
-deb: prepare-build
+deb:
 	@echo "📦 Building Debian package v$(VERSION)-$(RELEASE)..."
 	nfpm pkg --target $(MODNAME)-dkms_$(VERSION)-$(RELEASE).deb
 
-alpine: prepare-build
+alpine:
 	@echo "📦 Building Alpine package v$(VERSION)-$(RELEASE)..."
 	nfpm pkg --target $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
 
-slackware: prepare-build
+slackware:
 	@echo "📦 Building Slackware (TXZ)..."
 	nfpm pkg --packager archlinux --target $(MODNAME)-dkms-$(VERSION)-$(RELEASE).tar.xz
 	mv $(MODNAME)-dkms-$(VERSION)-$(RELEASE).tar.xz $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
