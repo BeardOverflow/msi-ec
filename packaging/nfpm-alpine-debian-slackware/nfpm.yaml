@@ -7,23 +7,32 @@ maintainer: "MSI-EC developpers"
 
 contents:
   - src: "../../Makefile"
-    dst: "/usr/src/msi-ec-${VERSION}/Makefile"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/Makefile"
+    expand: true
   - src: "../../Makefile.vars"
-    dst: "/usr/src/msi-ec-${VERSION}/Makefile.vars"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/Makefile.vars"
+    expand: true
   - src: "../../msi-ec.c"
-    dst: "/usr/src/msi-ec-${VERSION}/msi-ec.c"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/msi-ec.c"
+    expand: true
   - src: "../../ec_memory_configuration.h"
-    dst: "/usr/src/msi-ec-${VERSION}/ec_memory_configuration.h"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/ec_memory_configuration.h"
+    expand: true
   - src: "../../dkms.conf"
-    dst: "/usr/src/msi-ec-${VERSION}/dkms.conf"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/dkms.conf"
+    expand: true
   - src: "../../LICENSE"
-    dst: "/usr/src/msi-ec-${VERSION}/LICENSE"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/LICENSE"
+    expand: true
   - src: "../../README.md"
-    dst: "/usr/src/msi-ec-${VERSION}/README.md"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/README.md"
+    expand: true
   - src: "../../universalDKMSModuleUninstaller.sh"
-    dst: "/usr/src/msi-ec-${VERSION}/universalDKMSModuleUninstaller.sh"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/universalDKMSModuleUninstaller.sh"
+    expand: true
   - src: "../../docs"
-    dst: "/usr/src/msi-ec-${VERSION}/docs"
+    dst: "/usr/src/msi-ec-${VERSION}.${RELEASE}/docs"
+    expand: true
 
 scripts:
   postinstall: "scripts/postinstall.sh"
