@@ -3,6 +3,6 @@ NFPM is a tool that allow generating packages for multiple distributions. Howeve
 This yaml file will allow dynamically building packages for:
  - Alpine based distro
  - Debian based distro
- - Arch based distro
+ - Slackware linux
 
 The scripts folder contains scripts that will be embedded to packages.
