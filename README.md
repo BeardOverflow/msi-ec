@@ -94,6 +94,9 @@ Please check our brand new automatically built packages here: https://broadcasts
 Instructions on how to install them are also available on this link by clicking on the name of the package you want to install.
 Updating is automatic for Debian and Alpine as this is our repository.
 
+> [!NOTE]
+> Alpine and Slackware support **have not been tested yet** since we did not have those distro in production. Therefore, they are still **experimental** and your feedback and issues encountered are greatly appreciated.
+
 You can share your experience with these packages here:
  - Debian:  https://github.com/BeardOverflow/msi-ec/discussions/664
  - Alpine: https://github.com/BeardOverflow/msi-ec/discussions/665
