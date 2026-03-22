@@ -45,6 +45,11 @@ You can also contribute by sharing your feedback on the installation process and
 2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec` (Not required if using COPR or Debian/Alpine/Slackware install way) 
 3. Choose one of the following installation methods
 
+> [!NOTE]
+> Before installing any packaged version, you must uninstall every version of the module. If you were already using a packaged version, don't uninstall anything as the package manager will do it for you.
+> 
+> To uninstall that, run `sudo make dkms-uninstall`or `sudo make uninstall`depending on your install method.
+
 #### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
 
 1. Verify that dkms is available: `which dkms`
