@@ -21,3 +21,5 @@ compile_commands.json
 *.deb
 *.apk
 *.txz
+
+packaging/nfpm-alpine-debian-slackware/scripts/postinstall_slackware.sh packaging/nfpm-alpine-debian-slackware/scripts/postinstall.sh packaging/nfpm-alpine-debian-slackware/scripts/preremove.sh

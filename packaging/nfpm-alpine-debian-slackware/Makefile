@@ -15,24 +15,45 @@ CS_TARGET = $(CS_ORG)/$(CS_REPO)/any-distro/any-version
 
 .PHONY: package-all deb slackware alpine clean-pkg
 
-package-all: deb alpine slackware
+package-all: prepare-build deb alpine slackware
 
-deb:
+prepare-build:
+	@sed -e "s|@MODNAME@|$(MODNAME)|g" \
+	     -e "s|@VERSION@|$(VERSION)|g" \
+	     -e "s|@RELEASE@|$(RELEASE)|g" \
+	     -e "s|@VERSION_FULL@|$(FULL_VERSION)|g" \
+	     scripts/postinstall.sh.in > scripts/postinstall.sh
+	
+	@sed -e "s|@MODNAME@|$(MODNAME)|g" \
+	     -e "s|@VERSION@|$(VERSION)|g" \
+	     -e "s|@RELEASE@|$(RELEASE)|g" \
+	     -e "s|@VERSION_FULL@|$(FULL_VERSION)|g" \
+	     scripts/postinstall_slackware.sh.in > scripts/postinstall_slackware.sh
+
+	@sed -e "s|@MODNAME@|$(MODNAME)|g" \
+	     -e "s|@VERSION@|$(VERSION)|g" \
+	     -e "s|@RELEASE@|$(RELEASE)|g" \
+	     -e "s|@VERSION_FULL@|$(FULL_VERSION)|g" \
+	     scripts/preremove.sh.in > scripts/preremove.sh
+	
+	@chmod +x scripts/postinstall.sh scripts/preremove.sh scripts/postinstall_slackware.sh
+
+deb: prepare-build
 	@echo "📦 Building Debian package v$(VERSION)-$(RELEASE)..."
 	nfpm pkg --target $(MODNAME)-dkms_$(VERSION)-$(RELEASE).deb
 
-alpine:
+alpine: prepare-build
 	@echo "📦 Building Alpine package v$(VERSION)-$(RELEASE)..."
 	nfpm pkg --target $(MODNAME)-dkms-$(VERSION)-$(RELEASE).apk
 
-slackware:
+slackware: prepare-build
 	@echo "📦 Building Slackware (TXZ)..."
 	nfpm pkg --packager archlinux --target $(MODNAME)-dkms-$(VERSION)-$(RELEASE).tar.xz
 	mv $(MODNAME)-dkms-$(VERSION)-$(RELEASE).tar.xz $(MODNAME)-dkms-$(VERSION)-$(RELEASE).txz
 
 clean-pkg:
 	@echo "🧹 Cleaning packages..."
-	rm -f *.deb *.apk *.txz
+	rm -f *.deb *.apk *.txz scripts/postinstall_slackware.sh scripts/postinstall.sh scripts/preremove.sh
 
 publish: package-all
 	@if [ -z "$(CLOUDSMITH_API_KEY)" ]; then \
