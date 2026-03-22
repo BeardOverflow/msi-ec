@@ -5,6 +5,7 @@ MOD_RELEASE="@RELEASE@"
 MOD_DIR="/usr/src/@MODNAME@-@VERSION@.@RELEASE@"
 
 cd $MOD_DIR
+echo "Executing DKMS install"
 make dkms-uninstall
 cd /
 rm -rf $MOD_DIR
