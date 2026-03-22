@@ -1,0 +1,14 @@
+#!/bin/bash
+MOD_NAME="@MODNAME@"
+MOD_VERSION="@VERSION@"
+MOD_RELEASE="@RELEASE@"
+MOD_DIR="/usr/src/@MODNAME@-@VERSION@.@RELEASE@"
+
+set -x
+
+# On slackware, we have to check manually for dkms
+if command -v dkms >/dev/null 2>&1; then
+    cd $MOD_DIR && make dkms-install
+else
+    echo "⚠️  DKMS not found. Driver source installed in /usr/src/ but not compiled."
+fi

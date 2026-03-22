@@ -1,0 +1,13 @@
+#!/bin/bash
+MOD_NAME="@MODNAME@"
+MOD_VERSION="@VERSION@"
+MOD_RELEASE="@RELEASE@"
+MOD_DIR="/usr/src/@MODNAME@-@VERSION@.@RELEASE@"
+
+set -x
+
+cd $MOD_DIR
+echo "Executing DKMS install"
+make dkms-uninstall
+cd /
+rm -rf $MOD_DIR

@@ -1,0 +1,28 @@
+name: Cloudsmith Build - Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install NFPM
+        run: |
+          echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | sudo tee /etc/apt/sources.list.d/goreleaser.list
+          sudo apt-get update
+          sudo apt-get install -y nfpm
+
+      - name: Install Cloudsmith CLI
+        run: |
+          pip3 install --upgrade --user cloudsmith-cli --break-system-packages
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Build and Push
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: |
+          cd packaging/nfpm-alpine-debian-slackware
+          make publish
