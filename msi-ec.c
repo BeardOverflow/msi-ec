@@ -1127,6 +1127,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"158PIMS1.207", // Bravo 15 B7E
 	"1591EMS1.108", // Summit E16 Flip A11UCT
 	"1592EMS1.111", // Summit E16 Flip A12UCT / A12MT
+	"13P3EMS1.107", // Summit E13 Flip A12MT
 	"1594EMS1.109", // Prestige 16 Studio A13VE
 	"1596EMS1.105", // Summit E16 AI Studio A1VETG
 	"15H2IMS1.105", // Modern 15 B12HW
