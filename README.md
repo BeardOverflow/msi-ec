@@ -243,6 +243,19 @@ Led subsystem allows us to control the leds on the laptop including the keyboard
     - 2: Half
     - 3: Full
 
+- `/sys/class/leds/msiacpi::kbd_backlight/available_kbd_bl_modes`
+  - Description: This entry reports all supported keyboard backlight modes.
+  - Access: Read
+  - Valid values: Newline separated list of strings.
+
+- `/sys/class/leds/msiacpi::kbd_backlight/kbd_bl_mode`
+  - Description: This entry allows switching the keyboard backlight mode. It allows control on when to use the keyboard backlight.
+  - Access: Read, Write
+  - Valid values: 
+    - Values reported by `/sys/class/leds/msiacpi::kbd_backlight/available_kbd_bl_modes`. Some of the possible values:
+      - always: always keep the keyboard backlight enabled.
+      - timeout: automatically disable the keyboard backlight after 10s from last interaction with they keyboard or touchpad.
+
 ### Debug mode
 
 You can use module *parameters* to get direct read-write access to the EC or force-load a configuration
