@@ -42,8 +42,13 @@ You can also contribute by sharing your feedback on the installation process and
    - For Ubuntu: `sudo apt install build-essential linux-headers-generic`
    - For Fedora: `sudo dnf install kernel-devel`
    - For Arch:   `sudo pacman -S --needed base-devel linux-headers`
-2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec`   
+2. Clone this repository and cd to it: `git clone https://github.com/BeardOverflow/msi-ec && cd msi-ec` (Not required if using COPR or Debian/Alpine/Slackware install way) 
 3. Choose one of the following installation methods
+
+> [!NOTE]
+> Before installing any packaged version, you must uninstall every version of the module. If you were already using a packaged version, don't uninstall anything as the package manager will do it for you.
+> 
+> To uninstall that, run `sudo make dkms-uninstall`or `sudo make uninstall`depending on your install method.
 
 #### (Recommended) Installation using [DKMS](https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support):
 
@@ -82,6 +87,20 @@ Please note that if you are on Fedora Workstation or Fedora Workstation KDE, DKM
 You may find more information about installing from COPR here : [COPR Repo](https://copr.fedorainfracloud.org/coprs/xabi08/MSI-EC/)
 
 You can share your feedback/issues with the COPR packages here: https://github.com/BeardOverflow/msi-ec/discussions/657
+
+### Debian / Alpine / Slackware
+
+Please check our brand new automatically built packages here: https://broadcasts.cloudsmith.com/msi-ec/msi-ec
+Instructions on how to install them are also available on this link by clicking on the name of the package you want to install.
+Updating is automatic for Debian and Alpine as this is our repository.
+
+> [!NOTE]
+> Alpine and Slackware support **have not been tested yet** since we did not have those distro in production. Therefore, they are still **experimental** and your feedback and issues encountered are greatly appreciated.
+
+You can share your experience with these packages here:
+ - Debian:  https://github.com/BeardOverflow/msi-ec/discussions/664
+ - Alpine: https://github.com/BeardOverflow/msi-ec/discussions/665
+ - Slackware: https://github.com/BeardOverflow/msi-ec/discussions/666
 
 ## Current Support in the Kernel
 
