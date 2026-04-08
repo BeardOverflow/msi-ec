@@ -585,6 +585,11 @@ static struct msi_ec_conf CONF_G1_6 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_7[] __initconst = {
+	"16R6EMS1.103", // GF63 Thin 11UC / 11SC
+	"16R6EMS1.104",
+	"16R6EMS1.106",
+	"16R6EMS1.107",
+	"E16R6IMS.10D", // GF63 Thin 11UC - BIOS E16R6IMS.10D
 	"16R1EMS1.105", // GF63 8RC-249
 	"16R3EMS1.100", // GF63 Thin 9SC
 	"16R3EMS1.102",
@@ -1535,6 +1540,11 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 };
 
 static const char *ALLOWED_FW_G2_6[] __initconst = {
+	"16R6EMS1.103", // GF63 Thin 11UC / 11SC
+	"16R6EMS1.104",
+	"16R6EMS1.106",
+	"16R6EMS1.107",
+	"E16R6IMS.10D", // GF63 Thin 11UC - BIOS E16R6IMS.10D
 	"16R6EMS1.103", // GF63 Thin 11UC / 11SC
 	"16R6EMS1.104",
 	"16R6EMS1.106",
