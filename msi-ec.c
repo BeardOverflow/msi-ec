@@ -60,7 +60,8 @@ static const char *ALLOWED_FW_G1_0[] __initconst = {
 	"14C1EMS1.012", // Prestige 14 A10SC
 	"14C1EMS1.101",
 	"14C1EMS1.102",
-	"16S3EMS1.103", // Prestige 15 A10SC
+	"16S3EMS1.102", // Prestige 15 A10SC
+	"16S3EMS1.103",
 	NULL
 };
 
@@ -745,7 +746,8 @@ static const char *ALLOWED_FW_G1_9[] __initconst = {
 	"17G1EMS1.100", // GS75 Stealth 8SF
 	"17G1EMS1.102", // GS75 Stealth 9SF
 	"17G1EMS1.107",
-	"17G3EMS1.113", // GS75 Stealth 10SF
+	"17G3EMS1.110", // GS75 Stealth 10SF
+	"17G3EMS1.113",
 	"17G3EMS1.115",
 	NULL
 };
@@ -1037,6 +1039,7 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"159KIMS1.107", // Prestige A16 AI+ A3HMG
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG
 	"159KIMS1.110",
+	"159KIMS1.111",
 	"15H1IMS1.205", // Modern 15 B12MO
 	"15H1IMS1.214", // Modern 15 B13M
 	"15H4IMS1.107", // Modern 15 H B13M
@@ -1109,7 +1112,7 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 };
 
 static const char *ALLOWED_FW_G2_1[] __initconst = {
-	"14C4EMS1.120", // Prestige 14 A11SCX
+	"14C4EMS1.120", // Prestige 14 A11SCX / A11SCS
 	"14C6EMS1.109", // Prestige 14 Evo A12M
 	"1581EMS1.107", // Katana GF66 11UE / 11UG
 	"1582EMS1.105", // Pulse GL66 11UDK
@@ -1159,11 +1162,13 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"17L2EMS1.106",
 	"17L2EMS1.108", // Katana 17 B11UCX
 	"17L3EMS1.106", // Crosshair 17 B12UGZ
-	"17L3EMS1.109", // Katana GF76 12UG
+	"17L3EMS1.109", // Katana GF76 12UG / Pulse GL76 12U
 	"17L4EMS1.112", // Katana GF76 12UC
 	"17LNIMS1.10E", // Bravo 17 C7VE
-	"17LNIMS1.505", // Katana A17 AI B8VF
+	"17LNIMS1.502", // Katana A17 AI B8VF
+	"17LNIMS1.505",
 	"17LNIMS1.506",
+	"17LNIMS1.507",
 	"17M1EMS2.113", // Creator 17 B11UE
 	NULL
 };
@@ -1582,6 +1587,7 @@ static const char *ALLOWED_FW_G2_6[] __initconst = {
 	"16RKIMS1.110", // Thin A15 B7VF
 	"16RKIMS1.111",
 	"16RKIMS2.108",
+	"16RKIMS2.111",
 	NULL
 };
 
@@ -1655,7 +1661,8 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1571EMS1.106", // Creator Z16 A11UE
 	"1572EMS1.106", // Creator Z16 A12U
 	"1572EMS1.107",
-	"1587EMS1.102", // Katana 15 HX B14WEK
+	"1587EMS1.102", // Katana 15 HX B14WEK / B14WGK
+	"1587EMS1.104",
 	"1587EMS1.106",
 	"158NIMS1.502", // Katana A15 AI B8V
 	"158NIMS1.505",
@@ -1663,7 +1670,8 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"158NIMS1.507",
 	"15B1EMS1.103", // Stealth 15M B12UE
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
-	"15F3EMS1.105", // Stealth 16 AI Studio A1VHG
+	"15F3EMS1.104", // Stealth 16 AI Studio A1VHG
+	"15F3EMS1.105",
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
 	"15F4EMS1.106",
 	"15F4EMS1.107",
