@@ -299,6 +299,7 @@ static const char *ALLOWED_FW_G1_3[] __initconst = {
 	"16V1EMS1.116",
 	"16V1EMS1.118", // GS66 Stealth 10SE
 	"16V3EMS1.106", // GS66 Stealth 10UE
+	"17K2EMS1.104", // GE76 Raider 10UG
 	NULL
 };
 
