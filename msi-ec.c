@@ -127,6 +127,7 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_1[] __initconst = {
+	"16U5EMS1.100", // GL65 9SD
 	"16U7EMS1.105", // GP65 / GL65 Leopard 10S
 	"16U7EMS1.106",
 	"16U7EMS1.504", // GL65 Leopard 9SD
