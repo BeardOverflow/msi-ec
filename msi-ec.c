@@ -1714,6 +1714,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"1822EMS1.114",
 	"1822EMS1.115",
 	"1824EMS1.107", // Titan 18 HX Dragon Edition
+	"1824EMS1.108", // Raider 18 HX AI A2XWJG (MS-1824)
 	"182LIMS1.108", // Vector A18 HX A9WHG
 	"182LIMS1.111", // New ec version for Vector A18 HX A9WHG
 	"182KIMS1.113", // Raider A18 HX A7VIG
