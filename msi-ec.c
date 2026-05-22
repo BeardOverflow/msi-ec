@@ -16,6 +16,28 @@
  * This driver also registers available led class devices for
  * mute, micmute and keyboard_backlight leds
  *
+ * The driver additionally registers a hwmon device, making fan speed and
+ * temperature data available to standard Linux monitoring tools (lm-sensors,
+ * fancontrol, etc.) under /sys/class/hwmon/hwmonX/:
+ *
+ *   fan1_input   - CPU fan speed in RPM  (derived from EC percentage + max RPM)
+ *   fan2_input   - GPU fan speed in RPM  (when GPU fan address is supported)
+ *   temp1_input  - CPU temperature in millidegree Celsius
+ *   temp2_input  - GPU temperature in millidegree Celsius (when supported)
+ *   fan1_label   - "cpu_fan"
+ *   fan2_label   - "gpu_fan"
+ *   temp1_label  - "cpu_temp"
+ *   temp2_label  - "gpu_temp"
+ *
+ * Fan RPM is derived using Option B calibration:
+ *   RPM = (ec_percentage * max_rpm) / 100
+ * where max_rpm is resolved from msi_fan_specs.h using the EC firmware version,
+ * DMI board name, and DMI product name in priority order.
+ *
+ * When max_rpm cannot be resolved (MSI_RPM_UNKNOWN), the fan channel is still
+ * registered but fan_label is annotated with "(unvalidated)" to signal that
+ * the RPM value is an estimate using the family-level floor value.
+ *
  * This driver might not work on other laptops produced by MSI. Also, and until
  * future enhancements, no DMI data are used to identify your compatibility
  *
@@ -39,6 +61,10 @@
 #include <linux/version.h>
 #include <linux/rtc.h>
 #include <linux/string_choices.h>
+#include <linux/dmi.h>
+#include <linux/hwmon.h>
+
+#include "msi_fan_specs.h"
 
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
@@ -1785,6 +1811,128 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 
 /* ^^^^^^^^^^^^^^^^ Gen 2 - WMI2 ^^^^^^^^^^^^^^^^ */
 
+
+/* **************** MSI GV62 7RD / MS-16J9 (2017, Kaby Lake) ****************
+ *
+ * Board:    MS-16J9  (DMI board_name: "MS-16J9")
+ * Product:  MSI GV62 7RD  (DMI product_name: "GV62 7RD")
+ * CPU:      Intel Core i7-7700HQ (Kaby Lake)
+ * GPU:      NVIDIA GTX 1050
+ * EC fw:    16J9EMS1.112  (confirmed via debug/ec_get at 0xa0-0xab)
+ *
+ * ADDRESS VALIDATION (cross-referenced against EC dump + live sensor readings):
+ *   0x68 = 60  (CPU temp °C)  — matches coretemp: 59-60°C ✅
+ *   0x71 = 56  (CPU fan %)    — consistent with 60°C on fan curve ✅
+ *   0x80 = 50  (GPU temp °C)  — reasonable idle GTX1050 ✅
+ *   0x89 =  0  (GPU fan %)    — GPU fan off at idle ✅
+ *   0x98 bit7 = 0             — cooler boost off ✅
+ *
+ * UNCONFIRMED ADDRESSES (set to UNSUPP; test and promote in future revisions):
+ *   shift_mode: 0xf2 = 0x80 — does not match expected 0xc0/c1/c2 pattern;
+ *               address or values are different for this 2017 board generation.
+ *   fan_mode:   0xf4 = 0x0c — close to G1_0 pattern (0x0d=auto) but unconfirmed.
+ *               Possible mapping: auto=0x0c, silent=0x1c, basic=0x4c, advanced=0x8c.
+ *               Left UNSUPP until confirmed by live write tests.
+ *   webcam:     0x2e/0x2f — bytes present but bit semantics unconfirmed.
+ *   leds:       0x2b/0x2c — different values from G1_0; unconfirmed for this board.
+ *   charge:     0xef bit7=0 — driver will detect no charge control support at runtime.
+ *
+ * TODO: Live-test fan_mode at 0xf4 with values 0x0c/0x1c/0x4c/0x8c.
+ *       If confirmed, replace MSI_EC_ADDR_UNSUPP with 0xf4 and add mode values.
+ */
+
+static const char *ALLOWED_FW_GV62_16J9[] __initconst = {
+	"16J9EMS1.112", // MSI GV62 7RD (i7-7700HQ, GTX1050)
+	NULL
+};
+
+static struct msi_ec_conf CONF_GV62_16J9 __initdata = {
+	.allowed_fw = ALLOWED_FW_GV62_16J9,
+
+	/* Battery charge control: bit7=0 at 0xef → driver detects no support */
+	.charge_control_address = 0xef,
+
+	/* Webcam: address confirmed present, bit semantics unconfirmed */
+	.webcam = {
+		.address       = MSI_EC_ADDR_UNSUPP,
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
+	},
+
+	/* Fn/Win swap: 0xbf=0x00 — address may be correct, needs live swap test */
+	.fn_win_swap = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.bit     = 4,
+		.invert  = false,
+	},
+
+	/* Cooler boost: confirmed via EC dump diff (3 independent toggle tests).
+	 * 0x98: 0x02 (off) ↔ 0x82 (on) — bit7, consistent with all other G1 configs.
+	 * Secondary flag at 0x32: 0x00 (off) ↔ 0x01 (on) — mirrors 0x98 state. */
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+
+	/* Shift mode: 0xf2=0x80 does not match c0/c1/c2 pattern — unconfirmed */
+	.shift_mode = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.modes = {
+			MSI_EC_MODE_NULL
+		},
+	},
+
+	/* Super battery: unknown for this board generation */
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNKNOWN,
+	},
+
+	/* Fan mode: confirmed at 0xf4.
+	 * Values use 0x_c suffix where all other Gen1 boards use 0x_d.
+	 * auto=0x0c confirmed as default/baseline.
+	 * silent=0x1c confirmed: immediate 8% fan drop, held stable under EC control.
+	 * advanced=0x4c confirmed: write sticks; output identical to auto at idle
+	 *   (expected — sport curve only diverges from auto under CPU/GPU load). */
+	.fan_mode = {
+		.address = 0xf4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0c },
+			{ FM_SILENT_NAME,   0x1c },
+			{ FM_ADVANCED_NAME, 0x4c },
+			MSI_EC_MODE_NULL
+		},
+	},
+
+	/* CPU fan and temp: both confirmed via EC dump + live sensor cross-check */
+	.cpu = {
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
+	},
+
+	/* GPU fan and temp: both confirmed via EC dump + idle GPU behaviour */
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+	},
+
+	/* LEDs: 0x2b/0x2c present but values differ from G1_0 — unconfirmed */
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 2,
+	},
+
+	/* Keyboard backlight: 0xf3=0x82 but bl_mode/state addresses unconfirmed */
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	/* **** Gen 1 - WMI1 **** */
 	&CONF_G1_0,
@@ -1810,6 +1958,9 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G2_5,
 	&CONF_G2_6,
 	&CONF_G2_10,
+
+	/* **** Pre-Gen1 — legacy 2017 boards **** */
+	&CONF_GV62_16J9,
 	NULL
 };
 
@@ -1817,6 +1968,15 @@ static bool conf_loaded = false;
 static struct msi_ec_conf conf; // current configuration
 
 static bool charge_control_supported = false;
+
+/*
+ * hwmon subsystem state.
+ * msi_hwmon_dev is set by devm_hwmon_device_register_with_info() during init
+ * and remains valid until the platform device is removed (devm handles cleanup).
+ * msi_fan_resolved holds the calibrated max RPM values resolved from msi_fan_specs.h.
+ */
+static struct device *msi_hwmon_dev;
+static struct msi_fan_limits msi_fan_resolved;
 
 static char *firmware = NULL;
 module_param(firmware, charp, 0);
@@ -2627,7 +2787,330 @@ static struct attribute *msi_gpu_attrs[] = {
 };
 
 // ============================================================ //
-// Sysfs platform device attributes (debug)
+// hwmon subsystem — standard Linux hardware monitoring ABI
+//
+// Exposes fan speed and temperature via /sys/class/hwmon/hwmonX/
+// so that tools like lm-sensors, fancontrol, and psensor work
+// without any knowledge of MSI-specific sysfs paths.
+//
+// Channel mapping:
+//   fan1  →  CPU fan   (EC address: conf.cpu.rt_fan_speed_address)
+//   fan2  →  GPU fan   (EC address: conf.gpu.rt_fan_speed_address)
+//   temp1 →  CPU temp  (EC address: conf.cpu.rt_temp_address)
+//   temp2 →  GPU temp  (EC address: conf.gpu.rt_temp_address)
+//
+// RPM derivation (Option B):
+//   RPM = (ec_pct * max_rpm) / 100
+//   where max_rpm is resolved from msi_fan_specs.h at module init.
+//   When max_rpm is MSI_RPM_UNKNOWN (0), the channel is registered
+//   but labelled "(unvalidated)" so users know the value is a floor
+//   estimate from the family-prefix fallback tier.
+//
+// Temperature unit conversion:
+//   EC reports whole degrees Celsius (u8).
+//   hwmon ABI requires millidegree Celsius.
+//   Conversion: millideg = ec_byte * 1000
+// ============================================================ //
+
+/*
+ * msi_hwmon_is_visible - gate which hwmon attributes are created.
+ *
+ * Channels whose EC address is MSI_EC_ADDR_UNSUPP are hidden entirely.
+ * This mirrors the same pattern used for platform device attributes.
+ */
+static umode_t msi_hwmon_is_visible(const void *data,
+				    enum hwmon_sensor_types type,
+				    u32 attr, int channel)
+{
+	if (!conf_loaded)
+		return 0;
+
+	switch (type) {
+	case hwmon_fan:
+		if (channel == 0) {
+			/* CPU fan */
+			if (conf.cpu.rt_fan_speed_address == MSI_EC_ADDR_UNSUPP)
+				return 0;
+			return 0444;
+		}
+		if (channel == 1) {
+			/* GPU fan */
+			if (conf.gpu.rt_fan_speed_address == MSI_EC_ADDR_UNSUPP)
+				return 0;
+			return 0444;
+		}
+		return 0;
+
+	case hwmon_temp:
+		if (channel == 0) {
+			/* CPU temp */
+			if (conf.cpu.rt_temp_address == MSI_EC_ADDR_UNSUPP)
+				return 0;
+			return 0444;
+		}
+		if (channel == 1) {
+			/* GPU temp */
+			if (conf.gpu.rt_temp_address == MSI_EC_ADDR_UNSUPP)
+				return 0;
+			return 0444;
+		}
+		return 0;
+
+	default:
+		return 0;
+	}
+}
+
+/*
+ * msi_hwmon_read - read handler for hwmon attributes.
+ *
+ * fan1/fan2 (hwmon_fan_input):
+ *   Reads EC percentage, derives RPM = (pct * max_rpm) / 100.
+ *   If max_rpm is MSI_RPM_UNKNOWN (resolution failed), emits
+ *   the raw percentage value scaled to a nominal 5000 RPM range
+ *   as a last-resort best-effort — this will not be accurate but
+ *   at least monotonically tracks the real fan speed direction.
+ *   The label attribute explicitly marks such channels as unvalidated.
+ *
+ * temp1/temp2 (hwmon_temp_input):
+ *   Reads EC byte (whole degrees C), multiplies by 1000 for millideg C.
+ */
+static int msi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+			  u32 attr, int channel, long *val)
+{
+	u8 rdata;
+	int result;
+	unsigned int max_rpm;
+
+	switch (type) {
+	case hwmon_fan:
+		if (attr != hwmon_fan_input)
+			return -EOPNOTSUPP;
+
+		if (channel == 0) {
+			if (conf.cpu.rt_fan_speed_address == MSI_EC_ADDR_UNSUPP)
+				return -ENODATA;
+			result = ec_read(conf.cpu.rt_fan_speed_address, &rdata);
+			if (result < 0)
+				return result;
+			max_rpm = msi_fan_resolved.cpu_max_rpm;
+		} else if (channel == 1) {
+			if (conf.gpu.rt_fan_speed_address == MSI_EC_ADDR_UNSUPP)
+				return -ENODATA;
+			result = ec_read(conf.gpu.rt_fan_speed_address, &rdata);
+			if (result < 0)
+				return result;
+			max_rpm = msi_fan_resolved.gpu_max_rpm;
+		} else {
+			return -EOPNOTSUPP;
+		}
+
+		/*
+		 * RPM derivation. The EC percentage can legitimately exceed 100
+		 * on some firmware versions (0–150 range during cooler boost).
+		 * This is handled correctly by the formula — no clamping needed.
+		 *
+		 * If max_rpm is MSI_RPM_UNKNOWN (0), use a conservative nominal
+		 * of 5000 RPM so the channel returns a directionally meaningful
+		 * value rather than always zero.
+		 */
+		if (max_rpm == MSI_RPM_UNKNOWN)
+			max_rpm = 5000;
+
+		*val = ((unsigned int)rdata * max_rpm) / 100;
+		return 0;
+
+	case hwmon_temp:
+		if (attr != hwmon_temp_input)
+			return -EOPNOTSUPP;
+
+		if (channel == 0) {
+			if (conf.cpu.rt_temp_address == MSI_EC_ADDR_UNSUPP)
+				return -ENODATA;
+			result = ec_read(conf.cpu.rt_temp_address, &rdata);
+		} else if (channel == 1) {
+			if (conf.gpu.rt_temp_address == MSI_EC_ADDR_UNSUPP)
+				return -ENODATA;
+			result = ec_read(conf.gpu.rt_temp_address, &rdata);
+		} else {
+			return -EOPNOTSUPP;
+		}
+
+		if (result < 0)
+			return result;
+
+		/* EC reports whole °C; hwmon ABI requires millidegree Celsius */
+		*val = (long)rdata * 1000;
+		return 0;
+
+	default:
+		return -EOPNOTSUPP;
+	}
+}
+
+/*
+ * msi_hwmon_read_string - read handler for hwmon label attributes.
+ *
+ * Labels follow the pattern "cpu_fan", "gpu_fan", "cpu_temp", "gpu_temp".
+ * When the fan max_rpm could not be resolved from the database (resolution
+ * fell through to MSI_RPM_UNKNOWN), the fan label carries an "(unvalidated)"
+ * suffix so monitoring tools and users can identify approximate readings.
+ */
+static int msi_hwmon_read_string(struct device *dev,
+				 enum hwmon_sensor_types type,
+				 u32 attr, int channel, const char **str)
+{
+	switch (type) {
+	case hwmon_fan:
+		if (attr != hwmon_fan_label)
+			return -EOPNOTSUPP;
+		if (channel == 0) {
+			*str = (msi_fan_resolved.cpu_max_rpm == MSI_RPM_UNKNOWN)
+				? "cpu_fan (unvalidated)"
+				: "cpu_fan";
+		} else if (channel == 1) {
+			*str = (msi_fan_resolved.gpu_max_rpm == MSI_RPM_UNKNOWN)
+				? "gpu_fan (unvalidated)"
+				: "gpu_fan";
+		} else {
+			return -EOPNOTSUPP;
+		}
+		return 0;
+
+	case hwmon_temp:
+		if (attr != hwmon_temp_label)
+			return -EOPNOTSUPP;
+		if (channel == 0)
+			*str = "cpu_temp";
+		else if (channel == 1)
+			*str = "gpu_temp";
+		else
+			return -EOPNOTSUPP;
+		return 0;
+
+	default:
+		return -EOPNOTSUPP;
+	}
+}
+
+/* hwmon ops table — wires the callbacks into the hwmon subsystem */
+static const struct hwmon_ops msi_hwmon_ops = {
+	.is_visible  = msi_hwmon_is_visible,
+	.read        = msi_hwmon_read,
+	.read_string = msi_hwmon_read_string,
+};
+
+/*
+ * Channel configuration for the two fan channels.
+ * HWMON_F_INPUT: expose fanY_input (measured speed in RPM)
+ * HWMON_F_LABEL: expose fanY_label (human-readable channel name)
+ */
+static const u32 msi_hwmon_fan_config[] = {
+	HWMON_F_INPUT | HWMON_F_LABEL,   /* fan1 = CPU fan */
+	HWMON_F_INPUT | HWMON_F_LABEL,   /* fan2 = GPU fan */
+	0
+};
+
+/*
+ * Channel configuration for the two temperature channels.
+ * HWMON_T_INPUT: expose tempY_input (measured temp in millidegree C)
+ * HWMON_T_LABEL: expose tempY_label (human-readable channel name)
+ */
+static const u32 msi_hwmon_temp_config[] = {
+	HWMON_T_INPUT | HWMON_T_LABEL,   /* temp1 = CPU temp */
+	HWMON_T_INPUT | HWMON_T_LABEL,   /* temp2 = GPU temp */
+	0
+};
+
+/* hwmon channel info array — one entry per sensor type, NULL-terminated */
+static const struct hwmon_channel_info msi_hwmon_fan_info = {
+	.type   = hwmon_fan,
+	.config = msi_hwmon_fan_config,
+};
+
+static const struct hwmon_channel_info msi_hwmon_temp_info = {
+	.type   = hwmon_temp,
+	.config = msi_hwmon_temp_config,
+};
+
+static const struct hwmon_channel_info * const msi_hwmon_info[] = {
+	&msi_hwmon_fan_info,
+	&msi_hwmon_temp_info,
+	NULL
+};
+
+/* Top-level chip info struct passed to devm_hwmon_device_register_with_info */
+static const struct hwmon_chip_info msi_hwmon_chip_info = {
+	.ops  = &msi_hwmon_ops,
+	.info = msi_hwmon_info,
+};
+
+/*
+ * msi_hwmon_register - resolve fan limits and register the hwmon device.
+ *
+ * Called from msi_ec_init() after the platform device is created and
+ * the EC configuration is confirmed loaded. Uses the EC firmware version
+ * string (already resolved by load_configuration()) together with DMI
+ * board name and product name for the highest-precision fan limit lookup.
+ *
+ * Registration uses devm_hwmon_device_register_with_info() which ties the
+ * hwmon device lifetime to the platform device — no explicit unregister
+ * is needed in msi_ec_exit() as devm handles cleanup automatically.
+ *
+ * Returns 0 on success, negative errno on failure.
+ */
+/*
+ * parent: &msi_platform_device->dev, passed in from msi_ec_init() where
+ * msi_platform_device is in scope, avoiding a forward reference to the global.
+ */
+static int __init msi_hwmon_register(struct device *parent,
+				     const char *ec_fw_version)
+{
+	const char *board_name   = dmi_get_system_info(DMI_BOARD_NAME);
+	const char *product_name = dmi_get_system_info(DMI_PRODUCT_NAME);
+
+	/* Resolve max RPM limits for both fans */
+	msi_resolve_fan_limits(ec_fw_version, board_name, product_name,
+			       &msi_fan_resolved);
+
+	pr_info("hwmon: fan limits resolved (tier=%d quality=%d): "
+		"cpu_max=%u rpm, gpu_max=%u rpm\n",
+		msi_fan_resolved.match_tier,
+		msi_fan_resolved.source_quality,
+		msi_fan_resolved.cpu_max_rpm,
+		msi_fan_resolved.gpu_max_rpm);
+
+	if (msi_fan_resolved.match_tier == 0)
+		pr_warn("hwmon: fan max RPM unresolved for this device. "
+			"Fan speed readings will use nominal 5000 RPM fallback "
+			"and are labelled 'unvalidated'. Please report this "
+			"device to the msi-ec issue tracker.\n");
+
+	/*
+	 * Register the hwmon device as a child of the platform device.
+	 * devm_hwmon_device_register_with_info() creates the device under
+	 * /sys/class/hwmon/hwmonX/ with name "msi_ec".
+	 * The returned pointer is stored for informational purposes only;
+	 * devm handles the cleanup automatically.
+	 */
+	msi_hwmon_dev = devm_hwmon_device_register_with_info(
+		parent,
+		"msi_ec",
+		NULL,
+		&msi_hwmon_chip_info,
+		NULL);
+
+	if (IS_ERR(msi_hwmon_dev)) {
+		int err = PTR_ERR(msi_hwmon_dev);
+
+		pr_err("hwmon: failed to register hwmon device: %d\n", err);
+		msi_hwmon_dev = NULL;
+		return err;
+	}
+
+	pr_info("hwmon: registered as %s\n", dev_name(msi_hwmon_dev));
+	return 0;
+}
 // ============================================================ //
 
 // Prints an EC memory dump in form of a table
@@ -2999,6 +3482,7 @@ static int __init load_configuration(void)
 static int __init msi_ec_init(void)
 {
 	int result;
+	char ec_fw_ver[MSI_EC_FW_VERSION_LENGTH + 1] = {0};
 
 	result = load_configuration();
 	if (result < 0)
@@ -3041,6 +3525,25 @@ static int __init msi_ec_init(void)
 		led_classdev_register(&msi_platform_device->dev,
 				      &msiacpi_led_kbdlight);
 
+	/*
+	 * Register hwmon device. Fetch the EC firmware version string first
+	 * so the fan limit resolver can use it as the highest-precision key.
+	 * A failure here is non-fatal: the platform device remains functional
+	 * and the proprietary sysfs interface is unaffected. We log the error
+	 * and continue rather than aborting the entire driver load.
+	 */
+	if (ec_get_firmware_version(ec_fw_ver) == 0) {
+		result = msi_hwmon_register(&msi_platform_device->dev, ec_fw_ver);
+	} else {
+		pr_warn("hwmon: could not read EC firmware version; "
+			"attempting registration with DMI data only\n");
+		result = msi_hwmon_register(&msi_platform_device->dev, NULL);
+	}
+	if (result < 0)
+		pr_warn("hwmon: registration failed (%d), "
+			"standard monitoring tools will not see fan data\n",
+			result);
+
 	return 0;
 }
 
@@ -3059,6 +3562,13 @@ static void __exit msi_ec_exit(void)
 
 		if (charge_control_supported)
 			battery_hook_unregister(&battery_hook);
+
+		/*
+		 * msi_hwmon_dev was registered with devm_hwmon_device_register_with_info()
+		 * as a child of msi_platform_device. devm automatically releases it when
+		 * msi_platform_device is unregistered below — no explicit unregister call
+		 * is needed or safe here.
+		 */
 	}
 
 	platform_device_unregister(msi_platform_device);

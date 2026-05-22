@@ -54,6 +54,7 @@ dkms-install:
 	cp $(CURDIR)/Makefile.vars $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/msi_fan_specs.h $(DKMS_ROOT_PATH)
 
 	sed -e "s/@VERSION@/$(VERSION)/" \
 	    -i $(DKMS_ROOT_PATH)/dkms.conf
