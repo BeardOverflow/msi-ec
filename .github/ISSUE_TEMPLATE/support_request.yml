@@ -204,4 +204,10 @@ body:
     attributes:
       label: Agent Used (if any)
       description: Which Agent (e.g. Openclaw, Claude Code...) did you use ?
+
+  - type: textarea
+    id: llm-tasks
+    attributes:
+      label: Tasks given to the AI
+      description: For what did you use the AI ?
       
