@@ -25,6 +25,27 @@ Eager to support the project? Your help is always welcome to keep the project al
 
 You can also contribute by sharing your feedback on the installation process and problems encountered with it in this discussion: https://github.com/BeardOverflow/msi-ec/discussions/662
 
+## AI Policy
+
+### AI Policy for code contributions, documentations contribution
+When contributing code or documentation you have to follow the following rules:
+1. Explicitely tell what has been made by AI, by which LLM and by which agent tool. Please put that in the pull request **FIRST** message.
+2. Review **BY YOURSELF** everything the AI has written to ensure quality and logic
+3. You are not allowed to generate your whole PR with AI
+4. You must take and will be accountable for the responsibility in case of problem with your AI code.
+
+In general, AI code is strongly discouraged and may get more negative reviews by the maintainers.
+
+### AI Policy for issues
+When making an issue, you must follow the following rules:
+1. You may use AI to help get some infromations and commands to enrich your ticket
+2. You may use AI to improve the grammar and readability of your ticket
+3. Ticket ENTIRELY GENERATED with AI will NOT BE TREATED if the issue is not deemed serious enough
+4. Fully generated AI bug reports may be straight up closed and denied by the maintainer of the project
+5. You MUST be able to provide details when asked for it.
+6. You MUST tell when the AI was involved in the process. For diagnosis, please detail the model used and the agent tool if used in the **FIRST** message of the issue or somewhere or in a dedicated field of the issue template.
+
+In general, AI bug reports are discouraged unless it is to help with formulated the content in english because it is not your native language.
 
 ## Installation
 
