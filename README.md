@@ -43,7 +43,7 @@ When making an issue, you must follow the following rules:
 3. Ticket ENTIRELY GENERATED with AI will NOT BE TREATED if the issue is not deemed serious enough
 4. Fully generated AI bug reports may be straight up closed and denied by the maintainer of the project
 5. You MUST be able to provide details when asked for it.
-6. You MUST tell when the AI was involved in the process. For diagnosis, please detail the model used and the agent tool if used in the **FIRST** message of the issue.
+6. You MUST tell when the AI was involved in the process. For diagnosis, please detail the model used and the agent tool if used in the **FIRST** message of the issue or somewhere or in a dedicated field of the issue template.
 
 In general, AI bug reports are discouraged unless it is to help with formulated the content in english because it is not your native language.
 
