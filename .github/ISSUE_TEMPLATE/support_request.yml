@@ -188,8 +188,8 @@ body:
       label: LLM Usage
       description: Did you use any LLM/AI and/or agent to create this issue ?
       options:
-        - NO
-        - YES
+        - "NO"
+        - "YES"
     validations:
       required: true
 
