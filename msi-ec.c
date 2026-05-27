@@ -1106,6 +1106,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"1582EMS1.105", // Pulse GL66 11UDK
 	"1582EMS1.107", // Katana GF66 11UC / 11UD
 	"1583EMS1.105", // Crosshair 15 B12UEZ / B12UGSZ
+	"1583EMS1.109", // Pulse  GL66 12UEK
 	"1583EMS1.110", // Pulse  GL66 12UGK / Katana GF66 12UG
 	"1583EMS1.111",
 	"1584EMS1.104", // Katana GF66 12U(C/D) (ENE)
