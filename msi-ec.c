@@ -1361,7 +1361,7 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 		.address = 0x98,
 		.bit     = 7,
 	},
-	.shift_mode = {
+	.shift_mode = {          // 2622 has a new shift mode 0xc5 (super power mode)
 		.address = 0xd2,
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
