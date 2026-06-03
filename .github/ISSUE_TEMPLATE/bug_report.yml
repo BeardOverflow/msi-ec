@@ -83,3 +83,32 @@ body:
       description: Describe the issue
     validations:
       required: false
+
+  - type: dropdown
+    id: llm-use
+    attributes:
+      label: LLM Usage
+      description: Did you use any LLM/AI and/or agent to create this issue ?
+      options:
+        - "NO"
+        - "YES"
+    validations:
+      required: true
+
+  - type: input
+    id: llm-model
+    attributes:
+      label: LLM Used (if any)
+      description: Which LLM/AI model (e.g. Gemini, ChatGPT...) did you use ?
+
+  - type: input
+    id: llm-agent
+    attributes:
+      label: Agent Used (if any)
+      description: Which Agent (e.g. Openclaw, Claude Code...) did you use ?
+
+  - type: textarea
+    id: llm-tasks
+    attributes:
+      label: Tasks given to the AI
+      description: For what did you use the AI ?
