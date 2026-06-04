@@ -879,6 +879,7 @@ static struct msi_ec_conf CONF_G1_10 __initdata = {
 static const char *ALLOWED_FW_G1_11[] __initconst = {
 	"158MEMS1.100", // Bravo 15 B5ED
 	"158MEMS1.101",
+	"158MEMS1.102",
 	"158KEMS1.104", // Bravo 15 B5DD
 	"158KEMS1.106",
 	"158KEMS1.107",
