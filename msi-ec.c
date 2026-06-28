@@ -1032,6 +1032,7 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"159KIMS1.107", // Prestige A16 AI+ A3HMG
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG
 	"159KIMS1.110",
+	"159KIMS1.111",
 	"15H1IMS1.214", // Modern 15 B13M
 	"15H5EMS1.111", // Modern 15 H AI C1MG
 	NULL
@@ -1155,6 +1156,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"17LNIMS1.10E", // Bravo 17 C7VE
 	"17LNIMS1.505", // Katana A17 AI B8VF
 	"17LNIMS1.506",
+	"17LNIMS1.507",
 	"17M1EMS2.113", // Creator 17 B11UE
 	NULL
 };
