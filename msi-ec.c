@@ -1032,6 +1032,7 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"159KIMS1.107", // Prestige A16 AI+ A3HMG
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG
 	"159KIMS1.110",
+	"15H1IMS1.205", // Modern 15 B12MO
 	"15H1IMS1.214", // Modern 15 B13M
 	"15H5EMS1.111", // Modern 15 H AI C1MG
 	NULL
@@ -1059,6 +1060,7 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
+			{ SM_COMFORT_NAME, 0x81 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -2338,6 +2340,7 @@ static ssize_t shift_mode_store(struct device *dev,
 			if (result < 0)
 				return result;
 
+			sysfs_notify(&dev->kobj, NULL, "shift_mode");
 			return count;
 		}
 	}
