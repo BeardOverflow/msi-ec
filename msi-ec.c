@@ -16,6 +16,10 @@
  * This driver also registers available led class devices for
  * mute, micmute and keyboard_backlight leds
  *
+ * This driver also registers a hwmon device exposing fan RPM
+ * under /sys/class/hwmon/hwmonX/ (WMI1: period-encoded tachometers;
+ * WMI2: deferred to msi-wmi-platform).
+ *
  * This driver might not work on other laptops produced by MSI. Also, and until
  * future enhancements, no DMI data are used to identify your compatibility
  *
@@ -39,6 +43,7 @@
 #include <linux/version.h>
 #include <linux/rtc.h>
 #include <linux/string_choices.h>
+#include <linux/hwmon.h>
 
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
@@ -1039,6 +1044,7 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_0 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_0, // legacy fw_2, fw_53 (G2_19), 159K - Center S app
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = { // 159K, 15H5 have no webcam control
 		.address       = 0x2e,
@@ -1161,6 +1167,7 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_1 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_1, // legacy fw_3, fw_10 (G2_4), fw_11 (G2_5), fw_14 (G2_7), fw_17 (G2_8), fw_32 (G2_12), fw_34 (G2_14)
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1252,6 +1259,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_2 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_2, // legacy fw_4, fw_47 (G2_18)
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1347,6 +1355,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_3 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_3, // legacy fw_8, fw_25, fw_42 (G2_17)
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {          // Has no hardware webcam control: 13P5
 		.address       = 0x2e,
@@ -1417,6 +1426,7 @@ static const char *ALLOWED_FW_G2_4[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_4 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_4, // new
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1490,6 +1500,7 @@ static const char *ALLOWED_FW_G2_5[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_5 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_5, // new
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1573,6 +1584,7 @@ static const char *ALLOWED_FW_G2_6[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_6 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_6, // legacy fw_12
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1727,6 +1739,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 
 static struct msi_ec_conf CONF_G2_10 __initdata = {
 	.allowed_fw = ALLOWED_FW_G2_10, // legacy fw_27, fw_28 (G2_11), fw_33 (G2_13) fw_35 (G2_15), fw_37 (G2_16), fw_56 (G2_20), fw_59 (G2_21)
+	.is_wmi2 = true,
 	.charge_control_address = 0xd7,
 	.webcam = {
 		.address       = 0x2e,
@@ -1789,6 +1802,90 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 
 /* ^^^^^^^^^^^^^^^^ Gen 2 - WMI2 ^^^^^^^^^^^^^^^^ */
 
+static const char *ALLOWED_FW_GV62_16J9[] __initconst = {
+	"16J9EMS1.112", // MSI GV62 7RD (i7-7700HQ, GTX1050)
+	NULL
+};
+
+static struct msi_ec_conf CONF_GV62_16J9 __initdata = {
+	.allowed_fw = ALLOWED_FW_GV62_16J9,
+	.charge_control_address = 0xef, // bit7=0 at runtime → no charge control
+	.webcam = {
+		.address       = MSI_EC_ADDR_UNSUPP, // 0x2e present; bit semantics unconfirmed
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = MSI_EC_ADDR_UNSUPP, // 0xbf needs live swap test
+		.bit     = 4,
+		.invert  = false,
+	},
+	.cooler_boost = {
+		.address = 0x98, // confirmed via EC dump diff; not in glpnk WMI1 hexpat
+		.bit     = 7,
+	},
+	.shift_mode = {
+		/* glpnk WMI1 hexpat: SHLV at this address; the value 0x80
+		 * does not match the c0/c1/c2 pattern.
+		 */
+		.address = MSI_EC_ADDR_UNSUPP,
+		.modes = {
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNKNOWN,
+	},
+	.fan_mode = {
+		/* glpnk WMI1 hexpat: ECS xF4; mode values empirically
+		 * confirmed on one machine.
+		 */
+		.address = 0xf4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0c },
+			{ FM_SILENT_NAME,   0x1c },
+			{ FM_ADVANCED_NAME, 0x4c },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = 0x68, // glpnk WMI1 hexpat: CPUT
+		/* EC-owned fan curve step output, 0-86 on this board;
+		 * stale during cooler boost — use tachometer for actual RPM.
+		 */
+		.rt_fan_speed_address = 0x71, // glpnk WMI1 hexpat: TD71
+		/* 16-bit big-endian period register: hi byte at 0xcc, lo byte at 0xcd.
+		 * CPU fan confirmed on two WMI1 devices (see also msi-ec PR #475).
+		 */
+		.rt_fan_tach_address  = 0xcd, // glpnk hexpat: TDCD in AP block
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80, // glpnk WMI1 hexpat: SYST/TD80
+		/* Same semantics as CPU: EC-owned fan curve step output;
+		 * 0x00 during cooler boost despite fan spinning.
+		 */
+		.rt_fan_speed_address = 0x89, // glpnk WMI1 hexpat: TD89
+		/* 16-bit big-endian period register: hi byte at 0xca, lo byte at 0xcb.
+		 * 0x00 when fan stopped. GPU fan confirmed on two WMI1 devices (see also
+		 * msi-ec issue #164).
+		 */
+		.rt_fan_tach_address  = 0xcb, // glpnk hexpat: TDCB in AP block
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP, // 0x2b values differ from G1_0
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 2,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP, // 0xf3=0x82; state unconfirmed
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	/* **** Gen 1 - WMI1 **** */
 	&CONF_G1_0,
@@ -1804,6 +1901,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G1_10,
 	&CONF_G1_11,
 	&CONF_G1_13,
+	&CONF_GV62_16J9,
 
 	/* **** Gen 2 - WMI2 **** */
 	&CONF_G2_0,
@@ -1821,6 +1919,9 @@ static bool conf_loaded = false;
 static struct msi_ec_conf conf; // current configuration
 
 static bool charge_control_supported = false;
+
+static struct device *msi_hwmon_dev;
+static bool msi_hwmon_fans_deferred; // true if WMI2 GUID present; msi-wmi-platform provides fan RPM
 
 static char *firmware = NULL;
 module_param(firmware, charp, 0);
@@ -2631,7 +2732,169 @@ static struct attribute *msi_gpu_attrs[] = {
 };
 
 // ============================================================ //
-// Sysfs platform device attributes (debug)
+// hwmon subsystem
+// ============================================================ //
+
+/*
+ * Period-encoded tachometer constant: RPM = K / raw_tach
+ * K = 480,000 — theoretically: 32,000 Hz × 60 s/min / 4 pulses/rev
+ * (Armin Wolf, msi-wmi-platform commit 9c0beb6b; used in mainline kernel
+ * for WMI2). Confirmed against MSI Center on WMI1 AMD hardware (Jiogo18,
+ * msi-ec PR #475, 2024): floor(480000/x) matched. ISW (YoyPa) independently
+ * uses 478,000 on WMI1 hardware — consistent within measurement uncertainty.
+ * Note: the constant may vary by fan assembly — community data show different
+ * RPM at 100% across MSI product lines (PR #475 discussion, MSI Center PDF
+ * slide 97); per-assembly calibration may be needed for precision.
+ */
+#define MSI_EC_FAN_TACH_K 480000U
+
+static umode_t msi_hwmon_is_visible(const void *data,
+				    enum hwmon_sensor_types type,
+				    u32 attr, int channel)
+{
+	if (!conf_loaded)
+		return 0;
+
+	switch (type) {
+	case hwmon_fan:
+		if (msi_hwmon_fans_deferred)
+			return 0;
+		if (channel == 0)
+			return conf.cpu.rt_fan_tach_address ? 0444 : 0;
+		if (channel == 1)
+			return conf.gpu.rt_fan_tach_address ? 0444 : 0;
+		return 0;
+
+	default:
+		return 0;
+	}
+}
+
+static int msi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+			  u32 attr, int channel, long *val)
+{
+	switch (type) {
+	case hwmon_fan: {
+		u8 hi, lo;
+		unsigned int tach_addr;
+		int result;
+
+		if (attr != hwmon_fan_input)
+			return -EOPNOTSUPP;
+
+		if (channel == 0) {
+			if (!conf.cpu.rt_fan_tach_address)
+				return -ENODATA;
+			tach_addr = conf.cpu.rt_fan_tach_address;
+		} else if (channel == 1) {
+			if (!conf.gpu.rt_fan_tach_address)
+				return -ENODATA;
+			tach_addr = conf.gpu.rt_fan_tach_address;
+		} else {
+			return -EOPNOTSUPP;
+		}
+
+		// tachometer is a 16-bit big-endian period value:
+		// high byte at tach_addr-1, low byte at tach_addr
+		result = ec_read(tach_addr - 1, &hi);
+		if (result < 0)
+			return result;
+		result = ec_read(tach_addr, &lo);
+		if (result < 0)
+			return result;
+
+		{
+			unsigned int raw = ((unsigned int)hi << 8) | lo;
+			*val = raw ? (long)(MSI_EC_FAN_TACH_K / raw) : 0;
+		}
+		return 0;
+	}
+
+	default:
+		return -EOPNOTSUPP;
+	}
+}
+
+static int msi_hwmon_read_string(struct device *dev,
+				 enum hwmon_sensor_types type,
+				 u32 attr, int channel, const char **str)
+{
+	switch (type) {
+	case hwmon_fan:
+		if (attr != hwmon_fan_label)
+			return -EOPNOTSUPP;
+		if (channel == 0)
+			*str = "cpu_fan";
+		else if (channel == 1)
+			*str = "gpu_fan";
+		else
+			return -EOPNOTSUPP;
+		return 0;
+
+	default:
+		return -EOPNOTSUPP;
+	}
+}
+
+static const struct hwmon_ops msi_hwmon_ops = {
+	.is_visible  = msi_hwmon_is_visible,
+	.read        = msi_hwmon_read,
+	.read_string = msi_hwmon_read_string,
+};
+
+static const u32 msi_hwmon_fan_config[] = {
+	HWMON_F_INPUT | HWMON_F_LABEL, // fan1 = CPU
+	HWMON_F_INPUT | HWMON_F_LABEL, // fan2 = GPU
+	0
+};
+
+static const struct hwmon_channel_info msi_hwmon_fan_info = {
+	.type   = hwmon_fan,
+	.config = msi_hwmon_fan_config,
+};
+
+static const struct hwmon_channel_info * const msi_hwmon_info[] = {
+	&msi_hwmon_fan_info,
+	NULL
+};
+
+static const struct hwmon_chip_info msi_hwmon_chip_info = {
+	.ops  = &msi_hwmon_ops,
+	.info = msi_hwmon_info,
+};
+
+/* Present in ACPI DSDT on WMI2 hardware; absent on WMI1. Identified by Armin Wolf
+ * (msi-wmi-platform) as a Microsoft sample GUID reused in MSI firmware. Used here
+ * as a runtime proxy for msi-wmi-platform fan hwmon support.
+ */
+#define MSI_WMI_PLATFORM_GUID "ABBC0F6E-8EA1-11D1-00A0-C90629100000"
+
+#include <linux/wmi.h> /* for wmi_has_guid() */
+
+static int __init msi_hwmon_register(struct device *parent)
+{
+	/* On WMI2 hardware, defer fan RPM to msi-wmi-platform if its GUID is present */
+	if (conf.is_wmi2 && wmi_has_guid(MSI_WMI_PLATFORM_GUID)) {
+		msi_hwmon_fans_deferred = true;
+		pr_info("hwmon: WMI2 fan GUID present; fan RPM deferred to msi-wmi-platform\n");
+	} else if (conf.is_wmi2) {
+		pr_info("hwmon: WMI2 board but fan GUID absent; registering fan RPM\n");
+	}
+
+	msi_hwmon_dev = devm_hwmon_device_register_with_info(parent, "msi_ec", NULL,
+							     &msi_hwmon_chip_info, NULL);
+
+	if (IS_ERR(msi_hwmon_dev)) {
+		int err = PTR_ERR(msi_hwmon_dev);
+
+		pr_err("hwmon: failed to register hwmon device: %d\n", err);
+		msi_hwmon_dev = NULL;
+		return err;
+	}
+
+	pr_info("hwmon: registered as %s\n", dev_name(msi_hwmon_dev));
+	return 0;
+}
 // ============================================================ //
 
 // Prints an EC memory dump in form of a table
@@ -3045,6 +3308,14 @@ static int __init msi_ec_init(void)
 		led_classdev_register(&msi_platform_device->dev,
 				      &msiacpi_led_kbdlight);
 
+	/*
+	 * Register hwmon device. Non-fatal: platform device and sysfs
+	 * interface remain functional if hwmon registration fails.
+	 */
+	result = msi_hwmon_register(&msi_platform_device->dev);
+	if (result < 0)
+		pr_warn("hwmon: registration failed (%d)\n", result);
+
 	return 0;
 }
 
@@ -3063,6 +3334,13 @@ static void __exit msi_ec_exit(void)
 
 		if (charge_control_supported)
 			battery_hook_unregister(&battery_hook);
+
+		/*
+		 * msi_hwmon_dev was registered with devm_hwmon_device_register_with_info()
+		 * as a child of msi_platform_device. devm automatically releases it when
+		 * msi_platform_device is unregistered below — no explicit unregister call
+		 * is needed or safe here.
+		 */
 	}
 
 	platform_device_unregister(msi_platform_device);
