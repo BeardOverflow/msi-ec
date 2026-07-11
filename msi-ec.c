@@ -370,6 +370,7 @@ static struct msi_ec_conf CONF_G1_3 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_4[] __initconst = {
+	"16JFEMS1.105", // GV62 8RD
 	"17FKEMS1.108", // Bravo 17 A4DDR / A4DDK
 	"17FKEMS1.109",
 	"17FKEMS1.10A",
@@ -742,6 +743,7 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 };
 
 static const char *ALLOWED_FW_G1_9[] __initconst = {
+	"17E9EMS1.105", // GE75 Raider 10 SF / SFS / SGS
 	"17G1EMS2.106", // P75  CREATOR 9SG
 	"17G1EMS1.100", // GS75 Stealth 8SF
 	"17G1EMS1.102", // GS75 Stealth 9SF
@@ -749,6 +751,7 @@ static const char *ALLOWED_FW_G1_9[] __initconst = {
 	"17G3EMS1.110", // GS75 Stealth 10SF
 	"17G3EMS1.113",
 	"17G3EMS1.115",
+	"17H1EMS1.103", // GT76 Titan DT 9 SF / SFS / SG / SGS
 	NULL
 };
 
@@ -817,6 +820,7 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 static const char *ALLOWED_FW_G1_10[] __initconst = {
 	"16P5EMS1.103", // GE63 Raider 8RE
 	"1782EMS1.109", // GT72 6QE Dominator Pro
+	"1799EMS1.112", // GP72 7REX Leopard Pro
 	NULL
 };
 
@@ -1246,6 +1250,7 @@ static const char *ALLOWED_FW_G2_2[] __initconst = {
 	"16V4EMS1.114", // GS66 Stealth 11UE / 11UG
 	"16V4EMS1.115",
 	"16V4EMS1.116",
+	"16V4EMS2.106", // Creator 15 A11UE
 	"16V5EMS1.107", // Stealth GS66 12UE / 12UGS
 	"16V5EMS1.108",
 	"17K3EMS1.112", // GE76 Raider 11U / 11UH
@@ -1355,9 +1360,11 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"13Q3EMS1.111", // Prestige 13 AI+ Evo A2VMG
 	"14Q2EMS1.301", // Venture 14 AI A2HMG
 	"14QKIMS1.108", // Venture A14 AI+ A3HMG
+	"14T2EMS1.110", // Prestige 14 Flip AI+ D3MTG
 	"15A1EMS1.105", // Prestige 16 AI Evo B1MG
 	"15A1EMS1.109", // Prestige 16 AI Evo B1MG (.109 EC rev)
 	"15A3EMS1.104", // Prestige 16 AI+ Evo B2VMG
+	"15QKIMS1.506", // Venture A15 AI A2HMG / A2HMTG
 	NULL
 };
 
@@ -1681,6 +1688,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15FKIMS1.110", // Stealth A16 AI+ A3XVGG
 	"15FLIMS1.107", // Stealth A16 AI+ A3XWHG
 	"15FMIBA1.102", // Stealth A16 Mercedes AMG AI+ A3XWGG
+	"15G2EWS1.107", // CreatorPro Z16HXStudio B13VJTO / B13VKTO
 	"15K2EMS1.106", // Cyborg 15 AI A1VFK
 	"15K2EMS1.109",
 	"15M1IMS1.109", // Vector GP68 HX 13V
