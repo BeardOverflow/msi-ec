@@ -55,7 +55,7 @@ static DEFINE_MUTEX(ec_set_bit_mutex);
 #define FM_ADVANCED_NAME	"advanced"
 
 //Used to ban specific firmware versions in case they are buggy.
-static const char *BANNED_FW_VERSION[] __initconst = {
+static const char *BANNED_FW[] __initconst = {
 	NULL
 };
 
@@ -1970,17 +1970,17 @@ static int ec_check_bit(u8 addr, u8 bit, bool *output)
 	return 0;
 }
 
-static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH - 3])
+static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
 {
 	int result;
 
-	memset(buf, 0, MSI_EC_FW_VERSION_LENGTH - 3);
+	memset(buf, 0, MSI_EC_FW_VERSION_LENGTH + 1);
 	result = ec_read_seq(MSI_EC_FW_VERSION_ADDRESS, buf,
-			     MSI_EC_FW_VERSION_LENGTH - 4);
+			     MSI_EC_FW_VERSION_LENGTH);
 	if (result < 0)
 		return result;
 
-	return MSI_EC_FW_VERSION_LENGTH - 3;
+	return MSI_EC_FW_VERSION_LENGTH + 1;
 }
 
 static inline const char *str_left_right(bool v)
@@ -3005,7 +3005,7 @@ static int __init load_configuration(void)
 	int result;
 
 	char *ver;
-	char ver_by_ec[MSI_EC_FW_VERSION_LENGTH - 3]; // to store version read from EC
+	char ver_by_ec[MSI_EC_FW_VERSION_LENGTH + 1]; // to store version read from EC
 
 	if (firmware) {
 		// use fw version passed as a parameter
@@ -3019,23 +3019,37 @@ static int __init load_configuration(void)
 		ver = ver_by_ec;
 	}
 
-	// load the suitable configuration, if exists
-	for (int i = 0; CONFIGURATIONS[i]; i++) {
-		if (match_string(CONFIGURATIONS[i]->allowed_fw, -1, ver) != -EINVAL) {
-			memcpy(&conf,
-			       CONFIGURATIONS[i],
-			       sizeof(struct msi_ec_conf));
-			conf.allowed_fw = NULL;
-			conf_loaded = true;
-			return 0;
+	// Truncating the version to only keep what comes before the dot. EG: 15M3EMS1.113 -> 15M3EMS1
+	char ver_truncated[MSI_EC_FW_VERSION_LENGTH - 3];
+	memcpy(ver_truncated, ver, MSI_EC_FW_VERSION_LENGTH - 4);
+	ver_truncated[8] = '\0';
+
+	int banned = 0;
+	if (match_string(BANNED_FW, -1, ver) == -EINVAL) {
+		// load the suitable configuration, if exists
+		for (int i = 0; CONFIGURATIONS[i]; i++) {
+			if (match_string(CONFIGURATIONS[i]->allowed_fw, -1, ver_truncated) != -EINVAL) {
+				memcpy(&conf,
+					CONFIGURATIONS[i],
+					sizeof(struct msi_ec_conf));
+				conf.allowed_fw = NULL;
+				conf_loaded = true;
+				return 0;
+			}
 		}
+	} else {
+		banned = 1;
 	}
+	
 
 	// debug mode works regardless of whether the firmware is supported
 	if (debug)
 		return 0;
 
-	pr_err("Your firmware version is not supported!\n");
+	if (!banned)
+		pr_err("Your firmware version is not supported!\n");
+	else
+		pr_err("Your firmware version is blacklisted !\n");
 	return -EOPNOTSUPP;
 }
 
