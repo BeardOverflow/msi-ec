@@ -54,6 +54,12 @@ static DEFINE_MUTEX(ec_set_bit_mutex);
 #define FM_BASIC_NAME		"basic"
 #define FM_ADVANCED_NAME	"advanced"
 
+//Used to ban specific firmware versions in case they are buggy.
+static const char *BANNED_FW_VERSION[] __initconst = {
+	NULL
+};
+
+
 /* **************** Gen 1 - WMI1 **************** */
 
 static const char *ALLOWED_FW_G1_0[] __initconst = {
@@ -1964,17 +1970,17 @@ static int ec_check_bit(u8 addr, u8 bit, bool *output)
 	return 0;
 }
 
-static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH + 1])
+static int ec_get_firmware_version(u8 buf[MSI_EC_FW_VERSION_LENGTH - 3])
 {
 	int result;
 
-	memset(buf, 0, MSI_EC_FW_VERSION_LENGTH + 1);
+	memset(buf, 0, MSI_EC_FW_VERSION_LENGTH - 3);
 	result = ec_read_seq(MSI_EC_FW_VERSION_ADDRESS, buf,
-			     MSI_EC_FW_VERSION_LENGTH);
+			     MSI_EC_FW_VERSION_LENGTH - 4);
 	if (result < 0)
 		return result;
 
-	return MSI_EC_FW_VERSION_LENGTH + 1;
+	return MSI_EC_FW_VERSION_LENGTH - 3;
 }
 
 static inline const char *str_left_right(bool v)
@@ -2999,7 +3005,7 @@ static int __init load_configuration(void)
 	int result;
 
 	char *ver;
-	char ver_by_ec[MSI_EC_FW_VERSION_LENGTH + 1]; // to store version read from EC
+	char ver_by_ec[MSI_EC_FW_VERSION_LENGTH - 3]; // to store version read from EC
 
 	if (firmware) {
 		// use fw version passed as a parameter
