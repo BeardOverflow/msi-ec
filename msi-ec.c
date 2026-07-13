@@ -952,8 +952,8 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 
 static const char *ALLOWED_FW_G1_13[] __initconst = {
 	"16V2EMS1.104", // Creator 15 A10SD
-	"16V2EMS1.106", // Creator 15 A10SET
 	"16V2EMS1.105", // Creator 15 A10SFS
+	"16V2EMS1.106", // Creator 15 A10SET
 	NULL
 };
 
