@@ -295,6 +295,7 @@ static const char *ALLOWED_FW_G1_3[] __initconst = {
 	"16Q4EMS1.109",
 	"16Q4EMS1.110",
 	"16V1EMS1.109", // GS66 Stealth 10SFS
+	"16V1EMS1.111", // GS66 Stealth 10SGS
 	"16V1EMS1.112",
 	"16V1EMS1.116",
 	"16V1EMS1.118", // GS66 Stealth 10SE
