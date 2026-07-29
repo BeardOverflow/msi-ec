@@ -6,10 +6,12 @@ DKMS_ROOT_PATH  := /usr/src/msi_ec-$(VERSION)
 KERNELRELEASE := $(shell uname -r)
 
 KMOD_DIR        := /lib/modules/$(KERNELRELEASE)/updates/drivers/platform/x86
+HID_KMOD_DIR    := /lib/modules/$(KERNELRELEASE)/updates/drivers/hid
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
 obj-m += $(MODNAME).o
+obj-m += msi-mystic-light.o
 
 all: modules
 
@@ -33,16 +35,22 @@ reload: unload load
 reload-debug: unload load-debug
 
 install:
-	mkdir -p $(KMOD_DIR)
+	mkdir -p $(KMOD_DIR) $(HID_KMOD_DIR)
 	cp msi-ec.ko $(KMOD_DIR)
+	cp msi-mystic-light.ko $(HID_KMOD_DIR)
 	depmod -a
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
+	echo msi-mystic-light >> /etc/modules-load.d/msi-ec.conf
 	modprobe -v msi-ec
+	modprobe -v msi-mystic-light
 
 uninstall:
+	-modprobe -rv msi-mystic-light
 	-modprobe -rv msi-ec
 	rm -f $(KMOD_DIR)/msi-ec.ko
+	rm -f $(HID_KMOD_DIR)/msi-mystic-light.ko
 	-rmdir -p $(KMOD_DIR) > /dev/null 2>&1
+	-rmdir -p $(HID_KMOD_DIR) > /dev/null 2>&1
 	depmod -a
 	rm -f /etc/modules-load.d/msi-ec.conf
 
@@ -53,6 +61,7 @@ dkms-install:
 	cp $(CURDIR)/Makefile $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/Makefile.vars $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/msi-ec.c $(DKMS_ROOT_PATH)
+	cp $(CURDIR)/msi-mystic-light.c $(DKMS_ROOT_PATH)
 	cp $(CURDIR)/ec_memory_configuration.h $(DKMS_ROOT_PATH)
 
 	sed -e "s/@VERSION@/$(VERSION)/" \
@@ -62,6 +71,7 @@ dkms-install:
 	dkms build msi_ec/$(VERSION)
 	dkms install msi_ec/$(VERSION)
 	echo msi-ec > /etc/modules-load.d/msi-ec.conf
+	echo msi-mystic-light >> /etc/modules-load.d/msi-ec.conf
 
 dkms-uninstall:
 	bash universalDKMSModuleUninstaller.sh

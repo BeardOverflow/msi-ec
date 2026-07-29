@@ -2988,6 +2988,17 @@ static int __init load_configuration(void)
 			       CONFIGURATIONS[i],
 			       sizeof(struct msi_ec_conf));
 			conf.allowed_fw = NULL;
+
+			/*
+			 * Cyborg 15 B2R uses a dedicated MS-1606 USB HID
+			 * controller. EC byte 0xd3 is only a status mirror;
+			 * writing it does not change the physical backlight.
+			 */
+			if (!strcmp(ver, "15Q3EMS1.108")) {
+				conf.kbd_bl.bl_mode_address = MSI_EC_ADDR_UNSUPP;
+				conf.kbd_bl.bl_state_address = MSI_EC_ADDR_UNSUPP;
+			}
+
 			conf_loaded = true;
 			return 0;
 		}
