@@ -1037,6 +1037,7 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"159KIMS1.107", // Prestige A16 AI+ A3HMG
 	"159KIMS1.108", // Summit A16 AI+ A3HMTG
 	"159KIMS1.110",
+	"15H1IMS1.205", // Modern 15 B12MO
 	"15H1IMS1.214", // Modern 15 B13M
 	"15H4IMS1.107", // Modern 15 H B13M
 	"15H4IMS1.108",
