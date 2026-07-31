@@ -3128,6 +3128,8 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
 MODULE_AUTHOR("Aakash Singh <mail@singhaakash.dev>");
 MODULE_AUTHOR("Nikita Kravets <teackot@gmail.com>");
+MODULE_AUTHOR("Xabi Goity <xabigoity@gmail.com>");
+MODULE_AUTHOR("Glitch Punk <glpnk@proton.me>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
 MODULE_VERSION("0.13");
 
