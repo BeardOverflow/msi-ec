@@ -1650,6 +1650,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"158NIMS1.505",
 	"158NIMS1.506",
 	"158NIMS1.507",
+	"15B1EMS1.103", // Stealth 15M B12UE
 	"15F2EMS1.109", // Stealth 16 Studio A13VG
 	"15F3EMS1.105", // Stealth 16 AI Studio A1VHG
 	"15F4EMS1.105", // Stealth 16 AI Studio A1VFG
