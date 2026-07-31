@@ -3022,7 +3022,7 @@ static int __init load_configuration(void)
 	// Truncating the version to only keep what comes before the dot. EG: 15M3EMS1.113 -> 15M3EMS1
 	char ver_truncated[MSI_EC_FW_VERSION_LENGTH - 1];
 	memcpy(ver_truncated, ver, MSI_EC_FW_VERSION_LENGTH - 2);
-	ver_truncated[8] = '\0';
+	ver_truncated[10] = '\0';
 
 	int banned = 0;
 	if (match_string(BANNED_FW, -1, ver) == -EINVAL) {
