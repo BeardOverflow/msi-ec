@@ -1060,7 +1060,6 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_COMFORT_NAME, 0x81 },
 			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
@@ -2336,7 +2335,6 @@ static ssize_t shift_mode_store(struct device *dev,
 			if (result < 0)
 				return result;
 
-			sysfs_notify(&dev->kobj, NULL, "shift_mode");
 			return count;
 		}
 	}
