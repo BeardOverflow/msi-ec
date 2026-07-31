@@ -1138,7 +1138,6 @@ static const char *ALLOWED_FW_G2_1[] __initconst = {
 	"15K1IMS1.111", // Cyborg 15 A13VF
 	"15K1IMS1.112", // Cyborg 15 A13VFK
 	"15K1IMS1.113", // Cyborg 15 A13VF
-	"15Q3EMS1.108", // Cyborg 15 B2RWEKG / B2RWGKG
 	"16S6EMS1.111", // Prestige 15 A11SCX
 	"16S6EMS1.114",
 	"16S8EMS1.107", // Prestige 15 A12SC / A12UC
@@ -1486,6 +1485,9 @@ static const char *ALLOWED_FW_G2_5[] __initconst = {
 	"14K2EMS1.107",
 	"14K2EMS1.108",
 	"14K2EMS1.109",
+	"15Q3EMS1.106", // Cyborg 15 B13WFKG / B2RWFKG / B2RWEKG
+	"15Q3EMS1.107",
+	"15Q3EMS1.108",
 	NULL
 };
 
