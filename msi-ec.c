@@ -1491,6 +1491,9 @@ static const char *ALLOWED_FW_G2_5[] __initconst = {
 	"14K2EMS1.107",
 	"14K2EMS1.108",
 	"14K2EMS1.109",
+	"15Q3EMS1.106", // Cyborg 15 B13WFKG / B2RWFKG / B2RWEKG
+	"15Q3EMS1.107",
+	"15Q3EMS1.108",
 	NULL
 };
 
