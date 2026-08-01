@@ -32,7 +32,6 @@
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/platform_device.h>
-#include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/string.h>
 #include <linux/slab.h>
@@ -40,8 +39,8 @@
 #include <linux/rtc.h>
 #include <linux/string_choices.h>
 
-static DEFINE_MUTEX(ec_set_by_mask_mutex);
-static DEFINE_MUTEX(ec_unset_by_mask_mutex);
+//static DEFINE_MUTEX(ec_set_by_mask_mutex);
+//static DEFINE_MUTEX(ec_unset_by_mask_mutex);
 static DEFINE_MUTEX(ec_set_bit_mutex);
 
 #define SM_ECO_NAME		"eco"
@@ -1798,6 +1797,7 @@ static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 	return 0;
 }
 
+/*
 static int ec_set_by_mask(u8 addr, u8 mask)
 {
 	int result;
@@ -1847,6 +1847,7 @@ static int ec_check_by_mask(u8 addr, u8 mask, bool *output)
 
 	return 0;
 }
+*/
 
 static int ec_set_bit(u8 addr, u8 bit, bool value)
 {
