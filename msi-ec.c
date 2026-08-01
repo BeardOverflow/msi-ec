@@ -85,6 +85,7 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
@@ -170,10 +171,10 @@ static struct msi_ec_conf CONF_G1_1 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -241,9 +242,9 @@ static struct msi_ec_conf CONF_G1_2 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
-			{ SM_ECO_NAME,     0xc2 }, // super_battery = 0xa5
-			{ SM_COMFORT_NAME, 0xc1 }, // silent: super_battery = 0xa4 / balanced: super_battery = 0xa1
-			{ SM_TURBO_NAME,   0xc4 }, // super_battery = 0xa0
+			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -326,10 +327,10 @@ static struct msi_ec_conf CONF_G1_3 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -397,10 +398,10 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -474,7 +475,7 @@ static struct msi_ec_conf CONF_G1_5 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc0 },
+			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -552,7 +553,7 @@ static struct msi_ec_conf CONF_G1_6 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc0 },
+			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -631,10 +632,10 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			{ SM_SPORT_NAME,   0xc0 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -702,9 +703,9 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
-			{ SM_TURBO_NAME,   0xc4 }, // Performance
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -775,10 +776,10 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			{ SM_ECO_NAME,     0xc2 }, // super battery
 			{ SM_COMFORT_NAME, 0xc1 }, // balanced
 			{ SM_SPORT_NAME,   0xc0 }, // sport
-			{ SM_TURBO_NAME,   0xc4 }, // extreme
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -918,9 +919,9 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 	.shift_mode = {
 		.address = 0xf2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -989,7 +990,7 @@ static struct msi_ec_conf CONF_G1_13 __initdata = {
 		.modes = {
 			{ SM_ECO_NAME,     0xc2 }, // Super Battery
 			{ SM_COMFORT_NAME, 0xc1 }, // Balanced + Silent
-			{ SM_TURBO_NAME,   0xc0 },
+			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1073,9 +1074,9 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1197,9 +1198,9 @@ static struct msi_ec_conf CONF_G2_1 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1289,9 +1290,9 @@ static struct msi_ec_conf CONF_G2_2 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1388,9 +1389,9 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1458,9 +1459,9 @@ static struct msi_ec_conf CONF_G2_4 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1534,9 +1535,9 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1618,9 +1619,9 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 },
 			MSI_EC_MODE_NULL
 		},
 	},
@@ -1776,9 +1777,9 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
+			{ SM_TURBO_NAME,   0xc4 }, // sometimes 0xc0
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
-			{ SM_TURBO_NAME,   0xc4 }, // sometimes 0xc0
 			MSI_EC_MODE_NULL
 		},
 	},
