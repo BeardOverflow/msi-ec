@@ -45,11 +45,6 @@ struct msi_ec_shift_mode_conf {
 	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
 };
 
-struct msi_ec_super_battery_conf {
-	int address;
-	int mask;
-};
-
 struct msi_ec_fan_mode_conf {
 	int address;
 	struct msi_ec_mode modes[5]; // fixed size for easier hard coding
@@ -90,7 +85,6 @@ struct msi_ec_conf {
 	struct msi_ec_fn_win_swap_conf    fn_win_swap;
 	struct msi_ec_cooler_boost_conf   cooler_boost;
 	struct msi_ec_shift_mode_conf     shift_mode;
-	struct msi_ec_super_battery_conf  super_battery;
 	struct msi_ec_fan_mode_conf       fan_mode;
 	struct msi_ec_cpu_conf            cpu;
 	struct msi_ec_gpu_conf            gpu;
