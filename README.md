@@ -199,13 +199,6 @@ This driver exports a few files in its own platform device, msi-ec, and is avail
       - sport: full clock frequency and voltage for the CPU & GPU, aka default desktop mode
       - turbo: over-voltage and over-clock for the CPU & GPU, aka overclocking mode
 
-- `/sys/devices/platform/msi-ec/super_battery`
-  - Description: This entry allows switching the super battery function.
-  - Access: Read, Write
-  - Valid values:
-    - on: super battery function is enabled
-    - off: super battery function is disabled
-
 - `/sys/devices/platform/msi-ec/available_fan_modes`
   - Description: This entry reports all supported fan modes.
   - Access: Read
