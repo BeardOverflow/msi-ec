@@ -32,7 +32,6 @@
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/platform_device.h>
-#include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/string.h>
 #include <linux/slab.h>
@@ -40,8 +39,8 @@
 #include <linux/rtc.h>
 #include <linux/string_choices.h>
 
-static DEFINE_MUTEX(ec_set_by_mask_mutex);
-static DEFINE_MUTEX(ec_unset_by_mask_mutex);
+//static DEFINE_MUTEX(ec_set_by_mask_mutex);
+//static DEFINE_MUTEX(ec_unset_by_mask_mutex);
 static DEFINE_MUTEX(ec_set_bit_mutex);
 
 #define SM_ECO_NAME		"eco"
@@ -91,9 +90,6 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 needs testing
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -178,9 +174,6 @@ static struct msi_ec_conf CONF_G1_1 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN,
-	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
@@ -247,10 +240,6 @@ static struct msi_ec_conf CONF_G1_2 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // known. 0xd5.
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -334,10 +323,6 @@ static struct msi_ec_conf CONF_G1_3 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN,
-		.mask    = 0x0f,
-	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
@@ -404,10 +389,6 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 but has its own set of modes
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -478,10 +459,6 @@ static struct msi_ec_conf CONF_G1_5 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -556,10 +533,6 @@ static struct msi_ec_conf CONF_G1_6 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // 0xed
-		.mask    = 0x0f, // a5, a4, a2
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -639,10 +612,6 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP,
-		.mask    = 0x0f,
-	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
@@ -708,9 +677,6 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 }, // Silent / Balanced / AI
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP, // enabled by "Super Battery" shift mode
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -783,9 +749,6 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP,
-	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
@@ -850,9 +813,6 @@ static struct msi_ec_conf CONF_G1_10 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 }, // sport
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNSUPP,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -925,10 +885,6 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = MSI_EC_ADDR_UNKNOWN, // 0xd5 (automatic switching with shift mode)
-		.mask    = 0x0f,
-	},
 	.fan_mode = {
 		.address = 0xf4,
 		.modes = {
@@ -993,10 +949,6 @@ static struct msi_ec_conf CONF_G1_13 __initdata = {
 			{ SM_SPORT_NAME,   0xc0 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = 0xd5,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xf4,
@@ -1079,10 +1031,6 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1204,10 +1152,6 @@ static struct msi_ec_conf CONF_G2_1 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
 	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
@@ -1295,10 +1239,6 @@ static struct msi_ec_conf CONF_G2_2 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1395,10 +1335,6 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
 	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
@@ -1464,10 +1400,6 @@ static struct msi_ec_conf CONF_G2_4 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1540,10 +1472,6 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1624,10 +1552,6 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
 		},
-	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
 	},
 	.fan_mode = {
 		.address = 0xd4,
@@ -1784,10 +1708,6 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 			MSI_EC_MODE_NULL
 		},
 	},
-	.super_battery = {
-		.address = 0xeb,
-		.mask    = 0x0f,
-	},
 	.fan_mode = {
 		.address = 0xd4,
 		.modes = {
@@ -1878,6 +1798,7 @@ static int ec_read_seq(u8 addr, u8 *buf, u8 len)
 	return 0;
 }
 
+/*
 static int ec_set_by_mask(u8 addr, u8 mask)
 {
 	int result;
@@ -1927,6 +1848,7 @@ static int ec_check_by_mask(u8 addr, u8 mask, bool *output)
 
 	return 0;
 }
+*/
 
 static int ec_set_bit(u8 addr, u8 bit, bool value)
 {
@@ -2378,45 +2300,6 @@ static ssize_t shift_mode_store(struct device *dev,
 	return -EINVAL;
 }
 
-static ssize_t super_battery_show(struct device *device,
-				  struct device_attribute *attr, char *buf)
-{
-	int result;
-	bool enabled;
-
-	result = ec_check_by_mask(conf.super_battery.address,
-				  conf.super_battery.mask,
-				  &enabled);
-	if (result < 0)
-		return result;
-
-	return sysfs_emit(buf, "%s\n", str_on_off(enabled));
-}
-
-static ssize_t super_battery_store(struct device *dev,
-				   struct device_attribute *attr,
-				   const char *buf, size_t count)
-{
-	int result;
-	bool value;
-
-	result = kstrtobool(buf, &value);
-	if (result)
-		return result;
-
-	if (value)
-		result = ec_set_by_mask(conf.super_battery.address,
-					conf.super_battery.mask);
-	else
-		result = ec_unset_by_mask(conf.super_battery.address,
-					  conf.super_battery.mask);
-
-	if (result < 0)
-		return result;
-
-	return count;
-}
-
 static ssize_t available_fan_modes_show(struct device *device,
 					struct device_attribute *attr,
 					char *buf)
@@ -2533,7 +2416,6 @@ static DEVICE_ATTR_RW(win_key);
 static DEVICE_ATTR_RW(cooler_boost);
 static DEVICE_ATTR_RO(available_shift_modes);
 static DEVICE_ATTR_RW(shift_mode);
-static DEVICE_ATTR_RW(super_battery);
 static DEVICE_ATTR_RO(available_fan_modes);
 static DEVICE_ATTR_RW(fan_mode);
 static DEVICE_ATTR_RO(fw_version);
@@ -2547,7 +2429,6 @@ static struct attribute *msi_root_attrs[] = {
 	&dev_attr_cooler_boost.attr,
 	&dev_attr_available_shift_modes.attr,
 	&dev_attr_shift_mode.attr,
-	&dev_attr_super_battery.attr,
 	&dev_attr_available_fan_modes.attr,
 	&dev_attr_fan_mode.attr,
 	&dev_attr_fw_version.attr,
@@ -2895,9 +2776,6 @@ static umode_t msi_ec_is_visible(struct kobject *kobj,
 	else if (attr == &dev_attr_available_shift_modes.attr ||
 		 attr == &dev_attr_shift_mode.attr)
 		address = conf.shift_mode.address;
-
-	else if (attr == &dev_attr_super_battery.attr)
-		address = conf.super_battery.address;
 
 	else if (attr == &dev_attr_available_fan_modes.attr ||
 		 attr == &dev_attr_fan_mode.attr)
