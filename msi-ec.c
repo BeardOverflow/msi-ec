@@ -2825,12 +2825,12 @@ static int __init load_configuration(void)
 		ver = ver_by_ec;
 	}
 
-	// Truncating the version to only keep what comes before the dot. EG: 15M3EMS1.113 -> 15M3EMS1
+	// Truncating the version to remove update number part. EG: 15M3EMS1.113 -> 15M3EMS1.1
 	char ver_truncated[MSI_EC_FW_VERSION_LENGTH - 1];
 	memcpy(ver_truncated, ver, MSI_EC_FW_VERSION_LENGTH - 2);
-	ver_truncated[10] = '\0';
+	ver_truncated[MSI_EC_FW_VERSION_LENGTH - 2] = '\0';
 
-	int banned = 0;
+	bool banned = false;
 	if (match_string(BANNED_FW, -1, ver) == -EINVAL) {
 		// load the suitable configuration, if exists
 		for (int i = 0; CONFIGURATIONS[i]; i++) {
@@ -2844,7 +2844,7 @@ static int __init load_configuration(void)
 			}
 		}
 	} else {
-		banned = 1;
+		banned = true;
 	}
 	
 
@@ -2855,7 +2855,7 @@ static int __init load_configuration(void)
 	if (!banned)
 		pr_err("Your firmware version is not supported!\n");
 	else
-		pr_err("Your firmware version is blacklisted !\n");
+		pr_err("Your firmware version is blacklisted!\n");
 	return -EOPNOTSUPP;
 }
 
@@ -2937,7 +2937,7 @@ MODULE_AUTHOR("Nikita Kravets <teackot@gmail.com>");
 MODULE_AUTHOR("Xabi Goity <xabigoity@gmail.com>");
 MODULE_AUTHOR("Glitch Punk <glpnk@proton.me>");
 MODULE_DESCRIPTION("MSI Embedded Controller");
-MODULE_VERSION("0.13");
+MODULE_VERSION("0.20");
 
 module_init(msi_ec_init);
 module_exit(msi_ec_exit);
