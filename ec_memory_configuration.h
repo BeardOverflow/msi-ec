@@ -74,7 +74,7 @@ struct msi_ec_led_conf {
 #define MSI_EC_KBD_BL_STATE_MASK 0x3
 struct msi_ec_kbd_bl_conf {
 	int bl_mode_address;
-	int bl_modes[2];
+	struct msi_ec_mode bl_modes[5];
 	int max_mode;
 
 	int bl_state_address;

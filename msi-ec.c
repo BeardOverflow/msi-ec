@@ -54,6 +54,9 @@ static DEFINE_MUTEX(ec_set_bit_mutex);
 #define FM_BASIC_NAME		"basic"
 #define FM_ADVANCED_NAME	"advanced"
 
+#define KBD_BL_ALWAYS_NAME  "always"
+#define KBD_BL_TIMEOUT_NAME "timeout"
+
 /* **************** Gen 1 - WMI1 **************** */
 
 static const char *ALLOWED_FW_G1_0[] __initconst = {
@@ -120,7 +123,11 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},		
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -205,7 +212,11 @@ static struct msi_ec_conf CONF_G1_1 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -276,7 +287,11 @@ static struct msi_ec_conf CONF_G1_2 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
@@ -362,7 +377,11 @@ static struct msi_ec_conf CONF_G1_3 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
@@ -433,7 +452,11 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -507,7 +530,11 @@ static struct msi_ec_conf CONF_G1_5 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -585,7 +612,11 @@ static struct msi_ec_conf CONF_G1_6 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -668,7 +699,11 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -735,7 +770,11 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -810,7 +849,11 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x80,
@@ -878,7 +921,11 @@ static struct msi_ec_conf CONF_G1_10 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP, // RGB
 		.state_base_value = 0x80,
@@ -953,7 +1000,11 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xf3,
 		.state_base_value = 0x80,
@@ -1022,7 +1073,11 @@ static struct msi_ec_conf CONF_G1_13 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xF3,
 		.state_base_value = 0x80,
@@ -1108,7 +1163,11 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
@@ -1232,7 +1291,11 @@ static struct msi_ec_conf CONF_G2_1 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xd3, // mix of single and RGB
 		.state_base_value = 0x80,
@@ -1324,7 +1387,9 @@ static struct msi_ec_conf CONF_G2_2 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { },
+		.bl_modes         = {
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x80,
@@ -1423,7 +1488,11 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 }, // 00 - on, 08 - 10 sec auto off
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		}, // 00 - on, 08 - 10 sec auto off
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
@@ -1493,7 +1562,11 @@ static struct msi_ec_conf CONF_G2_4 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
-		.bl_modes         = { 0x00, 0x08 }, // 00 - on, 08 - 10 sec auto off
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		}, // 00 - on, 08 - 10 sec auto off
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
@@ -1569,7 +1642,11 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x80,
@@ -1653,7 +1730,9 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { },
+		.bl_modes         = {
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = 0xd3,
 		.state_base_value = 0x80,
@@ -1812,7 +1891,11 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
-		.bl_modes         = { 0x00, 0x08 },
+		.bl_modes = {
+			{ KBD_BL_ALWAYS_NAME,     0x00 },
+			{ KBD_BL_TIMEOUT_NAME,    0x08 },
+			MSI_EC_MODE_NULL
+		},
 		.max_mode         = 1,
 		.bl_state_address = MSI_EC_ADDR_UNSUPP,
 		.state_base_value = 0x80,
@@ -2843,6 +2926,105 @@ static int kbd_bl_sysfs_set(struct led_classdev *led_cdev,
 	return ec_write(conf.kbd_bl.bl_state_address, wdata);
 }
 
+static ssize_t available_kbd_bl_modes_show(struct device *device,
+					struct device_attribute *attr,
+					char *buf)
+{
+	int result = 0;
+	int count = 0;
+
+	for (int i = 0; conf.kbd_bl.bl_modes[i].name; i++) {
+		// NULL entries have NULL name
+
+		result = sysfs_emit_at(buf, count, "%s\n", conf.kbd_bl.bl_modes[i].name);
+		if (result < 0)
+			return result;
+		count += result;
+	}
+
+	return count;
+}
+
+static ssize_t kbd_bl_mode_show(struct device *device,
+			     struct device_attribute *attr, char *buf)
+{
+	u8 rdata;
+	int result;
+
+	result = ec_read(conf.kbd_bl.bl_mode_address, &rdata);
+	if (result < 0)
+		return result;
+
+	for (int i = 0; conf.kbd_bl.bl_modes[i].name; i++) {
+		// NULL entries have NULL name
+
+		if (rdata == conf.kbd_bl.bl_modes[i].value) {
+			return sysfs_emit(buf, "%s\n", conf.kbd_bl.bl_modes[i].name);
+		}
+	}
+
+	return sysfs_emit(buf, "%s (%i)\n", "unknown", rdata);
+}
+
+static ssize_t kbd_bl_mode_store(struct device *dev, struct device_attribute *attr,
+			      const char *buf, size_t count)
+{
+	int result;
+
+	for (int i = 0; conf.kbd_bl.bl_modes[i].name; i++) {
+		// NULL entries have NULL name
+
+		if (sysfs_streq(conf.kbd_bl.bl_modes[i].name, buf)) {
+			result = ec_write(conf.kbd_bl.bl_mode_address,
+					  conf.kbd_bl.bl_modes[i].value);
+			if (result < 0)
+				return result;
+
+			return count;
+		}
+	}
+
+	return -EINVAL;
+}
+
+static DEVICE_ATTR_RO(available_kbd_bl_modes);
+static DEVICE_ATTR_RW(kbd_bl_mode);
+
+static struct attribute *kbd_bl_attrs[] = {
+        &dev_attr_available_kbd_bl_modes.attr,
+        &dev_attr_kbd_bl_mode.attr,
+        NULL
+};
+
+static umode_t kbd_bl_is_visible(struct kobject *kobj,
+                                 struct attribute *attr,
+                                 int idx)
+{
+	int address;
+
+	if (!conf_loaded)
+		return 0;
+
+	if (attr == &dev_attr_available_kbd_bl_modes.attr ||
+	    attr == &dev_attr_kbd_bl_mode.attr)
+		address = conf.kbd_bl.bl_mode_address;
+
+	else
+		return attr->mode;
+
+	return address == MSI_EC_ADDR_UNSUPP ? 0 : attr->mode;
+}
+
+static const struct attribute_group kbd_bl_group = {
+	.attrs = kbd_bl_attrs,
+    .is_visible = kbd_bl_is_visible,
+};
+
+static const struct attribute_group *kbd_bl_groups[] = {
+	&kbd_bl_group,
+	NULL,
+};
+
 static struct led_classdev micmute_led_cdev = {
 	.name = "platform::micmute",
 	.max_brightness = 1,
@@ -2863,6 +3045,7 @@ static struct led_classdev msiacpi_led_kbdlight = {
 	.flags = LED_BRIGHT_HW_CHANGED,
 	.brightness_set_blocking = &kbd_bl_sysfs_set,
 	.brightness_get = &kbd_bl_sysfs_get,
+	.groups = kbd_bl_groups,
 };
 
 // ============================================================ //
