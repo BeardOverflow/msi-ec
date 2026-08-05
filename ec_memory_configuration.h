@@ -33,6 +33,11 @@ struct msi_ec_cooler_boost_conf {
 	int bit;
 };
 
+struct msi_ec_usb_powershare_conf {
+	int address;
+	int bit;
+};
+
 #define MSI_EC_MODE_NULL { NULL, 0 }
 struct msi_ec_mode {
 	const char *name;
@@ -89,6 +94,7 @@ struct msi_ec_conf {
 	struct msi_ec_webcam_conf         webcam;
 	struct msi_ec_fn_win_swap_conf    fn_win_swap;
 	struct msi_ec_cooler_boost_conf   cooler_boost;
+	struct msi_ec_usb_powershare_conf usb_powershare;
 	struct msi_ec_shift_mode_conf     shift_mode;
 	struct msi_ec_super_battery_conf  super_battery;
 	struct msi_ec_fan_mode_conf       fan_mode;

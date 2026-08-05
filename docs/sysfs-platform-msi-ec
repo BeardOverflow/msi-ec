@@ -26,6 +26,12 @@ Description:
 		to the maximum speed for quicker cooling.
 		Valid values: "on", "off".
 
+What:           /sys/devices/platform/<platform>/usb_powershare
+Description:
+                Control the usb powershare feature. This feature enables
+		usb charging while device is suspended or powered off.
+                Valid values: "on", "off".
+
 What:		/sys/devices/platform/<platform>/available_shift_modes
 Description:
 		Read-only, shows the list of available shift modes for
