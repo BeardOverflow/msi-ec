@@ -1690,6 +1690,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"15FKIMS1.110", // Stealth A16 AI+ A3XVGG
 	"15FLIMS1.107", // Stealth A16 AI+ A3XWHG
 	"15FMIBA1.102", // Stealth A16 Mercedes AMG AI+ A3XWGG
+	"2631EMS1.110", // Stealth 16 AI+ B3WH
 	"15G2EWS1.107", // CreatorPro Z16HXStudio B13VJTO / B13VKTO
 	"15K2EMS1.106", // Cyborg 15 AI A1VFK
 	"15K2EMS1.109",
