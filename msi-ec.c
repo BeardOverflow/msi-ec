@@ -820,6 +820,7 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 
 static const char *ALLOWED_FW_G1_10[] __initconst = {
 	"16P5EMS1.103", // GE63 Raider 8RE
+	"16P6EMS1.104", // GL63 8RC
 	"1782EMS1.109", // GT72 6QE Dominator Pro
 	"1799EMS1.112", // GP72 7REX Leopard Pro
 	NULL
