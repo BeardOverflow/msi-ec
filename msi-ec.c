@@ -522,6 +522,7 @@ static const char *ALLOWED_FW_G1_6[] __initconst = {
 	"14DKEMS1.105",
 	"14DLEMS1.105", // Modern 14 B5M
 	"155LEMS1.103", // Modern 15 A5M
+	"155LEMS1.104",
 	"155LEMS1.105",
 	"155LEMS1.106",
 	"15HKEMS1.102", // Modern 15 B7M
