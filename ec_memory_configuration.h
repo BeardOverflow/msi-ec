@@ -69,6 +69,8 @@ struct msi_ec_led_conf {
 	int micmute_led_address;
 	int mute_led_address;
 	int bit;
+	int stealth_led_address;
+	int stealth_led_bit;
 };
 
 #define MSI_EC_KBD_BL_STATE_MASK 0x3
