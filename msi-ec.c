@@ -1821,6 +1821,76 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 	},
 };
 
+static const char *ALLOWED_FW_G2_11[] __initconst = {
+	"15A2EMS1.114", // Prestige 16 AI Studio B1VEG (MS-15A2)
+	NULL
+};
+
+/*
+ * Deliberately minimal: only the features that were actually verified on this
+ * unit are enabled. Everything else is left UNSUPP rather than inherited from a
+ * similar config, because a wrong address here means writing to the wrong EC
+ * register.
+ *
+ * leds and kbd_bl must stay UNSUPP for a second reason: led_classdev_register()
+ * with a .default_trigger writes to the EC right after insmod, which would make
+ * loading the module a write operation instead of a read-only one.
+ */
+static struct msi_ec_conf CONF_G2_11 __initdata = {
+	.allowed_fw = ALLOWED_FW_G2_11,
+	.charge_control_address = 0xd7,
+	.webcam = {
+		.address       = MSI_EC_ADDR_UNSUPP,
+		.block_address = MSI_EC_ADDR_UNSUPP,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.bit     = 4,
+		.invert  = false,
+	},
+	.cooler_boost = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.modes = {
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = MSI_EC_ADDR_UNSUPP,
+	},
+	.fan_mode = {
+		.address = MSI_EC_ADDR_UNSUPP,
+		.modes = {
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
+	},
+	.gpu = {
+		.rt_temp_address      = MSI_EC_ADDR_UNSUPP,
+		.rt_fan_speed_address = MSI_EC_ADDR_UNSUPP,
+	},
+	.leds = {
+		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
+		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.bit                 = 1,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
 /* ^^^^^^^^^^^^^^^^ Gen 2 - WMI2 ^^^^^^^^^^^^^^^^ */
 
 static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
@@ -1848,6 +1918,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G2_5,
 	&CONF_G2_6,
 	&CONF_G2_10,
+	&CONF_G2_11,
 	NULL
 };
 
