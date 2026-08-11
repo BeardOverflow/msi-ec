@@ -42,11 +42,6 @@ Description:
 		Valid values: the values present in the available_shift_modes
 		list.
 
-What:		/sys/devices/platform/<platform>/super_battery
-Description:
-		Allows to enable the super battery saving mode.
-		Valid values: "on", "off"
-
 What:		/sys/devices/platform/<platform>/available_fan_modes
 Description:
 		Read-only, shows the list of available fan modes for
