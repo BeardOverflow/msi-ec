@@ -58,11 +58,13 @@ struct msi_ec_fan_mode_conf {
 struct msi_ec_cpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime % RPM
+	int rt_fan_tach_address;  // period tachometer (0 = not configured)
 };
 
 struct msi_ec_gpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime % RPM
+	int rt_fan_tach_address;  // period tachometer (0 = not configured)
 };
 
 struct msi_ec_led_conf {
@@ -84,6 +86,7 @@ struct msi_ec_kbd_bl_conf {
 
 struct msi_ec_conf {
 	const char **allowed_fw;
+	bool is_wmi2; /* WMI2 hardware: msi-wmi-platform handles fan hwmon */
 
 	int charge_control_address;
 	struct msi_ec_webcam_conf         webcam;
