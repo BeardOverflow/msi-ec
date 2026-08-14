@@ -1756,6 +1756,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"182LIMS1.108", // Vector A18 HX A9WHG
 	"182LIMS1.111", // New ec version for Vector A18 HX A9WHG
 	"182KIMS1.113", // Raider A18 HX A7VIG
+	"15P2ED61.100", // GameGaraj Slayer 4 (MSI Sword 16 HX derivative)
 	NULL
 };
 
