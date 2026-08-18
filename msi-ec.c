@@ -1052,6 +1052,7 @@ static const char *ALLOWED_FW_G2_0[] __initconst = {
 	"15H4IMS1.108",
 	"15H4IMS1.117",
 	"15H5EMS1.111", // Modern 15 H AI C1MG
+	"15H5EMS1.107", // Modern 15 H AI C1MG
 	NULL
 };
 
