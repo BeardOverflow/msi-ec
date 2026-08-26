@@ -1437,6 +1437,7 @@ static const char *ALLOWED_FW_G2_4[] __initconst = {
 	"14N2EMS1.103",
 	"14P1IMS1.104", // Cyborg 14 A13VF
 	"14P1IMS1.106",
+	"14P1IWS1.106", // M14 A13VF
 	NULL
 };
 
