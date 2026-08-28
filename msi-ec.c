@@ -1735,6 +1735,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"17Q1IMS1.10C", // Titan GT77 12UHS
 	"17Q2IMS1.107", // Titan GT77HX 13VH
 	"17Q2IMS1.10D",
+	"17Q2IMS1.10E", // Titan GT77HX 13VI
 	"17S1IMS1.105", // Raider GE78HX 13VI
 	"17S1IMS1.113",
 	"17S1IMS1.114",
