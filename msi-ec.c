@@ -1595,6 +1595,7 @@ static const char *ALLOWED_FW_G2_6[] __initconst = {
 	"16R8IMS2.117",
 	"16RKIMS1.110", // Thin A15 B7VF
 	"16RKIMS1.111",
+	"16RKIMS1.112", // Thin A15 B7UC
 	"16RKIMS2.108",
 	"16RKIMS2.111",
 	NULL
