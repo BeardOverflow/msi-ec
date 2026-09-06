@@ -117,6 +117,8 @@ static struct msi_ec_conf CONF_G1_0 __initdata = {
 		.micmute_led_address = 0x2b,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
@@ -202,6 +204,8 @@ static struct msi_ec_conf CONF_G1_1 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
@@ -273,6 +277,8 @@ static struct msi_ec_conf CONF_G1_2 __initdata = {
 		.micmute_led_address = 0x2b,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -359,6 +365,8 @@ static struct msi_ec_conf CONF_G1_3 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -430,6 +438,8 @@ static struct msi_ec_conf CONF_G1_4 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
@@ -504,6 +514,8 @@ static struct msi_ec_conf CONF_G1_5 __initdata = {
 		.micmute_led_address = 0x2b,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -583,6 +595,8 @@ static struct msi_ec_conf CONF_G1_6 __initdata = {
 		.micmute_led_address = 0x2b,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
@@ -666,6 +680,8 @@ static struct msi_ec_conf CONF_G1_7 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -733,6 +749,8 @@ static struct msi_ec_conf CONF_G1_8 __initdata = {
 	.leds = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -808,6 +826,8 @@ static struct msi_ec_conf CONF_G1_9 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -876,6 +896,8 @@ static struct msi_ec_conf CONF_G1_10 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -951,6 +973,8 @@ static struct msi_ec_conf CONF_G1_11 __initdata = {
 		.micmute_led_address = 0x2b,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNKNOWN,
@@ -1020,6 +1044,8 @@ static struct msi_ec_conf CONF_G1_13 __initdata = {
 		.micmute_led_address = 0x2b,
 		.mute_led_address    = 0x2c,
 		.bit                 = 2,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -1106,6 +1132,8 @@ static struct msi_ec_conf CONF_G2_0 __initdata = {
 		.micmute_led_address = 0x2c,
 		.mute_led_address    = 0x2d,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
@@ -1230,6 +1258,8 @@ static struct msi_ec_conf CONF_G2_1 __initdata = {
 		.micmute_led_address = 0x2c,
 		.mute_led_address    = 0x2d,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
@@ -1322,6 +1352,8 @@ static struct msi_ec_conf CONF_G2_2 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -1421,6 +1453,8 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 		.micmute_led_address = 0x2c, // not present on `14F1`
 		.mute_led_address    = 0x2d, // not present on `14L1`, `14N1`, `14QK`. May require udev rule to have ALSA drive LED state on 13P5.
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
@@ -1491,6 +1525,8 @@ static struct msi_ec_conf CONF_G2_4 __initdata = {
 		.micmute_led_address = 0x2c,
 		.mute_led_address    = 0x2d,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = 0x2c,
@@ -1503,13 +1539,6 @@ static struct msi_ec_conf CONF_G2_4 __initdata = {
 };
 
 static const char *ALLOWED_FW_G2_5[] __initconst = {
-	"14K1EMS1.103", // Stealth 14 Studio A13VF
-	"14K1EMS1.107",
-	"14K1EMS1.108",
-	"14K2EMS1.104", // Stealth 14 AI Studio A1VGG / A1VFG
-	"14K2EMS1.107",
-	"14K2EMS1.108",
-	"14K2EMS1.109",
 	"15Q3EMS1.106", // Cyborg 15 B13WFKG / B2RWFKG / B2RWEKG
 	"15Q3EMS1.107",
 	"15Q3EMS1.108",
@@ -1567,6 +1596,8 @@ static struct msi_ec_conf CONF_G2_5 __initdata = {
 		.micmute_led_address = 0x2c,
 		.mute_led_address    = 0x2d,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -1651,6 +1682,8 @@ static struct msi_ec_conf CONF_G2_6 __initdata = {
 		.micmute_led_address = MSI_EC_ADDR_UNSUPP,
 		.mute_led_address    = MSI_EC_ADDR_UNSUPP,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -1810,6 +1843,84 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 		.micmute_led_address = 0x2c,
 		.mute_led_address    = 0x2d,
 		.bit                 = 1,
+		.stealth_led_address    = MSI_EC_ADDR_UNSUPP,
+		.stealth_led_bit        = 4,
+	},
+	.kbd_bl = {
+		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
+		.bl_modes         = { 0x00, 0x08 },
+		.max_mode         = 1,
+		.bl_state_address = MSI_EC_ADDR_UNSUPP,
+		.state_base_value = 0x80,
+		.max_state        = 3,
+	},
+};
+
+
+static const char *ALLOWED_FW_G2_11[] __initconst = {
+	"14K1EMS1.103", // Stealth 14 Studio A13VF
+	"14K1EMS1.107",
+	"14K1EMS1.108",
+	"14K2EMS1.104", // Stealth 14 AI Studio A1VGG / A1VFG
+	"14K2EMS1.107",
+	"14K2EMS1.108",
+	"14K2EMS1.109",// Stealth 14 Studio A13VF
+	NULL
+};
+
+static struct msi_ec_conf CONF_G2_11 __initdata = {
+	.allowed_fw = ALLOWED_FW_G2_11, // new
+	.charge_control_address = 0xd7,
+	.webcam = {
+		.address       = 0x2e,
+		.block_address = 0x2f,
+		.bit           = 1,
+	},
+	.fn_win_swap = {
+		.address = 0xe8,
+		.bit     = 4,
+		.invert  = false,
+	},
+	.cooler_boost = {
+		.address = 0x98,
+		.bit     = 7,
+	},
+	.shift_mode = {
+		.address = 0xd2,
+		.modes = {
+			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_ECO_NAME,     0xc2 },
+			{ SM_COMFORT_NAME, 0xc1 },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.super_battery = {
+		.address = 0xeb,
+		.mask    = 0x0f,
+	},
+	.fan_mode = {
+		.address = 0xd4,
+		.modes = {
+			{ FM_AUTO_NAME,     0x0d },
+			{ FM_SILENT_NAME,   0x1d },
+			{ FM_ADVANCED_NAME, 0x8d },
+			MSI_EC_MODE_NULL
+		},
+	},
+	.cpu = {
+		.rt_temp_address      = 0x68,
+		.rt_fan_speed_address = 0x71,
+	},
+	.gpu = {
+		.rt_temp_address      = 0x80,
+		.rt_fan_speed_address = 0x89,
+	},
+	.leds = {
+		.micmute_led_address = 0x2c,
+		.mute_led_address    = 0x2d,
+		.bit                 = 1,
+		.stealth_led_address    = 0x2c,
+		.stealth_led_bit        = 4,
 	},
 	.kbd_bl = {
 		.bl_mode_address  = MSI_EC_ADDR_UNSUPP,
@@ -1848,6 +1959,7 @@ static struct msi_ec_conf *CONFIGURATIONS[] __initdata = {
 	&CONF_G2_5,
 	&CONF_G2_6,
 	&CONF_G2_10,
+	&CONF_G2_11,
 	NULL
 };
 
@@ -2820,6 +2932,19 @@ static int mute_led_sysfs_set(struct led_classdev *led_cdev,
 	return 0;
 }
 
+static int stealth_led_sysfs_set(struct led_classdev *led_cdev,
+			      enum led_brightness brightness)
+{
+	int result;
+
+	result = ec_set_bit(conf.leds.stealth_led_address, conf.leds.stealth_led_bit, brightness);
+
+	if (result < 0)
+		return result;
+
+	return 0;
+}
+
 static enum led_brightness kbd_bl_sysfs_get(struct led_classdev *led_cdev)
 {
 	u8 rdata;
@@ -2856,6 +2981,12 @@ static struct led_classdev mute_led_cdev = {
 	.max_brightness = 1,
 	.brightness_set_blocking = &mute_led_sysfs_set,
 	.default_trigger = "audio-mute",
+};
+
+static struct led_classdev stealth_led_cdev = {
+	.name = "platform::stealth",
+	.max_brightness = 1,
+	.brightness_set_blocking = &stealth_led_sysfs_set,
 };
 
 static struct led_classdev msiacpi_led_kbdlight = {
@@ -3074,6 +3205,10 @@ static int __init msi_ec_init(void)
 	if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_register(&msi_platform_device->dev,
 				      &mute_led_cdev);
+	
+	if (conf.leds.stealth_led_address != MSI_EC_ADDR_UNSUPP)
+		led_classdev_register(&msi_platform_device->dev,
+				      &stealth_led_cdev);
 
 	if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
 		led_classdev_register(&msi_platform_device->dev,
@@ -3091,6 +3226,9 @@ static void __exit msi_ec_exit(void)
 
 		if (conf.leds.mute_led_address != MSI_EC_ADDR_UNSUPP)
 			led_classdev_unregister(&mute_led_cdev);
+
+		if (conf.leds.stealth_led_address != MSI_EC_ADDR_UNSUPP)
+			led_classdev_unregister(&stealth_led_cdev);
 
 		if (conf.kbd_bl.bl_state_address != MSI_EC_ADDR_UNSUPP)
 			led_classdev_unregister(&msiacpi_led_kbdlight);
