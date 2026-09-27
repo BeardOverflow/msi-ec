@@ -1729,6 +1729,7 @@ static const char *ALLOWED_FW_G2_10[] __initconst = {
 	"17L7EMS1.102", // Katana 17 HX B14WGK
 	"17L7EMS1.104",
 	"17N1EMS1.109", // Creator Z17 A12UGST
+	"17N2EMS1.109", // Creator Z17 HX Studio A13VGT
 	"17P1EMS1.104", // Stealth GS77 12U(E/GS)
 	"17P1EMS1.106",
 	"17P2EMS1.111", // Stealth 17 Studio A13VI
