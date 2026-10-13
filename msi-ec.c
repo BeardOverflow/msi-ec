@@ -1779,7 +1779,8 @@ static struct msi_ec_conf CONF_G2_10 __initdata = {
 	.shift_mode = {
 		.address = 0xd2,
 		.modes = {
-			{ SM_TURBO_NAME,   0xc4 }, // sometimes 0xc0
+			{ SM_TURBO_NAME,   0xc4 },
+			{ SM_SPORT_NAME,   0xc0 }, // set by BIOS "User Scenario: Performance" (Creator Z16 A11UE)
 			{ SM_ECO_NAME,     0xc2 },
 			{ SM_COMFORT_NAME, 0xc1 },
 			MSI_EC_MODE_NULL
