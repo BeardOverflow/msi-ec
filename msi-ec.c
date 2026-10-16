@@ -823,6 +823,7 @@ static const char *ALLOWED_FW_G1_10[] __initconst = {
 	"16P5EMS1.103", // GE63 Raider 8RE
 	"1782EMS1.109", // GT72 6QE Dominator Pro
 	"1799EMS1.112", // GP72 7REX Leopard Pro
+	"17C5EMS1.109", // GP73 Leopard 8RE / GE73 Raider RGB 8RE
 	NULL
 };
 
