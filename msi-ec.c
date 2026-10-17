@@ -27,6 +27,7 @@
 
 #include <acpi/battery.h>
 #include <linux/acpi.h>
+#include <linux/dmi.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -3104,6 +3105,25 @@ static void __exit msi_ec_exit(void)
 
 	pr_info("module_exit\n");
 }
+
+/*
+ * Autoload on MSI laptops. The firmware version is still checked in
+ * load_configuration(), so unsupported models just fail to probe.
+ */
+static const struct dmi_system_id msi_dmi_table[] __maybe_unused = {
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "MICRO-STAR INT"),
+		},
+	},
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Micro-Star International"),
+		},
+	},
+	{}
+};
+MODULE_DEVICE_TABLE(dmi, msi_dmi_table);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jose Angel Pastrana <japp0005@red.ujaen.es>");
