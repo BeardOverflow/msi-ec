@@ -19,6 +19,7 @@ License:        GPLv2
 URL:            https://github.com/BeardOverflow/msi-ec/
 Source0:        %{modname}-%{version}.tar.gz
 Source1:        depmod-override.conf
+Source2:        dracut-omit.conf
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  %{_bindir}/kmodtool
@@ -88,6 +89,9 @@ done
 mkdir -p %{buildroot}%{_sysconfdir}/depmod.d/
 install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/depmod.d/msi-ec.conf
 
+mkdir -p %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/
+install -p -m 0644 %{SOURCE2} %{buildroot}%{_prefix}/lib/dracut/dracut.conf.d/90-msi-ec.conf
+
 %{?akmod_install}
 
 %post
@@ -101,6 +105,7 @@ fi
 
 %files common
 %config(noreplace) %{_sysconfdir}/depmod.d/msi-ec.conf
+%{_prefix}/lib/dracut/dracut.conf.d/90-msi-ec.conf
 
 
 %clean

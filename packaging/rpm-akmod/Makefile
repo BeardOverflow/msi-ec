@@ -28,7 +28,7 @@ srpm: dist
 	mv $(DIST_DIR).tar.gz $(RPM_ROOT)/SOURCES/
 	
 	
-	cp depmod-override.conf $(RPM_ROOT)/SOURCES/ ; \
+	cp depmod-override.conf dracut-omit.conf $(RPM_ROOT)/SOURCES/ ; \
 	
 	sed -e "s|@MODNAME@|$(MODNAME)|g" \
 	    -e "s|@VERSION@|$(VERSION)|g" \
