@@ -36,7 +36,6 @@ install:
 	mkdir -p $(KMOD_DIR)
 	cp msi-ec.ko $(KMOD_DIR)
 	depmod -a
-	echo msi-ec > /etc/modules-load.d/msi-ec.conf
 	modprobe -v msi-ec
 
 uninstall:
@@ -61,7 +60,6 @@ dkms-install:
 	dkms add msi_ec/$(VERSION)
 	dkms build msi_ec/$(VERSION)
 	dkms install msi_ec/$(VERSION)
-	echo msi-ec > /etc/modules-load.d/msi-ec.conf
 
 dkms-uninstall:
 	bash universalDKMSModuleUninstaller.sh

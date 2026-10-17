@@ -27,9 +27,8 @@ srpm: dist
 	mkdir -p $(RPM_ROOT)/{SOURCES,SPECS,SRPMS}
 	mv $(DIST_DIR).tar.gz $(RPM_ROOT)/SOURCES/
 	
-	echo "$(MODNAME)" > $(RPM_ROOT)/SOURCES/module-load.conf
 	
-	cp depmod-override.conf $(RPM_ROOT)/SOURCES/ ; \
+	cp depmod-override.conf dracut-omit.conf $(RPM_ROOT)/SOURCES/ ; \
 	
 	sed -e "s|@MODNAME@|$(MODNAME)|g" \
 	    -e "s|@VERSION@|$(VERSION)|g" \
