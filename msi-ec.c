@@ -40,6 +40,17 @@
 #include <linux/rtc.h>
 #include <linux/string_choices.h>
 
+/*
+ * The ACPI battery hook registration functions were renamed upstream
+ * (battery_hook_* -> acpi_battery_hook_*). Not every distro kernel at the
+ * same version carries the rename, so the Makefile feature-detects the
+ * header instead of relying on LINUX_VERSION_CODE.
+ */
+#ifdef MSI_EC_ACPI_BATTERY_HOOK_RENAMED
+#define battery_hook_register    acpi_battery_hook_register
+#define battery_hook_unregister  acpi_battery_hook_unregister
+#endif
+
 static DEFINE_MUTEX(ec_set_by_mask_mutex);
 static DEFINE_MUTEX(ec_unset_by_mask_mutex);
 static DEFINE_MUTEX(ec_set_bit_mutex);
