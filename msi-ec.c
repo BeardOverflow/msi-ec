@@ -753,6 +753,7 @@ static const char *ALLOWED_FW_G1_9[] __initconst = {
 	"17G3EMS1.110", // GS75 Stealth 10SF
 	"17G3EMS1.113",
 	"17G3EMS1.115",
+	"17G3EWS1.113", // WS75 10TK
 	"17H1EMS1.103", // GT76 Titan DT 9 SF / SFS / SG / SGS
 	NULL
 };
