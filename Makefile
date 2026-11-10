@@ -9,6 +9,14 @@ KMOD_DIR        := /lib/modules/$(KERNELRELEASE)/updates/drivers/platform/x86
 
 ccflags-y := -std=gnu11 -Wno-declaration-after-statement
 
+# The battery hook API was renamed (battery_hook_* -> acpi_battery_hook_*)
+# in some 7.2.x kernels but not all distros carry it, so detect it in the
+# target kernel headers instead of guessing from LINUX_VERSION_CODE.
+ifeq ($(shell grep -qs acpi_battery_hook_register \
+		/lib/modules/$(KERNELRELEASE)/build/include/acpi/battery.h && echo y),y)
+ccflags-y += -DMSI_EC_ACPI_BATTERY_HOOK_RENAMED
+endif
+
 obj-m += $(MODNAME).o
 
 all: modules
