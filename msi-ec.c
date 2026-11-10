@@ -1250,6 +1250,7 @@ static const char *ALLOWED_FW_G2_3[] __initconst = {
 	"15A1EMS1.1", // Prestige 16 AI Evo B1MG
 	"15A3EMS1.1", // Prestige 16 AI+ Evo B2VMG
 	"15QKIMS1.5", // Venture A15 AI A2HMG / A2HMTG
+	"2622EMS1.1", // Prestige 16 Flip AI+ C3MTG
 	NULL
 };
 
@@ -1270,7 +1271,7 @@ static struct msi_ec_conf CONF_G2_3 __initdata = {
 		.address = 0x98,
 		.bit     = 7,
 	},
-	.shift_mode = {
+	.shift_mode = {          // 2622 has a new shift mode 0xc5 (super power mode)
 		.address = 0xd2,
 		.modes = {
 			{ SM_TURBO_NAME,   0xc4 },
