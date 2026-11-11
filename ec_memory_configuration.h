@@ -58,11 +58,13 @@ struct msi_ec_fan_mode_conf {
 struct msi_ec_cpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime % RPM
+	int fan_speed_rpm_address_0; // 480000/n RPM
 };
 
 struct msi_ec_gpu_conf {
 	int rt_temp_address;
 	int rt_fan_speed_address; // realtime % RPM
+	int fan_speed_rpm_address_0; // 480000/n RPM
 };
 
 struct msi_ec_led_conf {
